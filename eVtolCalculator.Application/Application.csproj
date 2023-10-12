@@ -22,6 +22,11 @@
     <Folder Include="DetailDesignFacilitators\Handlers\" />
     <Folder Include="DetailDesignFacilitators\Validators\" />
     <Folder Include="DetailDesignFacilitators\Queries\" />
+    <Folder Include="InverterFacilitators\Queries\" />
+    <Folder Include="InverterFacilitators\Validators\" />
+    <Folder Include="MotorFacilitators\Validators\" />
+    <Folder Include="MotorFacilitators\Queries\" />
+    <Folder Include="MissionParameterFacilitators\" />
   </ItemGroup>
 
 </Project>

@@ -14,6 +14,7 @@ public class SiUnits : SmartEnum<SiUnits, double>
     public static readonly SiUnits WattHour = new("Wh", 1);
     public static readonly SiUnits Horsepower = new("hp", 1);
     public static readonly SiUnits Degress = new("º", 1);
+    public static readonly SiUnits Rpm = new("rpm", 1);
 
     public SiUnits(string unit, double valueMultiplier)
         : base(unit, valueMultiplier)
