@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eVtolCalculatorApi", "eVtolCalculator\eVtolCalculatorApi.csproj", "{04C4288E-C620-431B-89E8-71F8E1753840}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "eVtolCalculator.Domain\Domain.csproj", "{72A3F566-DA9B-4B2A-B104-EED7ADF310D3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "eVtolCalculator.Application\Application.csproj", "{4007B1DE-3DF0-4291-9C30-D13F3E43CD41}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "eVtolCalculator.Infrastructure\Infrastructure.csproj", "{0CDD4754-5339-4337-AD2C-CEB48CD5ACD1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eVtolCalculatorTests", "eVtolCalculatorTests\eVtolCalculatorTests.csproj", "{1E345C77-731E-4B0A-A892-0E094A482BED}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5BA88C5D-EEC2-4BC3-8138-F59983FDEE96}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{76A26A03-9EF4-4DB0-8444-DFA1F8BFCC01}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{04C4288E-C620-431B-89E8-71F8E1753840}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04C4288E-C620-431B-89E8-71F8E1753840}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04C4288E-C620-431B-89E8-71F8E1753840}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04C4288E-C620-431B-89E8-71F8E1753840}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72A3F566-DA9B-4B2A-B104-EED7ADF310D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72A3F566-DA9B-4B2A-B104-EED7ADF310D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72A3F566-DA9B-4B2A-B104-EED7ADF310D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72A3F566-DA9B-4B2A-B104-EED7ADF310D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4007B1DE-3DF0-4291-9C30-D13F3E43CD41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4007B1DE-3DF0-4291-9C30-D13F3E43CD41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4007B1DE-3DF0-4291-9C30-D13F3E43CD41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4007B1DE-3DF0-4291-9C30-D13F3E43CD41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CDD4754-5339-4337-AD2C-CEB48CD5ACD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CDD4754-5339-4337-AD2C-CEB48CD5ACD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CDD4754-5339-4337-AD2C-CEB48CD5ACD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CDD4754-5339-4337-AD2C-CEB48CD5ACD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E345C77-731E-4B0A-A892-0E094A482BED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E345C77-731E-4B0A-A892-0E094A482BED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E345C77-731E-4B0A-A892-0E094A482BED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E345C77-731E-4B0A-A892-0E094A482BED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{04C4288E-C620-431B-89E8-71F8E1753840} = {5BA88C5D-EEC2-4BC3-8138-F59983FDEE96}
+		{72A3F566-DA9B-4B2A-B104-EED7ADF310D3} = {5BA88C5D-EEC2-4BC3-8138-F59983FDEE96}
+		{4007B1DE-3DF0-4291-9C30-D13F3E43CD41} = {5BA88C5D-EEC2-4BC3-8138-F59983FDEE96}
+		{0CDD4754-5339-4337-AD2C-CEB48CD5ACD1} = {5BA88C5D-EEC2-4BC3-8138-F59983FDEE96}
+		{1E345C77-731E-4B0A-A892-0E094A482BED} = {76A26A03-9EF4-4DB0-8444-DFA1F8BFCC01}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {669EF06B-B6C0-4DB2-9976-186F538B0C63}
+	EndGlobalSection
+EndGlobal
