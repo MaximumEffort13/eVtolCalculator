@@ -1,0 +1,26 @@
+﻿using Domain.Entities.DetailedDesign.Battery;
+using Infrastructure.Converters;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace Infrastructure.Configurations;
+
+internal class BatteryModuleConfiguration : IEntityTypeConfiguration<BatteryModule>
+{
+    public void Configure(EntityTypeBuilder<BatteryModule> builder)
+    {
+        builder.HasKey(x  => x.Id);
+        builder.Property(x => x.Id).IsRequired();
+
+        builder.Property(x => x.NumberOfCellsConnectedInSeries).IsRequired().HasColumnType("integer").HasColumnName("cellc_connected_series");
+        builder.Property(x => x.NumberOfCellsConnectedInParallel).IsRequired().HasColumnType("integer").HasColumnName("cellc_connected_parallel");
+
+        builder.Property(x => x.Current).HasConversion<MeasureandQuantityConverter>().HasColumnName("current");
+        builder.Property(x => x.Voltage).HasConversion<MeasureandQuantityConverter>().HasColumnName("voltage");
+        builder.Property(x => x.Capacity).HasConversion<MeasureandQuantityConverter>().HasColumnName("capacity");
+        builder.Property(x => x.Weight).HasConversion<MeasureandQuantityConverter>().HasColumnName("weight");
+        builder.Property(x => x.Power).HasConversion<MeasureandQuantityConverter>().HasColumnName("power");
+
+        builder.HasOne<Cell>().WithMany().HasForeignKey(a => a.CellId).IsRequired();
+    }
+}
