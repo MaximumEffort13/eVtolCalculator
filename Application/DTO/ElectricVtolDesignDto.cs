@@ -4,6 +4,7 @@ namespace Application.DTO;
 
 public sealed class ElectricVtolDesignDto
 {
+    public Guid Id { get; set; }
     public string Name { get; set; }
     public BatteryPackDto Battery { get; set; }
     public MotorDto Motor { get; set; }

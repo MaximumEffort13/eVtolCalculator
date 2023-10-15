@@ -9,6 +9,7 @@ public static class BladeDtoMapper
     {
         return new BladeDto
         {
+            Id = blade.Id,
             Name = blade.Name,
             Length = $"{blade.Length.Value} {blade.Length.Unit}",
             Width = $"{blade.Width.Value} {blade.Width.Unit}",

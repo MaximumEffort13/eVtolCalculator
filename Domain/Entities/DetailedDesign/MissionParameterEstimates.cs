@@ -1,4 +1,5 @@
 ﻿using Domain.ConstantValues;
+using Domain.EntityCalculations;
 using Domain.Enums;
 using Domain.Primitives;
 
@@ -6,17 +7,20 @@ namespace Domain.Entities.ConceptDesign;
 
 public sealed class MissionParameterEstimates : Entity
 {
-    public MissionParameterEstimates(Guid id, MeasureandQuantity totalDesignWeight, MeasureandQuantity payloadWeight, TimeSpan flightTimeRequirementInMinutes) : base(id)
+    public MissionParameterEstimates(Guid id,
+        MeasureandQuantity totalDesignWeight,
+        MeasureandQuantity payloadWeight,
+        TimeSpan flightTimeRequirementInMinutes) : base(id)
     {
         TotalDesignWeight = totalDesignWeight;
         PayloadWeight = payloadWeight;
         FlightTimeRequirementInMinutes = flightTimeRequirementInMinutes;
 
-        EstimatedPowerRequirement = CalculatePowerRequirement();
-        EstimatedBatteryCapacityRequirement = CalculateBatteryCapacityRequired();
-        EstimatedBatteryWeight = CalculateEstimatedBatteryWeight();
-        EstimatedMotorWeight = CalculateEstimatedMotorWeight();
-        EstimatedHorsepowerRequiredForHover = CalculateHorsepower();
+        EstimatedPowerRequirement = DesignConstraintsCalculations.CalculatePowerRequirement(totalDesignWeight, payloadWeight);
+        EstimatedBatteryCapacityRequirement = DesignConstraintsCalculations.CalculateBatteryCapacityRequired(EstimatedPowerRequirement, flightTimeRequirementInMinutes);
+        EstimatedBatteryWeight = DesignConstraintsCalculations.CalculateEstimatedBatteryWeight(EstimatedBatteryCapacityRequirement);
+        EstimatedMotorWeight = DesignConstraintsCalculations.CalculateEstimatedMotorWeight(EstimatedPowerRequirement);
+        EstimatedHorsepowerRequiredForHover = DesignConstraintsCalculations.CalculateHorsepower(EstimatedPowerRequirement);
     }
 
     public MeasureandQuantity TotalDesignWeight { get; private set; }
@@ -27,32 +31,4 @@ public sealed class MissionParameterEstimates : Entity
     public MeasureandQuantity EstimatedBatteryWeight { get; private set; }
     public MeasureandQuantity EstimatedMotorWeight { get; private set; }
     public MeasureandQuantity EstimatedHorsepowerRequiredForHover { get; private set; }
-
-    // Use actual entities for power to weight ratio calculations /////////////////////////////////////////////
-
-    private MeasureandQuantity CalculatePowerRequirement()
-    {
-        return new MeasureandQuantity((TotalDesignWeight.Value + PayloadWeight.Value) / PredefinedConstantValues.motorThrustToPowerRatio, SiPrefixes.Kilo.Name + SiUnits.Power.Name);
-    }
-
-    private MeasureandQuantity CalculateBatteryCapacityRequired()
-    {
-        return new MeasureandQuantity(EstimatedPowerRequirement.Value * FlightTimeRequirementInMinutes.TotalHours, SiPrefixes.Kilo.Name + SiUnits.WattHour.Name);
-    }
-
-    private MeasureandQuantity CalculateEstimatedBatteryWeight()
-    {
-        return new MeasureandQuantity(EstimatedPowerRequirement.Value * SiPrefixes.Kilo.Value / PredefinedConstantValues.currentBatteryCapacityPerKg, SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
-    }
-
-    private MeasureandQuantity CalculateEstimatedMotorWeight()
-    {
-        return new MeasureandQuantity(EstimatedPowerRequirement.Value / PredefinedConstantValues.motorPowerLoading, SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
-    }
-
-    private MeasureandQuantity CalculateHorsepower()
-    {
-        return new MeasureandQuantity(EstimatedPowerRequirement.Value * SiPrefixes.Kilo.Value / PredefinedConstantValues.horsepowerToWatConversion, SiUnits.Horsepower.Name);
-    }
-
 }

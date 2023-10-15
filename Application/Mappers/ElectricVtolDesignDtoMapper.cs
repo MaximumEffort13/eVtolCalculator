@@ -10,12 +10,6 @@ public static class ElectricVtolDesignDtoMapper
         return new ElectricVtolDesignDto
         {
             Name = eVtolDesign.Name,
-            Battery = BatteryPackDtoMapper.Map(eVtolDesign.Battery),
-            Invert = InverterDtoMapper.Map(eVtolDesign.Inverter),
-            Motor = MotorDtoMapper.Map(eVtolDesign.Motor),
-            Fuselage = FuselageDtoMapper.Map(eVtolDesign.Fuselage),
-            MissionEstimates = MissionParameterDtoMapper.Map(eVtolDesign.MissionParameters),
-
             LiftOffWeight = $"{eVtolDesign.LiftOffWeight.Value} {eVtolDesign.LiftOffWeight.Unit}",
             FlightTimeInMinutes = eVtolDesign.FlightTimeInMinutes.TotalMinutes,
             PayloadWeight = $"{eVtolDesign.PayloadWeight.Value} {eVtolDesign.PayloadWeight.Unit}",

@@ -7,4 +7,5 @@ public interface IBatteryPackRepository
     void CreateBatteryPack(BatteryPack battery);
     Task<List<BatteryPack>> GetAllAsync(CancellationToken cancellationToken);
     Task<BatteryPack> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<BatteryPack> GetByNameAsync(string name, CancellationToken cancellationToken);
 }

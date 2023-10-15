@@ -1,20 +1,37 @@
 ﻿using Infrastructure.DataAccess;
 using Domain.Abstractions;
+using Domain.Entities.DetailedDesign;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
-    public sealed class DetailDesignRepository
+    public sealed class ElectricVtolRepository : IElectricVtolRepository
     {
-        private readonly ApplicationDbContext _appContext;
+        private readonly ApplicationDbContext _appDbContext;
 
-        public DetailDesignRepository(ApplicationDbContext appContext)
+        public ElectricVtolRepository(ApplicationDbContext appDbContext)
         {
-            _appContext = appContext;
+            _appDbContext = appDbContext;
         }
 
-        //public async Task<ElectricVtolDesign> GetById(Guid id)
-        //{
-        //    _appContext.
-        //}
+        public void Create(ElectricVtolDesign electricVtolDesign)
+        {
+            _appDbContext.ElectricVtolDesigns.Add(electricVtolDesign);
+        }
+
+        public async Task<ElectricVtolDesign> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+        {
+            return await _appDbContext.ElectricVtolDesigns.SingleAsync(eVtol => eVtol.Id == id, cancellationToken);
+        }
+
+        public async Task<List<ElectricVtolDesign>> GetAllAsync(CancellationToken cancellationToken)
+        {
+            return await _appDbContext.ElectricVtolDesigns.ToListAsync(cancellationToken);
+        }
+
+        public async Task<ElectricVtolDesign> GetByNameAsync(string name, CancellationToken cancellationToken)
+        {
+            return await _appDbContext.ElectricVtolDesigns.SingleAsync(eVtol => eVtol.Name == name, cancellationToken);
+        }
     }
 }

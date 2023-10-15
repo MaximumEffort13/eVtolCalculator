@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using Domain.EntityCalculations;
+using Domain.Enums;
 using Domain.Primitives;
 
 namespace Domain.Entities.DetailedDesign;
@@ -12,8 +13,8 @@ public sealed class Motor : Entity
         CurrentRating = currentRating;
         Weight = weight;
         Kv = kv;
-        PowerToWeightRatio = CalculatePowerToWeightRatio();
-        Rpm = CalculateRpm();
+        Rpm = MechanicalCalculations.CalculateRpm(kv.Value, voltageRating);
+        PowerToWeightRatio = ElectricCalculations.CalculatePowerToWeightRatio(voltageRating, currentRating, weight);
     }
 
 
@@ -37,28 +38,16 @@ public sealed class Motor : Entity
     /// <summary>
     /// Revolutions per minute
     /// </summary>
-    public double Rpm { get; private set; }
+    public MeasureandQuantity Rpm { get; private set; }
 
     /// <summary>
     /// Kv determines the amount of rpm per volt.
     /// </summary>
-    public MeasureandQuantity Kv { get; set; }
+    public MeasureandQuantity Kv { get; private set; }
 
     /// <summary>
     /// The amount of power generated per unit of weight that the motor weighs.
     /// </summary>
     public MeasureandQuantity PowerToWeightRatio { get; private set; }
 
-
-    private MeasureandQuantity CalculatePowerToWeightRatio()
-    {
-        return new MeasureandQuantity(
-            (VoltageRating.Value * CurrentRating.Value) / Weight.Value,
-            $"{SiPrefixes.Kilo.Name}{SiUnits.Power.Name}/{SiPrefixes.Kilo.Name}{SiUnits.Mass.Name}");
-    }
-
-    private double CalculateRpm()
-    {
-        return Kv.Value * VoltageRating.Value;
-    }
 }

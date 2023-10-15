@@ -32,7 +32,7 @@ public sealed class ConceptualVtolDesign : Entity
 
     private MeasureandQuantity CalculatePowerRequirement()
     {
-        return new MeasureandQuantity((TotalDesignWeight.Value + PayloadWeight.Value) / PredefinedConstantValues.motorThrustToPowerRatio, SiPrefixes.Kilo.Name + SiUnits.Power.Name);
+        return new MeasureandQuantity((TotalDesignWeight.Value + PayloadWeight.Value) / PredefinedConstantValues.motorThrustToPowerRatio, SiPrefixes.Kilo.Name + SiUnits.Watt.Name);
     }
 
     private MeasureandQuantity CalculateBatteryCapacityRequired()

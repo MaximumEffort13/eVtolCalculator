@@ -7,4 +7,4 @@ public sealed record CreateInverterCommand(
     string Name,
     double VoltageRating,
     double CurrentRating,
-    double Weight) : ICommand<InverterDto>;
+    double Weight_kg) : ICommand<InverterDto>;

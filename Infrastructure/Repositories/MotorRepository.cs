@@ -21,11 +21,16 @@ public sealed class MotorRepository : IMotorRepository
 
     public async Task<Motor> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await _appDbContext.Motors.SingleAsync(cell => cell.Id == id, cancellationToken);
+        return await _appDbContext.Motors.SingleAsync(m => m.Id == id, cancellationToken);
     }
 
     public async Task<List<Motor>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _appDbContext.Motors.ToListAsync(cancellationToken);
+    }
+
+    public async Task<Motor> GetByNameAsync(string name, CancellationToken cancellationToken)
+    {
+        return await _appDbContext.Motors.SingleAsync(m => m.Name == name, cancellationToken);
     }
 }

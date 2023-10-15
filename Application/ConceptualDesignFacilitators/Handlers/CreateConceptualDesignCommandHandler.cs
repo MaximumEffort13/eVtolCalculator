@@ -23,8 +23,8 @@ internal sealed class CreateConceptualDesignCommandHandler : ICommandHandler<Cre
 
     public async Task<Result<ConceptualDesignDto>> Handle(CreateConceptualDesignCommand request, CancellationToken cancellationToken)
     {
-        MeasureandQuantity designWeight = new(request.TotalMassOfeVtol, SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
-        MeasureandQuantity payloadWeight = new(request.PayloadMass, SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
+        MeasureandQuantity designWeight = new(request.TotalMassOfeVtol_kg, SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
+        MeasureandQuantity payloadWeight = new(request.PayloadMass_kg, SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
         TimeSpan flightTime = TimeSpan.FromMinutes(request.FlightTimeInMinutes);
 
         var design = new ConceptualVtolDesign(Guid.NewGuid(), designWeight, payloadWeight, flightTime);

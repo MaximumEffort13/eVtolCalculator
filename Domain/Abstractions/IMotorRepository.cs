@@ -7,4 +7,5 @@ public interface IMotorRepository
     void Create(Motor motor);
     Task<List<Motor>> GetAllAsync(CancellationToken cancellationToken);
     Task<Motor> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<Motor> GetByNameAsync(string name, CancellationToken cancellationToken);
 }

@@ -21,11 +21,16 @@ public sealed class InvererRepository : IInvererRepository
 
     public async Task<Inverter> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await _appDbContext.Inverters.SingleAsync(cell => cell.Id == id, cancellationToken);
+        return await _appDbContext.Inverters.SingleAsync(i => i.Id == id, cancellationToken);
     }
 
     public async Task<List<Inverter>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _appDbContext.Inverters.ToListAsync(cancellationToken);
+    }
+
+    public async Task<Inverter> GetByNameAsync(string name, CancellationToken cancellationToken)
+    {
+        return await _appDbContext.Inverters.SingleAsync(i => i.Name == name, cancellationToken);
     }
 }

@@ -7,5 +7,5 @@ public sealed record CreateMotorCommand(
     string Name,
     double VoltageRating,
     double CurrentRating,
-    double Weight,
+    double Weight_kg,
     double Kv) : ICommand<MotorDto>;

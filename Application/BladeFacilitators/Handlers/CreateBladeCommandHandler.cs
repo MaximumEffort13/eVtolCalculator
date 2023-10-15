@@ -23,16 +23,16 @@ internal sealed class CreateBladeCommandHandler : ICommandHandler<CreateBladeCom
 
     public async Task<Result<BladeDto>> Handle(CreateBladeCommand request, CancellationToken cancellationToken)
     {
-        MeasureandQuantity length = new(request.Length, SiPrefixes.Milli.Name + SiUnits.Meter.Name);
-        MeasureandQuantity width = new(request.Widht, SiPrefixes.Milli.Name + SiUnits.Meter.Name);
-        MeasureandQuantity thickness = new(request.Thickness, SiPrefixes.Milli.Name + SiUnits.Meter.Name);
-        MeasureandQuantity weight = new(request.Weight, SiUnits.Mass.Name);
+        MeasureandQuantity length = new(request.Length_mm, SiPrefixes.Milli.Name + SiUnits.Meter.Name);
+        MeasureandQuantity width = new(request.Widht_mm, SiPrefixes.Milli.Name + SiUnits.Meter.Name);
+        MeasureandQuantity thickness = new(request.Thickness_mm, SiPrefixes.Milli.Name + SiUnits.Meter.Name);
+        MeasureandQuantity weight = new(request.Weight_g, SiUnits.Mass.Name);
         MeasureandQuantity angleOfAttack = new(request.AngleOfAttack, SiUnits.Degress.Name);
 
         var blade = new Blade(Guid.NewGuid(), request.Name, length, width, thickness, weight, angleOfAttack);
 
         _bladeRepository.Create(blade);
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         var response = BladeDtoMapper.Map(blade);
         return response;

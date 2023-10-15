@@ -5,8 +5,8 @@ namespace Application.BladeFacilitators.Commands;
 
 public sealed record CreateBladeCommand(
     string Name,
-    double Length,
-    double Widht,
-    double Thickness,
-    double Weight,
+    double Length_mm,
+    double Widht_mm,
+    double Thickness_mm,
+    double Weight_g,
     double AngleOfAttack) : ICommand<BladeDto>;

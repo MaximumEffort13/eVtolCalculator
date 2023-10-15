@@ -22,7 +22,7 @@ namespace Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Entities.OverallDesign.OverallDesignParameters", b =>
+            modelBuilder.Entity("Domain.Entities.ConceptDesign.ConceptualVtolDesign", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,12 +30,14 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("BatteryCapacityRequirement")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("battery_capacity");
 
                     b.Property<string>("BatteryWeight")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("battery_weight");
 
                     b.Property<double>("FlightTimeRequirementInMinutes")
@@ -43,32 +45,565 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("Horsepower")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("horsepower");
 
                     b.Property<string>("MotorWeight")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("motor_weight");
 
                     b.Property<string>("PayloadWeight")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("payload_weight");
 
                     b.Property<string>("PowerRequirement")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("power_required");
 
                     b.Property<string>("TotalDesignWeight")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("design_weight");
 
                     b.HasKey("Id");
 
-                    b.ToTable("OverallDesignParameters");
+                    b.ToTable("ConceptualDesign");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ConceptDesign.MissionParameterEstimates", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("EstimatedBatteryCapacityRequirement")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("calculated_battery_capacity");
+
+                    b.Property<string>("EstimatedBatteryWeight")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("calculated_battery_weight");
+
+                    b.Property<string>("EstimatedHorsepowerRequiredForHover")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("Calculated_horsepower_required");
+
+                    b.Property<string>("EstimatedMotorWeight")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("calculated_motor_weight");
+
+                    b.Property<string>("EstimatedPowerRequirement")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("calculated_power_required");
+
+                    b.Property<double>("FlightTimeRequirementInMinutes")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("PayloadWeight")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("payload_weight");
+
+                    b.Property<string>("TotalDesignWeight")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("calculated_weight");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MissionParameters");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DetailedDesign.Battery.BatteryModule", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Capacity")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("capacity");
+
+                    b.Property<Guid>("CellId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Current")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("current");
+
+                    b.Property<int>("NumberOfCellsConnectedInParallel")
+                        .HasColumnType("integer")
+                        .HasColumnName("cellc_connected_parallel");
+
+                    b.Property<int>("NumberOfCellsConnectedInSeries")
+                        .HasColumnType("integer")
+                        .HasColumnName("cellc_connected_series");
+
+                    b.Property<string>("Power")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("power");
+
+                    b.Property<string>("Voltage")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("voltage");
+
+                    b.Property<string>("Weight")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("weight");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CellId");
+
+                    b.ToTable("BatteryModules");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DetailedDesign.Battery.BatteryPack", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Capacity")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("capacity");
+
+                    b.Property<string>("Current")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("current");
+
+                    b.Property<string>("MiscellaneousWeight")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("miscellaneous_weight");
+
+                    b.Property<Guid>("ModuleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<int>("NumberOfModulesConnectedInParallel")
+                        .HasColumnType("integer")
+                        .HasColumnName("modules_connected_parallel");
+
+                    b.Property<int>("NumberOfModulesConnectedInSeries")
+                        .HasColumnType("integer")
+                        .HasColumnName("modules_connected_series");
+
+                    b.Property<string>("Power")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("power");
+
+                    b.Property<string>("SpecificEnergy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("specific_energy");
+
+                    b.Property<string>("Voltage")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("voltage");
+
+                    b.Property<string>("Weight")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("weight");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModuleId");
+
+                    b.ToTable("BatteryPacks");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DetailedDesign.Battery.Cell", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Capacity")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("capacity");
+
+                    b.Property<string>("Current")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("current");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("Voltage")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("voltage");
+
+                    b.Property<string>("Weight")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("weight");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cells");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DetailedDesign.Blade", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AngleOfAttack")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("angle_attack");
+
+                    b.Property<string>("Length")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("length");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("Thickness")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("thickness");
+
+                    b.Property<string>("Weight")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("total_weight");
+
+                    b.Property<string>("Width")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("width");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Blades");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DetailedDesign.ElectricVtolDesign", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BatteryPackId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BladeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("BladePerMotorQuantity")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("DiscLoading")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<double>("FlightTimeInMinutes")
+                        .HasColumnType("double precision");
+
+                    b.Property<Guid>("FuselageId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("InverterId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("LiftOffWeight")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<Guid>("MissionParameterId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("MotorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("MotorQuantity")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("PayloadWeight")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("PowerLoading")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Thrust")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("ThrustArea")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BatteryPackId");
+
+                    b.HasIndex("BladeId");
+
+                    b.HasIndex("FuselageId");
+
+                    b.HasIndex("InverterId");
+
+                    b.HasIndex("MissionParameterId");
+
+                    b.HasIndex("MotorId");
+
+                    b.ToTable("ElectricVtolDesigns");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DetailedDesign.Fuselage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Weight")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("weight");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Fuselages");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DetailedDesign.Inverter", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CurrentRating")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("current_rating");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("PowerToWeightRatio")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("power_to_weight");
+
+                    b.Property<string>("VoltageRating")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("voltage_rating");
+
+                    b.Property<string>("Weight")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("total_weight");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Inverters");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DetailedDesign.Motor", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CurrentRating")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("current_rating");
+
+                    b.Property<string>("Kv")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("Kv");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<string>("PowerToWeightRatio")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("power_to_weight");
+
+                    b.Property<double>("Rpm")
+                        .HasMaxLength(15)
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("VoltageRating")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("voltage_rating");
+
+                    b.Property<string>("Weight")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("total_weight");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Motors");
+                });
+
+            modelBuilder.Entity("Domain.Primitives.MeasureandQuantity", b =>
+                {
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<double>("Value")
+                        .HasColumnType("double precision");
+
+                    b.ToTable("MeasureandQuantity");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DetailedDesign.Battery.BatteryModule", b =>
+                {
+                    b.HasOne("Domain.Entities.DetailedDesign.Battery.Cell", null)
+                        .WithMany()
+                        .HasForeignKey("CellId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.DetailedDesign.Battery.BatteryPack", b =>
+                {
+                    b.HasOne("Domain.Entities.DetailedDesign.Battery.BatteryModule", null)
+                        .WithMany()
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.DetailedDesign.ElectricVtolDesign", b =>
+                {
+                    b.HasOne("Domain.Entities.DetailedDesign.Battery.BatteryPack", null)
+                        .WithMany()
+                        .HasForeignKey("BatteryPackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.DetailedDesign.Blade", null)
+                        .WithMany()
+                        .HasForeignKey("BladeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.DetailedDesign.Fuselage", null)
+                        .WithMany()
+                        .HasForeignKey("FuselageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.DetailedDesign.Inverter", null)
+                        .WithMany()
+                        .HasForeignKey("InverterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.ConceptDesign.MissionParameterEstimates", null)
+                        .WithMany()
+                        .HasForeignKey("MissionParameterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.DetailedDesign.Motor", null)
+                        .WithMany()
+                        .HasForeignKey("MotorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

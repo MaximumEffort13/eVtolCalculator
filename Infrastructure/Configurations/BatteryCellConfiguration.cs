@@ -17,9 +17,9 @@ internal class BatteryCellConfiguration : IEntityTypeConfiguration<Cell>
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).IsRequired();
         builder.Property(x => x.Name).IsRequired().HasMaxLength(128);
-        builder.Property(x => x.Current).HasConversion<MeasureandQuantityConverter>().HasColumnName("current");
-        builder.Property(x => x.Voltage).HasConversion<MeasureandQuantityConverter>().HasColumnName("voltage");
-        builder.Property(x => x.Capacity).HasConversion<MeasureandQuantityConverter>().HasColumnName("capacity");
-        builder.Property(x => x.Weight).HasConversion<MeasureandQuantityConverter>().HasColumnName("weight");
+        builder.Property(x => x.Current).HasConversion<MeasureandQuantityConverter>().HasMaxLength(50).HasColumnName("current");
+        builder.Property(x => x.Voltage).HasConversion<MeasureandQuantityConverter>().HasMaxLength(50).HasColumnName("voltage");
+        builder.Property(x => x.Capacity).HasConversion<MeasureandQuantityConverter>().HasMaxLength(50).HasColumnName("capacity");
+        builder.Property(x => x.Weight).HasConversion<MeasureandQuantityConverter>().HasMaxLength(50).HasColumnName("weight");
     }
 }

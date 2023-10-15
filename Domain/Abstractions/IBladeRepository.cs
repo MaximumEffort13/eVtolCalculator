@@ -7,4 +7,5 @@ public interface IBladeRepository
     void Create(Blade blade);
     Task<List<Blade>> GetAllAsync(CancellationToken cancellationToken);
     Task<Blade> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<Blade> GetByNameAsync(string name, CancellationToken cancellationToken);
 }

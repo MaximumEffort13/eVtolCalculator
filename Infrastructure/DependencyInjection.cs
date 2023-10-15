@@ -24,6 +24,7 @@ public static class DependencyInjection
         services.AddTransient<IBatteryCellRepository, BatteryCellRepository>();
         services.AddTransient<IBatteryModuleRepository, BatteryModuleRepository>();
         services.AddTransient<IBatteryPackRepository, BatteryPackRepository>();
+        services.AddTransient<IElectricVtolRepository, ElectricVtolRepository>();
 
         return services;
     }

@@ -25,12 +25,12 @@ public sealed class CreateFuselageCommandHandler : ICommandHandler<CreateFuselag
 
     public async Task<Result<FuselageDto>> Handle(CreateFuselageCommand request, CancellationToken cancellationToken)
     {
-        MeasureandQuantity weight = new(request.Weight, SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
+        MeasureandQuantity weight = new(request.Weight_kg, SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
 
         var fuselage = new Fuselage(Guid.NewGuid(), weight);
 
         _fuselageRepository.Create(fuselage);
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         var response = FuselageDtoMapper.Map(fuselage);
 

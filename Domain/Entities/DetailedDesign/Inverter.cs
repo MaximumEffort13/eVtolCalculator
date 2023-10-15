@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using Domain.EntityCalculations;
+using Domain.Enums;
 using Domain.Primitives;
 
 namespace Domain.Entities.DetailedDesign;
@@ -11,7 +12,7 @@ public sealed class Inverter : Entity
         Weight = weight;
         VoltageRating = voltageRating;
         CurrentRating = currentRating;
-        PowerToWeightRatio = CalculatePowerToWeightRatio();
+        PowerToWeightRatio = ElectricCalculations.CalculatePowerToWeightRatio(voltageRating, currentRating, weight);
     }
 
     public string Name { get; private set; }
@@ -19,11 +20,4 @@ public sealed class Inverter : Entity
     public MeasureandQuantity CurrentRating { get; private set; }
     public MeasureandQuantity Weight { get; private set; }
     public MeasureandQuantity PowerToWeightRatio { get; private set; }
-
-    private MeasureandQuantity CalculatePowerToWeightRatio()
-    {
-        return new MeasureandQuantity(
-            (VoltageRating.Value * CurrentRating.Value) / Weight.Value, 
-            $"{SiPrefixes.Kilo.Name}{SiUnits.Power.Name}/{SiPrefixes.Kilo.Name}{SiUnits.Mass.Name}");
-    }
 }

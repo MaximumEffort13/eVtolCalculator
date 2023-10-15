@@ -23,13 +23,13 @@ namespace Infrastructure.Configurations
             builder.Property(e => e.Name).HasMaxLength(50).IsRequired();
             builder.Property(e => e.MotorQuantity).IsRequired().HasColumnType("integer");
             builder.Property(e => e.BladePerMotorQuantity).IsRequired().HasColumnType("integer");
-            builder.Property(e => e.FlightTimeInMinutes).HasConversion(conv => conv.TotalMinutes, value => TimeSpan.FromMinutes(value)).IsRequired().HasColumnType("double");
-            builder.Property(e => e.DiscLoading).HasConversion<MeasureandQuantityConverter>().IsRequired().HasColumnType("string");
-            builder.Property(e => e.Thrust).HasConversion<MeasureandQuantityConverter>().IsRequired().HasColumnType("string");
-            builder.Property(e => e.ThrustArea).HasConversion<MeasureandQuantityConverter>().IsRequired().HasColumnType("string");
-            builder.Property(e => e.PayloadWeight).HasConversion<MeasureandQuantityConverter>().IsRequired().HasColumnType("string");
-            builder.Property(e => e.LiftOffWeight).HasConversion<MeasureandQuantityConverter>().IsRequired().HasColumnType("string");
-            builder.Property(e => e.PowerLoading).HasConversion<MeasureandQuantityConverter>().IsRequired().HasColumnType("string");
+            builder.Property(e => e.FlightTimeInMinutes).HasConversion(conv => conv.TotalMinutes, value => TimeSpan.FromMinutes(value)).IsRequired();
+            builder.Property(e => e.DiscLoading).HasConversion<MeasureandQuantityConverter>().IsRequired().HasMaxLength(50);
+            builder.Property(e => e.Thrust).HasConversion<MeasureandQuantityConverter>().IsRequired().HasMaxLength(50);
+            builder.Property(e => e.ThrustArea).HasConversion<MeasureandQuantityConverter>().IsRequired().HasMaxLength(50);
+            builder.Property(e => e.PayloadWeight).HasConversion<MeasureandQuantityConverter>().IsRequired().HasMaxLength(50);
+            builder.Property(e => e.LiftOffWeight).HasConversion<MeasureandQuantityConverter>().IsRequired().HasMaxLength(50);
+            builder.Property(e => e.PowerLoading).HasConversion<MeasureandQuantityConverter>().IsRequired().HasMaxLength(50);
 
             builder.HasOne<MissionParameterEstimates>().WithMany().HasForeignKey(a => a.MissionParameterId).IsRequired();
             builder.HasOne<BatteryPack>().WithMany().HasForeignKey(a => a.BatteryPackId).IsRequired();

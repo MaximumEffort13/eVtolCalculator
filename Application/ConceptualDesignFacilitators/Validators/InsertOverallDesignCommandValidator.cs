@@ -8,12 +8,12 @@ public sealed class InsertOverallDesignCommandValidator : AbstractValidator<Crea
 {
     public InsertOverallDesignCommandValidator(IConceptualDesignRepository designRepository)
     {
-        RuleFor(d => d.TotalMassOfeVtol).Must((value) =>
+        RuleFor(d => d.TotalMassOfeVtol_kg).Must((value) =>
         {
             return value > 0;
         }).WithMessage("Mass should always be a positive value");
 
-        RuleFor(d => d.PayloadMass).NotNull().Must((value) =>
+        RuleFor(d => d.PayloadMass_kg).NotNull().Must((value) =>
         {
             return value > 0;
         }).WithMessage("Mass must be larger than 0");

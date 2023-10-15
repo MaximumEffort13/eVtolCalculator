@@ -20,43 +20,23 @@ namespace eVtolCalculatorApi.Controllers
             _sender = sender;
         }
 
-        // GET: api/<ConceptualDesignController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
         // GET api/<ConceptualDesignController>/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAsync(Guid id, CancellationToken cancellationToken)
         {
             var query = new GetConceptualDesignByIdQuery(id);
             Result<ConceptualDesignDto> response = await _sender.Send(query, cancellationToken);
 
-            return response.IsSuccess? Ok(response.Value) : NotFound(response.Errors) ;
+            return response.IsSuccess? Ok(response.Value) : NotFound(response.Errors);
         }
 
         // POST api/<ConceptualDesignController>
         [HttpPost]
-        public async Task<IActionResult> Post(double totalDesignWeight, double totalPayloadWeight, int flightTimeInMinutes)
+        public async Task<IActionResult> PostAsync(CreateConceptualDesignCommand command)
         {
-            CreateConceptualDesignCommand overallDesign = new (totalDesignWeight, totalPayloadWeight, flightTimeInMinutes);
-            var response = await _sender.Send(overallDesign);
+            var response = await _sender.Send(command);
 
-            return response.IsSuccess ? Ok(response.Value) : NotFound(response.Errors);
-        }
-
-        // PUT api/<ConceptualDesignController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<ConceptualDesignController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Errors);
         }
     }
 }

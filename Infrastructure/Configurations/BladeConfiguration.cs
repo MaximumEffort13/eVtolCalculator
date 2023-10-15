@@ -1,5 +1,6 @@
 ﻿using Domain.Entities.DetailedDesign;
 using Domain.Primitives;
+using Infrastructure.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -18,10 +19,10 @@ internal class BladeConfiguration : IEntityTypeConfiguration<Blade>
         builder.Property(x => x.Id).IsRequired();
         builder.Property(x => x.Name).IsRequired().HasMaxLength(128);
 
-        builder.Property(x => x.Weight).HasConversion<MeasureandQuantity>().HasColumnName("total_weight");
-        builder.Property(x => x.AngleOfAttack).HasConversion<MeasureandQuantity>().HasColumnName("angle_attack");
-        builder.Property(x => x.Length).HasConversion<MeasureandQuantity>().HasColumnName("length");
-        builder.Property(x => x.Weight).HasConversion<MeasureandQuantity>().HasColumnName("total_weight");
-        builder.Property(x => x.Thickness).HasConversion<MeasureandQuantity>().HasColumnName("thickness");
+        builder.Property(x => x.Weight).HasConversion<MeasureandQuantityConverter>().HasMaxLength(50).HasColumnName("total_weight");
+        builder.Property(x => x.Length).HasConversion<MeasureandQuantityConverter>().HasMaxLength(50).HasColumnName("length");
+        builder.Property(x => x.Width).HasConversion<MeasureandQuantityConverter>().HasMaxLength(50).HasColumnName("width");
+        builder.Property(x => x.Thickness).HasConversion<MeasureandQuantityConverter>().HasMaxLength(50).HasColumnName("thickness");
+        builder.Property(x => x.AngleOfAttack).HasConversion<MeasureandQuantityConverter>().HasMaxLength(50).HasColumnName("angle_attack");
     }
 }

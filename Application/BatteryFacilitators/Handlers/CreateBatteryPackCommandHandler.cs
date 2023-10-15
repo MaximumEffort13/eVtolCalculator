@@ -4,6 +4,7 @@ using Application.DTO;
 using Application.Mappers;
 using Domain.Abstractions;
 using Domain.Entities.DetailedDesign.Battery;
+using Domain.EntityCalculations;
 using Domain.Enums;
 using Domain.Primitives;
 using FluentResults;
@@ -34,11 +35,36 @@ internal class CreateBatteryPackCommandHandler : ICommandHandler<CreateBatteryPa
         MeasureandQuantity cellVoltage = new(request.CellVoltage, SiUnits.Voltage.Name);
         MeasureandQuantity cellCurrent = new(request.CellCurrent, SiUnits.Current.Name);
         MeasureandQuantity cellCapacity = new(request.CellCapacity, SiUnits.WattHour.Name);
-        MeasureandQuantity cellWeight = new(request.CellWeight, SiUnits.Mass.Name);
+        MeasureandQuantity cellWeight = new(request.CellWeight_g, SiUnits.Mass.Name);
 
         Cell cell = new(Guid.NewGuid(), request.CellName, cellVoltage, cellCapacity, cellCurrent, cellWeight);
-        BatteryModule module = new(Guid.NewGuid(), cell, request.NumberOfCellsConnectedInSeries, request.NumberOFCellsConnectedInParallel);
-        BatteryPack batteryPack = new(Guid.NewGuid(), request.PackName, module, request.ModuleCountConnectedInSeries, request.ModuleCountConnectedInParallel, request.MiscellaneousWeigh);
+        BatteryModule module = new(Guid.NewGuid(), cell.Id, request.NumberOfCellsConnectedInSeries, request.NumberOfCellsConnectedInParallel)
+        {
+            Voltage = ElectricCalculations.CalculateVoltageFromUnitConnectionCount(cell.Voltage, request.NumberOfCellsConnectedInSeries),
+            Current = ElectricCalculations.CalculateCurrentFromUnitConnectionCount(cell.Current, request.NumberOfCellsConnectedInParallel),
+            Capacity = ElectricCalculations.CalculateCapacityBaseOnUnitConnections(cell.Capacity, request.NumberOfCellsConnectedInParallel),
+            Power = ElectricCalculations.CalculatePower(cellVoltage, cellCurrent),
+            Weight = MechanicalCalculations.CalculateBatteryModuleWeight(cellWeight, request.NumberOfCellsConnectedInParallel + request.NumberOfCellsConnectedInSeries),
+        };
+
+        MeasureandQuantity miscellaneousBatteryPackWeight = new(request.MiscellaneousPackWeight_kg, SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
+
+        BatteryPack batteryPack = new(
+            Guid.NewGuid(),
+            request.PackName,
+            module.Id,
+            request.ModuleCountConnectedInSeries,
+            request.ModuleCountConnectedInParallel,
+            miscellaneousBatteryPackWeight)
+        {
+            Current = ElectricCalculations.CalculateCurrentFromUnitConnectionCount(module.Current, request.ModuleCountConnectedInParallel),
+            Voltage = ElectricCalculations.CalculateVoltageFromUnitConnectionCount(module.Voltage, request.NumberOfCellsConnectedInSeries),
+            Capacity = ElectricCalculations.CalculateCapacityBaseOnUnitConnections(module.Capacity, request.ModuleCountConnectedInParallel),
+            Power = ElectricCalculations.CalculatePower(module.Voltage, module.Current),
+            Weight = MechanicalCalculations.CalculateBatteryPackWeightUsingBatteryModule(module.Weight, request.ModuleCountConnectedInSeries + request.ModuleCountConnectedInParallel),
+        };
+
+        batteryPack.SpecificEnergy = ElectricCalculations.CalculateSpecificEnergy(batteryPack.Capacity, batteryPack.Weight);
 
         _batteryCell.CreateBatteryCell(cell);
         _batteryModule.CreateBatteryModule(module);

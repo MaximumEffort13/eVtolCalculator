@@ -28,4 +28,9 @@ public sealed class BladeRepository : IBladeRepository
     {
         return await _appDbContext.Blades.ToListAsync(cancellationToken);
     }
+
+    public async Task<Blade> GetByNameAsync(string name, CancellationToken cancellationToken)
+    {
+        return await _appDbContext.Blades.SingleAsync(b => b.Name == name, cancellationToken);
+    }
 }

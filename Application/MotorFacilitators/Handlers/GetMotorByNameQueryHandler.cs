@@ -1,0 +1,26 @@
+﻿using Application.Abstractions;
+using Application.DTO;
+using Application.Mappers;
+using Application.MotorFacilitators.Queries;
+using Domain.Abstractions;
+using FluentResults;
+
+namespace Application.MotorFacilitators.Handlers;
+internal class GetMotorByNameQueryHandler : IQueryHandler<GetMotorByNameQuery, MotorDto>
+{
+    private readonly IMotorRepository _motorRepository;
+
+    public GetMotorByNameQueryHandler(IMotorRepository motorRepository)
+    {
+        _motorRepository = motorRepository;
+    }
+
+    public async Task<Result<MotorDto>> Handle(GetMotorByNameQuery request, CancellationToken cancellationToken)
+    {
+        var motor = await _motorRepository.GetByNameAsync(request.Name, cancellationToken);
+
+        var response = MotorDtoMapper.Map(motor);
+
+        return response;
+    }
+}

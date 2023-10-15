@@ -1,19 +1,16 @@
-﻿using Domain.Primitives;
+﻿using Domain.Entities.DetailedDesign.Battery;
+using Domain.Primitives;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Infrastructure.Converters
+namespace Infrastructure.Converters;
+
+internal class MeasureandQuantityConverter : ValueConverter<MeasureandQuantity, string>
 {
-    internal class MeasureandQuantityConverter : ValueConverter<MeasureandQuantity, string>
+    private static readonly char[] separator = new char[] { ' ' };
+
+    public MeasureandQuantityConverter() : base(t => $"{t.Value} {t.Unit}",
+        value => new MeasureandQuantity(Convert.ToDouble(value.Split(separator)[0]), value.Split(separator)[1]))
     {
-        public MeasureandQuantityConverter() : base(t => $"{t.Value} {t.Unit}",
-            value => new MeasureandQuantity(Convert.ToDouble(value.Split(new char[] { ' ' })[0]), value.Split(new char[] { ' ' })[1]))
-        {
-            
-        }
+        
     }
 }

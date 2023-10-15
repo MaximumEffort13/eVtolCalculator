@@ -24,6 +24,11 @@ public sealed class BatteryPackRepository : IBatteryPackRepository
         return await _appContext.BatteryPacks.SingleAsync(b => b.Id == id, cancellationToken);
     }
 
+    public async Task<BatteryPack> GetByNameAsync(string name, CancellationToken cancellationToken)
+    {
+        return await _appContext.BatteryPacks.SingleAsync(b => b.Name == name, cancellationToken);
+    }
+
     public async Task<List<BatteryPack>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _appContext.BatteryPacks.ToListAsync(cancellationToken);
