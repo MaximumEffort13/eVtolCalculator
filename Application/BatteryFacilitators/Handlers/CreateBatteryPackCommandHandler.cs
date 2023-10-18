@@ -32,9 +32,9 @@ internal class CreateBatteryPackCommandHandler : ICommandHandler<CreateBatteryPa
 
     public async Task<Result<BatteryPackDto>> Handle(CreateBatteryPackCommand request, CancellationToken cancellationToken)
     {
-        MeasureandQuantity cellVoltage = new(request.CellVoltage, SiUnits.Voltage.Name);
-        MeasureandQuantity cellCurrent = new(request.CellCurrent, SiUnits.Current.Name);
-        MeasureandQuantity cellCapacity = new(request.CellCapacity, SiUnits.WattHour.Name);
+        MeasureandQuantity cellVoltage = new(request.CellVoltage_V, SiUnits.Voltage.Name);
+        MeasureandQuantity cellCurrent = new(request.CellCurrent_mA, SiUnits.Current.Name);
+        MeasureandQuantity cellCapacity = new(request.CellCapacity_mWh, SiUnits.WattHour.Name);
         MeasureandQuantity cellWeight = new(request.CellWeight_g, SiUnits.Mass.Name);
 
         Cell cell = new(Guid.NewGuid(), request.CellName, cellVoltage, cellCapacity, cellCurrent, cellWeight);

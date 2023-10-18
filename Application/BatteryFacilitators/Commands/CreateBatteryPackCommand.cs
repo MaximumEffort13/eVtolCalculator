@@ -1,15 +1,14 @@
 ﻿using Application.Abstractions;
 using Application.DTO;
-using Domain.Enums;
 
 namespace Application.BatteryFacilitators.Commands;
 
 public sealed record CreateBatteryPackCommand(
     string CellName,
-    double CellVoltage,
-    double CellCurrent,
+    double CellVoltage_V,
+    double CellCurrent_mA,
     double CellWeight_g,
-    double CellCapacity,
+    double CellCapacity_mWh,
     int NumberOfCellsConnectedInSeries,
     int NumberOfCellsConnectedInParallel,
     int ModuleCountConnectedInSeries,

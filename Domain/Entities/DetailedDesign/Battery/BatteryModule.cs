@@ -1,5 +1,4 @@
-﻿using Domain.Enums;
-using Domain.Primitives;
+﻿using Domain.Primitives;
 
 namespace Domain.Entities.DetailedDesign.Battery;
 

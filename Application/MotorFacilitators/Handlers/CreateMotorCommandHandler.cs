@@ -25,8 +25,8 @@ internal class CreateMotorCommandHandler : ICommandHandler<CreateMotorCommand, M
     {
         MeasureandQuantity weight = new(request.Weight_kg,$"{SiPrefixes.Kilo.Name}{SiUnits.Mass.Name}");
         MeasureandQuantity kv = new(request.Kv, $"{SiUnits.Rpm.Name}/{SiUnits.Voltage.Name}");
-        MeasureandQuantity currentRating = new(request.CurrentRating, SiUnits.Current.Name);
-        MeasureandQuantity voltageRating = new(request.VoltageRating, SiUnits.Voltage.Name);
+        MeasureandQuantity currentRating = new(request.CurrentRating_A, SiUnits.Current.Name);
+        MeasureandQuantity voltageRating = new(request.VoltageRating_V, SiUnits.Voltage.Name);
 
         var motor = new Motor(Guid.NewGuid(), request.Name, voltageRating, currentRating, weight, kv);
 

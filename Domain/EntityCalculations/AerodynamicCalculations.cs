@@ -1,5 +1,4 @@
 ﻿using Domain.ConstantValues;
-using Domain.Entities.DetailedDesign;
 using Domain.Enums;
 using Domain.Primitives;
 

@@ -2,9 +2,7 @@
 using Application.DetailDesignFacilitators.Commands;
 using Application.DTO;
 using Application.Mappers;
-using Domain.Abstractions;
 using Domain.Entities.DetailedDesign;
-using Domain.Entities.DetailedDesign.Battery;
 using Domain.EntityCalculations;
 using Domain.Enums;
 using Domain.Primitives;

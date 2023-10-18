@@ -1,6 +1,4 @@
-﻿using Domain.ConstantValues;
-using Domain.EntityCalculations;
-using Domain.Enums;
+﻿using Domain.EntityCalculations;
 using Domain.Primitives;
 
 namespace Domain.Entities.ConceptDesign;

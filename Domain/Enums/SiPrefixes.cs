@@ -9,7 +9,7 @@ public class SiPrefixes : SmartEnum<SiPrefixes, double>
     public static readonly SiPrefixes Nano = new("n", 0.000000001);
     public static readonly SiPrefixes Micro = new("u", 0.000001);
     public static readonly SiPrefixes Milli = new("m", 0.001);
-    public static readonly SiPrefixes None = new("", 1);
+    public static readonly SiPrefixes None = new("None", 1);
     public static readonly SiPrefixes Kilo = new("k", 1000);
     public static readonly SiPrefixes Mega = new("M", 1000000);
     public static readonly SiPrefixes Giga = new("G", 1000000000);
@@ -70,8 +70,9 @@ public class SiPrefixes : SmartEnum<SiPrefixes, double>
             scaledValue = value / SiPrefixes.Milli.Value;
         }
 
+        var prefixName = prefix == SiPrefixes.None ? "" : prefix.Name;
 
-        return new MeasureandQuantity(scaledValue, prefix.Name + baseUnit.Name);
+        return new MeasureandQuantity(scaledValue, prefixName + baseUnit.Name);
     }
 
     public static double NormaliseValue(MeasureandQuantity valueToNormalise, SiUnits baseUnit)

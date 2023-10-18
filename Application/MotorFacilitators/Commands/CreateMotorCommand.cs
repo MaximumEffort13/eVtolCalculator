@@ -5,7 +5,7 @@ namespace Application.MotorFacilitators.Commands;
 
 public sealed record CreateMotorCommand(
     string Name,
-    double VoltageRating,
-    double CurrentRating,
+    double VoltageRating_V,
+    double CurrentRating_A,
     double Weight_kg,
     double Kv) : ICommand<MotorDto>;

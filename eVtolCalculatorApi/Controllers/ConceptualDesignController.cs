@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Application.ConceptualDesignFacilitators.Commands;
 using Application.ConceptualDesignFacilitators.Queries;
 using Application.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,6 +12,7 @@ namespace eVtolCalculatorApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ConceptualDesignController : ControllerBase
     {
         private readonly ISender _sender;

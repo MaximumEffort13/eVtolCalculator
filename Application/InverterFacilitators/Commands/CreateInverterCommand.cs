@@ -5,6 +5,6 @@ namespace Application.InverterFacilitators.Commands;
 
 public sealed record CreateInverterCommand(
     string Name,
-    double VoltageRating,
-    double CurrentRating,
+    double VoltageRating_V,
+    double CurrentRating_A,
     double Weight_kg) : ICommand<InverterDto>;

@@ -1,8 +1,8 @@
 using Application;
-using Domain.Entities;
 using Infrastructure;
-using Infrastructure.DataAccess;
+using Infrastructure.Persistence.DataAccess;
 using Microsoft.AspNetCore.Identity;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +21,7 @@ builder.Services.AddAuthorizationBuilder();
 
 builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
 
-builder.Services.AddIdentityCore<ApiUser>().AddEntityFrameworkStores<ApplicationDbContext>().AddApiEndpoints();
+builder.Services.AddIdentityCore<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>().AddApiEndpoints();
 
 var app = builder.Build();
 
@@ -38,6 +38,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapGroup("/account").MapIdentityApi<ApiUser>();
+app.MapGroup("/account").MapIdentityApi<IdentityUser>();
 
 app.Run();

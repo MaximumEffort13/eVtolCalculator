@@ -1,6 +1,4 @@
-﻿using Domain.Enums;
-
-namespace Domain.Primitives;
+﻿namespace Domain.Primitives;
 
 public sealed class MeasureandQuantity
 {

@@ -1,6 +1,4 @@
-﻿using System.Security;
-
-namespace Domain.ConstantValues;
+﻿namespace Domain.ConstantValues;
 
 public class PredefinedConstantValues
 {

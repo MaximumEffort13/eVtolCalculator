@@ -1,8 +1,4 @@
-﻿using Domain.ConstantValues;
-using Domain.Entities.ConceptDesign;
-using Domain.Entities.DetailedDesign.Battery;
-using Domain.Enums;
-using Domain.Primitives;
+﻿using Domain.Primitives;
 
 namespace Domain.Entities.DetailedDesign;
 

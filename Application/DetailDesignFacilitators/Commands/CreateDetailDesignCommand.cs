@@ -6,7 +6,6 @@ using Application.FuselageFacilitators.Commands;
 using Application.InverterFacilitators.Commands;
 using Application.MissionParameterFacilitators.Commands;
 using Application.MotorFacilitators.Commands;
-using Domain.Primitives;
 
 namespace Application.DetailDesignFacilitators.Commands;
 

@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5BA88C5D-EEC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{76A26A03-9EF4-4DB0-8444-DFA1F8BFCC01}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eVtolCalculatorUi", "eVtolCalculatorUi\eVtolCalculatorUi.csproj", "{0C1D6A4E-53BB-4268-A372-37415388C220}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{1E345C77-731E-4B0A-A892-0E094A482BED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E345C77-731E-4B0A-A892-0E094A482BED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E345C77-731E-4B0A-A892-0E094A482BED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C1D6A4E-53BB-4268-A372-37415388C220}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C1D6A4E-53BB-4268-A372-37415388C220}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C1D6A4E-53BB-4268-A372-37415388C220}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C1D6A4E-53BB-4268-A372-37415388C220}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +59,7 @@ Global
 		{4007B1DE-3DF0-4291-9C30-D13F3E43CD41} = {5BA88C5D-EEC2-4BC3-8138-F59983FDEE96}
 		{0CDD4754-5339-4337-AD2C-CEB48CD5ACD1} = {5BA88C5D-EEC2-4BC3-8138-F59983FDEE96}
 		{1E345C77-731E-4B0A-A892-0E094A482BED} = {76A26A03-9EF4-4DB0-8444-DFA1F8BFCC01}
+		{0C1D6A4E-53BB-4268-A372-37415388C220} = {5BA88C5D-EEC2-4BC3-8138-F59983FDEE96}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {669EF06B-B6C0-4DB2-9976-186F538B0C63}

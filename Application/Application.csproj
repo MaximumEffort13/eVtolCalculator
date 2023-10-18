@@ -17,13 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="BatteryFacilitators\Validators\" />
-    <Folder Include="DetailDesignFacilitators\Validators\" />
-    <Folder Include="InverterFacilitators\Validators\" />
-    <Folder Include="MotorFacilitators\Validators\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EditorConfigFiles Remove="C:\Users\Jacobus\Desktop\1_Projects\TUT - eVtolCalculator\eVtolCalculator\Application\.editorconfig" />
   </ItemGroup>
 

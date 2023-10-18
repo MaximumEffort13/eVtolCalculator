@@ -24,8 +24,8 @@ internal class CreateInverterCommandHandler : ICommandHandler<CreateInverterComm
     public async Task<Result<InverterDto>> Handle(CreateInverterCommand request, CancellationToken cancellationToken)
     {
         MeasureandQuantity weight = new(request.Weight_kg,$"{SiPrefixes.Kilo.Name}{SiUnits.Mass.Name}");
-        MeasureandQuantity currentRating = new(request.CurrentRating, SiUnits.Current.Name);
-        MeasureandQuantity voltageRating = new(request.VoltageRating, SiUnits.Voltage.Name);
+        MeasureandQuantity currentRating = new(request.CurrentRating_A, SiUnits.Current.Name);
+        MeasureandQuantity voltageRating = new(request.VoltageRating_V, SiUnits.Voltage.Name);
 
         var inverter = new Inverter(Guid.NewGuid(), request.Name, weight, voltageRating, currentRating);
 

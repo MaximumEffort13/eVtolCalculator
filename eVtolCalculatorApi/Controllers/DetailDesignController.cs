@@ -1,7 +1,7 @@
-﻿using Application.BatteryFacilitators.Commands;
-using Application.DetailDesignFacilitators.Commands;
+﻿using Application.DetailDesignFacilitators.Commands;
 using Application.DetailDesignFacilitators.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -10,6 +10,7 @@ namespace eVtolCalculatorApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class DetailDesignController : ControllerBase
 {
     private readonly ISender _sender;

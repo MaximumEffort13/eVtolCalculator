@@ -1,0 +1,68 @@
+﻿@page "/login"
+@inject HttpClient httpCLient
+@inject NavigationManager NavManager
+@attribute [AllowAnonymous]
+
+<PageTitle>Login</PageTitle>
+
+<h3>Login</h3>
+
+<EditForm Model="model" class="">
+    <DataAnnotationsValidator />
+    <div class="form-group row">
+        <div class="col-auto">
+            <label for="email" class="visually-hidden">Email</label>
+            <InputText id="emial" class="form-control" @bind-Value="model.Email" placeholder="Email Address" />
+            <ValidationMessage For=@(() => model.Email) />
+        </div>
+        <div class="col-auto">
+            <label for="password" class="visually-hidden">Password</label>
+            <InputText type="password" id="password" class="form-control" @bind-Value="model.Password" placeholder="Password" />
+            <ValidationMessage For=@(() => model.Password) />
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-success" @onclick="ExecuteLogin">Log In</button>
+        </div>
+        <div class="col-auto">
+            <button type="button" class="btn btn-primary" @onclick="RegisterUser">Register</button>
+        </div>
+    </div>
+
+    @if (showAuthenticationError)
+    {
+        <div class="form-row">
+            <div class="text-danger">
+                @authenticationErrorText;
+            </div>
+        </div>
+    }
+</EditForm>
+
+
+@code {
+    private AuthenticationUserModel model = new();
+
+    private bool showAuthenticationError;
+    private string authenticationErrorText = string.Empty;
+
+    private void RegisterUser()
+    {
+        NavManager.NavigateTo("/register");
+    }
+
+    private async Task ExecuteLogin()
+    {
+        showAuthenticationError = false;
+
+        AuthenticatedUserModel result = await AuthService.Login(model);
+
+        if (result is null)
+        {
+            authenticationErrorText = "There was a error while trying to authenticate you.";
+            showAuthenticationError = true;
+            return;
+        }
+
+        NavManager.NavigateTo("/");
+    }
+}

@@ -1,6 +1,4 @@
-﻿using Domain.Primitives;
-
-namespace Application.DTO;
+﻿namespace Application.DTO;
 
 public sealed class ElectricVtolDesignDto
 {

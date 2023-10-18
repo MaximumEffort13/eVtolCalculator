@@ -1,5 +1,4 @@
-﻿using Domain.Entities.DetailedDesign;
-using Domain.Enums;
+﻿using Domain.Enums;
 using Domain.Primitives;
 
 namespace Domain.EntityCalculations;
