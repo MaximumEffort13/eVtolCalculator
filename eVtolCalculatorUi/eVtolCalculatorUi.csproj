@@ -16,11 +16,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ApiClient\ApiClient.csproj" />
     <ProjectReference Include="..\Application\Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\Jacobus\Desktop\1_Projects\TUT - eVtolCalculator\eVtolCalculator\eVtolCalculatorUi\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\Jacobus\Desktop\1_Projects\TUT - eVtolCalculator\eVtolCalculator\eVtolCalculatorUi\.editorconfig" />
   </ItemGroup>
 
 </Project>

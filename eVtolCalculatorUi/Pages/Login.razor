@@ -1,5 +1,6 @@
 ﻿@page "/login"
-@inject HttpClient httpCLient
+@using ApiClient.DataTransferObjects;
+@inject IAuthenticationService AuthService
 @inject NavigationManager NavManager
 @attribute [AllowAnonymous]
 
@@ -7,24 +8,34 @@
 
 <h3>Login</h3>
 
-<EditForm Model="model" class="">
+<EditForm Model="@model">
     <DataAnnotationsValidator />
-    <div class="form-group row">
-        <div class="col-auto">
-            <label for="email" class="visually-hidden">Email</label>
-            <InputText id="emial" class="form-control" @bind-Value="model.Email" placeholder="Email Address" />
-            <ValidationMessage For=@(() => model.Email) />
+    <div class="container-fluid">
+        <h4>User Details: </h4>
+        <div class="row row-cols-2">
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <label for="first-name">Email</label>
+                    <InputText id="email" class="form-control" @bind-Value="model.Email" placeholder="Email Address" />
+                    <ValidationMessage For=@(() => model.Email) />
+                </div>
+            </div>
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <label for="password" class="visually-hidden">Password</label>
+                    <InputText type="password" id="password" class="form-control" @bind-Value="model.Password" placeholder="Password" />
+                    <ValidationMessage For=@(() => model.Password) />
+                </div>
+            </div>
         </div>
-        <div class="col-auto">
-            <label for="password" class="visually-hidden">Password</label>
-            <InputText type="password" id="password" class="form-control" @bind-Value="model.Password" placeholder="Password" />
-            <ValidationMessage For=@(() => model.Password) />
-        </div>
-        <div class="col-auto">
-            <button type="submit" class="btn btn-success" @onclick="ExecuteLogin">Log In</button>
-        </div>
-        <div class="col-auto">
-            <button type="button" class="btn btn-primary" @onclick="RegisterUser">Register</button>
+        <div class="form-group row">
+
+            <div class="col-auto">
+                <button type="submit" class="btn btn-success" @onclick="ExecuteLogin">Log In</button>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" @onclick="RegisterUser">Register</button>
+            </div>
         </div>
     </div>
 
@@ -53,6 +64,7 @@
     private async Task ExecuteLogin()
     {
         showAuthenticationError = false;
+
 
         AuthenticatedUserModel result = await AuthService.Login(model);
 

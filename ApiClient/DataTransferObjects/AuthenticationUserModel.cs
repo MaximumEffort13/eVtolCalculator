@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace eVtolCalculatorUi.Models;
+namespace ApiClient.DataTransferObjects;
 
 public class AuthenticationUserModel
 {
