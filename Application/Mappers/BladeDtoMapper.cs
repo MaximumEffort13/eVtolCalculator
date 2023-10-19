@@ -5,7 +5,7 @@ namespace Application.Mappers;
 
 public static class BladeDtoMapper
 {
-    public static BladeDto Map(Blade blade)
+    public static BladeDto Map(BladeEntity blade)
     {
         return new BladeDto
         {

@@ -4,7 +4,7 @@ namespace Domain.Abstractions;
 
 public interface IFuselageRepository
 {
-    void Create(Fuselage fuselage);
-    Task<List<Fuselage>> GetAllAsync(CancellationToken cancellationToken);
-    Task<Fuselage> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    void Create(FuselageEntity fuselage);
+    Task<List<FuselageEntity>> GetAllAsync(CancellationToken cancellationToken);
+    Task<FuselageEntity> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 }

@@ -1,5 +1,5 @@
-﻿using Application.DetailDesignFacilitators.Commands;
-using Application.DetailDesignFacilitators.Queries;
+﻿using Application.Commands.DetailDesign;
+using Application.Queries.DetailDesign;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +34,11 @@ public class DetailDesignController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(InsertDetailDesignDto inputCommands, CancellationToken cancellationToken)
     {
+        if (ModelState.IsValid == false)
+        {
+            return BadRequest();
+        }
+
         var battery = await _sender.Send(inputCommands.Battery, cancellationToken);
         var motor = await _sender.Send(inputCommands.Motor, cancellationToken);
         var inverter = await _sender.Send(inputCommands.Inverter, cancellationToken);

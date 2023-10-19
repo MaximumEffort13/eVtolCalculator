@@ -1,5 +1,5 @@
-﻿using Application.BatteryFacilitators.Commands;
-using Application.BatteryFacilitators.Queries;
+﻿using Application.Queries.Battery;
+using Application.Commands.Battery;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -46,6 +46,11 @@ public class BatterPackController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> PostAsync(CreateBatteryPackCommand command, CancellationToken cancellationToken)
     {
+        if (ModelState.IsValid == false)
+        {
+            return BadRequest();
+        }
+
         var response = await _sender.Send(command, cancellationToken);
 
         return response.IsSuccess ? Ok(response) : BadRequest(response.Errors);

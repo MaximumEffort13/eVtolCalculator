@@ -28,8 +28,6 @@ public sealed class ConceptualVtolDesign : Entity
     public MeasureandQuantity MotorWeight { get; private set; }
     public MeasureandQuantity Horsepower { get; private set; }
 
-
-
     private MeasureandQuantity CalculatePowerRequirement()
     {
         return new MeasureandQuantity((TotalDesignWeight.Value + PayloadWeight.Value) / PredefinedConstantValues.motorThrustToPowerRatio, SiPrefixes.Kilo.Name + SiUnits.Watt.Name);

@@ -5,7 +5,7 @@ namespace Application.Mappers;
 
 public static class InverterDtoMapper
 {
-    public static InverterDto Map(Inverter inverter)
+    public static InverterDto Map(InverterEntity inverter)
     {
         return new InverterDto
         {

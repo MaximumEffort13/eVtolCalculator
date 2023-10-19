@@ -8,9 +8,9 @@ namespace ApiClient.DataTransferObjects;
 
 public class LoggedInUserModel : ILoggedInUserModel
 {
+    public Guid Id { get; set; }
 
     public string Token { get; set; }
-    public string Id { get; set; }
 
     public string FirstName { get; set; }
 

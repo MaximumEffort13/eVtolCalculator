@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Persistence.Configurations
 {
-    internal class FuselageConfiguration : IEntityTypeConfiguration<Fuselage>
+    internal class FuselageConfiguration : IEntityTypeConfiguration<FuselageEntity>
     {
-        public void Configure(EntityTypeBuilder<Fuselage> builder)
+        public void Configure(EntityTypeBuilder<FuselageEntity> builder)
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).IsRequired();

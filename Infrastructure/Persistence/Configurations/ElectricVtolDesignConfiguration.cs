@@ -27,10 +27,10 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.HasOne<MissionParameterEstimates>().WithMany().HasForeignKey(a => a.MissionParameterId).IsRequired();
             builder.HasOne<BatteryPack>().WithMany().HasForeignKey(a => a.BatteryPackId).IsRequired();
-            builder.HasOne<Fuselage>().WithMany().HasForeignKey(a => a.FuselageId).IsRequired();
+            builder.HasOne<FuselageEntity>().WithMany().HasForeignKey(a => a.FuselageId).IsRequired();
             builder.HasOne<Motor>().WithMany().HasForeignKey(a => a.MotorId).IsRequired();
-            builder.HasOne<Inverter>().WithMany().HasForeignKey(a => a.InverterId).IsRequired();
-            builder.HasOne<Blade>().WithMany().HasForeignKey(a => a.BladeId).IsRequired();
+            builder.HasOne<InverterEntity>().WithMany().HasForeignKey(a => a.InverterId).IsRequired();
+            builder.HasOne<BladeEntity>().WithMany().HasForeignKey(a => a.BladeId).IsRequired();
         }
     }
 }

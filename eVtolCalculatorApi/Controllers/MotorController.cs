@@ -1,5 +1,5 @@
-﻿using Application.MotorFacilitators.Commands;
-using Application.MotorFacilitators.Queries;
+﻿using Application.Commands.Motors;
+using Application.Queries.Motors;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +35,11 @@ public class MotorController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(CreateMotorCommand command, CancellationToken cancellationToken)
     {
+        if (ModelState.IsValid == false)
+        {
+            return BadRequest();
+        }
+
         var response = await _sender.Send(command, cancellationToken);
 
         return response.IsSuccess ? Ok(response) : BadRequest(response.Errors);

@@ -1,5 +1,5 @@
-﻿using Application.BladeFacilitators.Commands;
-using Application.BladeFacilitators.Queries;
+﻿using Application.Queries.Blade;
+using Application.Commands.Blade;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -46,6 +46,11 @@ public class BladeController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(CreateBladeCommand command, CancellationToken cancellationToken)
     {
+        if (ModelState.IsValid == false)
+        {
+            return BadRequest();
+        }
+
         var response = await _sender.Send(command, cancellationToken);
 
         return response.IsSuccess ? Ok(response) : BadRequest(response);

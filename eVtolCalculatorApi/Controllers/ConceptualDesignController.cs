@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using FluentResults;
 using Microsoft.AspNetCore.Mvc;
-using Application.ConceptualDesignFacilitators.Commands;
-using Application.ConceptualDesignFacilitators.Queries;
+using Application.Queries.ConceptualDesign;
 using Application.DTO;
 using Microsoft.AspNetCore.Authorization;
+using Application.Commands.ConceptualDesign;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -34,9 +34,14 @@ namespace eVtolCalculatorApi.Controllers
 
         // POST api/<ConceptualDesignController>
         [HttpPost]
-        public async Task<IActionResult> PostAsync(CreateConceptualDesignCommand command)
+        public async Task<IActionResult> PostAsync(CreateConceptualDesignCommand command, CancellationToken cancellationToken)
         {
-            var response = await _sender.Send(command);
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest();
+            }
+
+            var response = await _sender.Send(command, cancellationToken);
 
             return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Errors);
         }

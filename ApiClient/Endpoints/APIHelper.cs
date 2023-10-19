@@ -1,5 +1,6 @@
 ﻿using ApiClient.DataTransferObjects;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,30 +16,32 @@ public class APIHelper : IAPIHelper
     private readonly IConfiguration _config;
     private readonly ILoggedInUserModel _loggedInUser;
     private readonly IHttpClientFactory _apiClient;
+    private readonly ILogger<APIHelper> _logger;
 
-    public APIHelper(IConfiguration config, ILoggedInUserModel loggedInUser, IHttpClientFactory apiClient)
+    public APIHelper(
+        IConfiguration config,
+        ILoggedInUserModel loggedInUser,
+        IHttpClientFactory apiClient,
+        ILogger<APIHelper> logger)
     {
         _config = config;
         _loggedInUser = loggedInUser;
         _apiClient = apiClient;
-        ApiClient = apiClient.CreateClient("apiClient");
+        _logger = logger;
     }
-
-    public HttpClient ApiClient { get; private set; }
 
     public async Task<AuthenticatedUser> Authenticate(string username, string password)
     {
-        var data = new FormUrlEncodedContent(new[]
-        {
-            new KeyValuePair<string, string>("grant_type", "password"),
-            new KeyValuePair<string, string>("username", username),
-            new KeyValuePair<string, string>("password", password)
-        });
-
-        var tokenPath = _config["tokenEndpoint"];
         var client = _apiClient.CreateClient("apiClient");
 
-        using HttpResponseMessage response = await client.PostAsync(tokenPath, data);
+        AuthenticationUserModel userModel = new()
+        {
+            Email = username,
+            Password = password
+        };
+
+        using HttpResponseMessage response = await client.PostAsJsonAsync("/account/login", userModel);
+
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadFromJsonAsync<AuthenticatedUser>();
@@ -52,19 +55,20 @@ public class APIHelper : IAPIHelper
 
     public void LogOffUser()
     {
-        ApiClient.DefaultRequestHeaders.Clear();
+        var client = _apiClient.CreateClient("apiClient");
+        client.DefaultRequestHeaders.Clear();
     }
 
     public async Task GetLoggedInUserInfo(string token)
     {
-        ApiClient.DefaultRequestHeaders.Clear();
-        ApiClient.DefaultRequestHeaders.Accept.Clear();
-        ApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        ApiClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-
-        using HttpResponseMessage response = await ApiClient.GetAsync("/api/User");
+        var client = _apiClient.CreateClient("apiClient");
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+        var cancellationToken = new CancellationToken();
+        
+        using HttpResponseMessage response = await client.GetAsync($"/account", cancellationToken);
         if (response.IsSuccessStatusCode == false)
         {
+            _logger.LogWarning("User not authenticated. Please login");
             throw new Exception(response.ReasonPhrase);
         }
 

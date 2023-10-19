@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Persistence.Configurations;
 
-internal class BladeConfiguration : IEntityTypeConfiguration<Blade>
+internal class BladeConfiguration : IEntityTypeConfiguration<BladeEntity>
 {
-    public void Configure(EntityTypeBuilder<Blade> builder)
+    public void Configure(EntityTypeBuilder<BladeEntity> builder)
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).IsRequired();

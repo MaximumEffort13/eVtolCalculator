@@ -1,4 +1,5 @@
-﻿using ApiClient.Endpoints;
+﻿using ApiClient.DataTransferObjects;
+using ApiClient.Endpoints;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Headers;
@@ -8,18 +9,18 @@ namespace eVtolCalculatorUi.Authentication;
 
 public class AuthStateProvider : AuthenticationStateProvider
 {
-    private readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILocalStorageService _localStorage;
     private readonly IConfiguration _config;
     private readonly IAPIHelper _apiHelper;
     private readonly AuthenticationState _anonymous;
 
-    public AuthStateProvider(HttpClient httpClient,
+    public AuthStateProvider(IHttpClientFactory httpClientFactory,
                              ILocalStorageService localStorage,
                              IConfiguration config,
                              IAPIHelper apiHelper)
     {
-        _httpClient = httpClient;
+        _httpClientFactory = httpClientFactory;
         _localStorage = localStorage;
         _config = config;
         _apiHelper = apiHelper;
@@ -28,7 +29,7 @@ public class AuthStateProvider : AuthenticationStateProvider
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        string authTokenStorageKey = _config["authTokenStorageKey"];
+        string authTokenStorageKey = _config["authTokenStorageKey"]!;
         var token = await _localStorage.GetItemAsync<string>(authTokenStorageKey);
 
         if (string.IsNullOrWhiteSpace(token))
@@ -42,8 +43,9 @@ public class AuthStateProvider : AuthenticationStateProvider
         {
             return _anonymous;
         }
+        var client = _httpClientFactory.CreateClient("apiClient");
 
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
 
         return new AuthenticationState(
             new ClaimsPrincipal(
@@ -74,11 +76,18 @@ public class AuthStateProvider : AuthenticationStateProvider
 
     public async Task NotifyUserLogout()
     {
+        var client = _httpClientFactory.CreateClient("apiClient");
+
         string authTokenStorageKey = _config["authTokenStorageKey"];
+        string authTokenRefreshStorageKey = _config["authTokenRefreshStorageKey"];
+
         await _localStorage.RemoveItemAsync(authTokenStorageKey);
+        await _localStorage.RemoveItemAsync(authTokenRefreshStorageKey);
+
         var authState = Task.FromResult(_anonymous);
+        
         _apiHelper.LogOffUser();
-        _httpClient.DefaultRequestHeaders.Authorization = null;
+        client.DefaultRequestHeaders.Authorization = null;
         NotifyAuthenticationStateChanged(authState);
     }
 }

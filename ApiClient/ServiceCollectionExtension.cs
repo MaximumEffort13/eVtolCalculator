@@ -22,7 +22,7 @@ public static class ServiceCollectionExtension
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         });
 
-        services.AddSingleton<IAPIHelper, APIHelper>();
+        services.AddTransient<IAPIHelper, APIHelper>();
         services.AddSingleton<ILoggedInUserModel, LoggedInUserModel>();
     }
 }

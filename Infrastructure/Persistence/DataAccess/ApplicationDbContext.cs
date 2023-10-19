@@ -1,4 +1,5 @@
-﻿using Domain.Entities.ConceptDesign;
+﻿using Domain.Entities.AuthenticationModels;
+using Domain.Entities.ConceptDesign;
 using Domain.Entities.DetailedDesign;
 using Domain.Entities.DetailedDesign.Battery;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -17,11 +18,13 @@ namespace Infrastructure.Persistence.DataAccess
         internal DbSet<BatteryPack> BatteryPacks { get; set; }
         internal DbSet<BatteryModule> BatteryModules { get; set; }
         internal DbSet<Cell> Cells { get; set; }
-        internal DbSet<Blade> Blades { get; set; }
-        internal DbSet<Fuselage> Fuselages { get; set; }
-        internal DbSet<Inverter> Inverters { get; set; }
+        internal DbSet<BladeEntity> Blades { get; set; }
+        internal DbSet<FuselageEntity> Fuselages { get; set; }
+        internal DbSet<InverterEntity> Inverters { get; set; }
         internal DbSet<Motor> Motors { get; set; }
         internal DbSet<MissionParameterEstimates> MissionParameters { get; set; }
+        internal DbSet<PersonEntity> People { get; set; }
+        internal DbSet<AddressEntity> Addresses { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

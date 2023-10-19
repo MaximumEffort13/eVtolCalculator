@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Infrastructure.Persistence.Configurations;
 
-internal class InverterConfiguration : IEntityTypeConfiguration<Inverter>
+internal class InverterConfiguration : IEntityTypeConfiguration<InverterEntity>
 {
-    public void Configure(EntityTypeBuilder<Inverter> builder)
+    public void Configure(EntityTypeBuilder<InverterEntity> builder)
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).IsRequired();

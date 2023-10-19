@@ -14,22 +14,22 @@ public sealed class InvererRepository : IInvererRepository
         _appDbContext = appDbContext;
     }
 
-    public void Create(Inverter inverter)
+    public void Create(InverterEntity inverter)
     {
         _appDbContext.Inverters.Add(inverter);
     }
 
-    public async Task<Inverter> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<InverterEntity> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _appDbContext.Inverters.SingleAsync(i => i.Id == id, cancellationToken);
     }
 
-    public async Task<List<Inverter>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<List<InverterEntity>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _appDbContext.Inverters.ToListAsync(cancellationToken);
     }
 
-    public async Task<Inverter> GetByNameAsync(string name, CancellationToken cancellationToken)
+    public async Task<InverterEntity> GetByNameAsync(string name, CancellationToken cancellationToken)
     {
         return await _appDbContext.Inverters.SingleAsync(i => i.Name == name, cancellationToken);
     }

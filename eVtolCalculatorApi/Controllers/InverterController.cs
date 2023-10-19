@@ -1,5 +1,5 @@
-﻿using Application.InverterFacilitators.Commands;
-using Application.InverterFacilitators.Queries;
+﻿using Application.Commands.Inverter;
+using Application.Queries.Inverter;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +35,11 @@ public class InverterController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(CreateInverterCommand command, CancellationToken cancellationToken)
     {
+        if (ModelState.IsValid == false)
+        {
+            return BadRequest();
+        }
+
         var response = await _sender.Send(command, cancellationToken);
 
         return response.IsSuccess ? Ok(response) : BadRequest(response.Errors);

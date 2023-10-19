@@ -5,7 +5,7 @@ namespace Application.Mappers;
 
 public static class FuselageDtoMapper
 {
-    public static FuselageDto Map(Fuselage fuselage)
+    public static FuselageDto Map(FuselageEntity fuselage)
     {
         return new FuselageDto
         {

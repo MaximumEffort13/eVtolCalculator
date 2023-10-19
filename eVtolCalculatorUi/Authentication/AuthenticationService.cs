@@ -14,17 +14,22 @@ public class AuthenticationService : IAuthenticationService
     private readonly ILocalStorageService _localStorage;
     private readonly IConfiguration _config;
     private readonly string authTokenStorageKey;
+    private readonly string authTokenRefreshStorageKey;
+    private readonly ILogger<AuthenticationService> _logger;
 
     public AuthenticationService(IHttpClientFactory clientFactory,
                                  AuthenticationStateProvider authStateProvider,
                                  ILocalStorageService localStorage,
-                                 IConfiguration config)
+                                 IConfiguration config,
+                                 ILogger<AuthenticationService> logger)
     {
         _clientFactory = clientFactory;
         _authStateProvider = authStateProvider;
         _localStorage = localStorage;
         _config = config;
         authTokenStorageKey = _config["authTokenStorageKey"];
+        authTokenRefreshStorageKey = _config["authTokenRefreshStorageKey"];
+        _logger = logger;
     }
 
     public async Task<AuthenticatedUserModel> Login(AuthenticationUserModel userForAuthentication)
@@ -35,6 +40,7 @@ public class AuthenticationService : IAuthenticationService
 
         if (authResult.IsSuccessStatusCode == false)
         {
+            _logger.LogWarning($"{authResult.RequestMessage.RequestUri} not found.");
             return null;
         }
 
@@ -42,12 +48,14 @@ public class AuthenticationService : IAuthenticationService
         
         if(authContent is null)
         {
+            _logger.LogWarning($"{authResult.RequestMessage.RequestUri} response incorrect.");
             return null; ;
         }
 
         await _localStorage.SetItemAsync(authTokenStorageKey, authContent.AccessToken);
+        await _localStorage.SetItemAsync(authTokenRefreshStorageKey, authContent.RefreshToken);
 
-        await ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(authContent.AccessToken);
+        await ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication( authContent.AccessToken);
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", authContent.AccessToken);
 
