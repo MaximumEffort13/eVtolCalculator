@@ -1,9 +1,10 @@
-﻿using ApiClient.DataTransferObjects;
+﻿using ApiClient.DataTransferObjects.IdentityObjects;
 
-namespace eVtolCalculatorUi.Authentication;
-
-public interface IAuthenticationService
+namespace eVtolCalculatorUi.Authentication
 {
-    Task<AuthenticatedUserModel> Login(AuthenticationUserModel userForAuthentication);
-    Task Logout();
+    public interface IAuthenticationService
+    {
+        Task<AuthenticatedUserModel> Login(AuthenticationUserModel userForAuthentication);
+        Task Logout();
+    }
 }

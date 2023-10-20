@@ -20,7 +20,7 @@ public class BladeController : ControllerBase
         _sender = sender;
     }
 
-    // GET api/<BladeController>/5
+    // GET api/<Blade>/5
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
     {
@@ -31,7 +31,7 @@ public class BladeController : ControllerBase
         return response.IsSuccess ? Ok(response) : NotFound(response);
     }
 
-    // GET api/<BladeController>/5
+    // GET api/<Blade>/
     [HttpGet]
     public async Task<IActionResult> Get([FromBody] string name, CancellationToken cancellationToken)
     {
@@ -42,7 +42,7 @@ public class BladeController : ControllerBase
         return response.IsSuccess ? Ok(response) : NotFound(response);
     }
 
-    // POST api/<BladeController>
+    // POST api/<Blade>
     [HttpPost]
     public async Task<IActionResult> Post(CreateBladeCommand command, CancellationToken cancellationToken)
     {

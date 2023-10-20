@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,25 +24,17 @@ namespace eVtolCalculatorApi.Controllers
             _userManager = userManager;
         }
 
-        // GET: api/<PersonController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> GetLoggedInUser(CancellationToken cancellationToken) 
         {
-            return new string[] { "value1", "value2" };
-        }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        [HttpGet]
-        [Route("/getLoggedInUser")]
-        public async Task<IActionResult> GetLoggedInUser(string email, CancellationToken cancellationToken) 
-        {
-            var user = await _userManager.FindByEmailAsync(email);
-
-            if (user == null)
+            if (userId == null)
             {
                 return NotFound();
             }
 
-            var query = new GetPersonByUserIdQuery(Guid.Parse(user.Id));
+            var query = new GetPersonByUserIdQuery(Guid.Parse(userId));
             var response = await _sender.Send(query, cancellationToken);
 
             return response.IsSuccess ? Ok(response) : BadRequest(response.Errors);

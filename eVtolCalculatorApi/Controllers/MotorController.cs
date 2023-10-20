@@ -20,7 +20,7 @@ public class MotorController : ControllerBase
         _sender = sender;
     }
 
-    // GET api/<MotorController>/5
+    // GET api/<Motor>/5
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
     {
@@ -31,7 +31,7 @@ public class MotorController : ControllerBase
         return response.IsSuccess ? Ok(response) : NotFound(response.Errors);
     }
 
-    // POST api/<MotorController>
+    // POST api/<Motor>
     [HttpPost]
     public async Task<IActionResult> Post(CreateMotorCommand command, CancellationToken cancellationToken)
     {

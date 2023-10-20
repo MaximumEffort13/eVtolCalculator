@@ -1,4 +1,4 @@
-﻿namespace ApiClient.DataTransferObjects;
+﻿namespace ApiClient.DataTransferObjects.IdentityObjects;
 
 public class AuthenticatedUserModel
 {

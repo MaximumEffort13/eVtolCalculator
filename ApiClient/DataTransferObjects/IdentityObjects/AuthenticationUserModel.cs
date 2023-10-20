@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ApiClient.DataTransferObjects;
+namespace ApiClient.DataTransferObjects.IdentityObjects;
 
 public class AuthenticationUserModel
 {
@@ -9,4 +9,9 @@ public class AuthenticationUserModel
 
     [Required(ErrorMessage = "Password is required.")]
     public string Password { get; set; }
+
+    public string TwoFactorCode { get; set; } = string.Empty;
+
+    public string TwoFactorRecoveryCode { get; set; } = string.Empty;
+
 }

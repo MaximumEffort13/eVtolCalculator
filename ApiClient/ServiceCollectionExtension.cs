@@ -1,4 +1,5 @@
-﻿using ApiClient.DataTransferObjects;
+﻿using ApiClient.Abstractions;
+using ApiClient.DataTransferObjects.IdentityObjects;
 using ApiClient.Endpoints;
 
 using Microsoft.Extensions.Configuration;
@@ -22,7 +23,8 @@ public static class ServiceCollectionExtension
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         });
 
-        services.AddTransient<IAPIHelper, APIHelper>();
+        services.AddTransient<IIdentityEndpoints, IdentityEndpoints>();
+        services.AddTransient<IApiHelper, ApiHelper>();
         services.AddSingleton<ILoggedInUserModel, LoggedInUserModel>();
     }
 }

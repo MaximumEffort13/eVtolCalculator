@@ -1,5 +1,5 @@
 ﻿@page "/login"
-@using ApiClient.DataTransferObjects;
+@using ApiClient.DataTransferObjects.IdentityObjects;
 @inject IAuthenticationService AuthService
 @inject NavigationManager NavManager
 @attribute [AllowAnonymous]
@@ -65,8 +65,7 @@
     {
         showAuthenticationError = false;
 
-
-        AuthenticatedUserModel result = await AuthService.Login(model);
+       AuthenticatedUserModel result = await AuthService.Login(model);
 
         if (result is null)
         {
