@@ -8,6 +8,5 @@ namespace ApiClient.Abstractions
         Task<Result> ConfirmAccountEmail(GetAccountConfirmEmailQuery confirmationEmail);
         Task<Result<ManageAccountInfoResponse>> GetManageAccount();
         Task<Result<ManageAccountInfoResponse>> PostManageAccount(AccountManageInfoCommand account);
-        Task<Result> ResendEmailConfirmation(ResendConfirmationEmailCommand command);
     }
 }

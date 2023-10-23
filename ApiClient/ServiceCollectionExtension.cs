@@ -26,5 +26,6 @@ public static class ServiceCollectionExtension
         services.AddTransient<IIdentityEndpoints, IdentityEndpoints>();
         services.AddTransient<IApiHelper, ApiHelper>();
         services.AddSingleton<ILoggedInUserModel, LoggedInUserModel>();
+        services.AddTransient<IUserEndpoints, UserEndpoints>();
     }
 }

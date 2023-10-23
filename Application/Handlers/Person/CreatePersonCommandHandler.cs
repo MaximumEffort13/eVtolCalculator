@@ -5,11 +5,6 @@ using Application.Mappers;
 using Domain.Abstractions;
 using Domain.Entities.AuthenticationModels;
 using FluentResults;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Handlers.Person;
 internal class CreatePersonCommandHandler : ICommandHandler<CreatePersonCommand, PersonDto>
@@ -27,7 +22,7 @@ internal class CreatePersonCommandHandler : ICommandHandler<CreatePersonCommand,
 
     public async Task<Result<PersonDto>> Handle(CreatePersonCommand request, CancellationToken cancellationToken)
     {
-        PersonEntity person = new(Guid.NewGuid(), request.UserId, request.FirstName, request.LastName, request.PhoneNumber);
+        PersonEntity person = new(Guid.NewGuid(), request.IdentityUserId, request.FirstName, request.LastName, request.PhoneNumber);
 
         AddressEntity address = new(Guid.NewGuid(), person.Id, request.StreetName, request.Suburb, request.City, request.Province, request.PostalCode);
 

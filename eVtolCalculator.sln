@@ -17,11 +17,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5BA88C5D-EEC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{76A26A03-9EF4-4DB0-8444-DFA1F8BFCC01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eVtolCalculatorUi", "eVtolCalculatorUi\eVtolCalculatorUi.csproj", "{0C1D6A4E-53BB-4268-A372-37415388C220}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eVtolCalculatorUi", "eVtolCalculatorUi\eVtolCalculatorUi.csproj", "{0C1D6A4E-53BB-4268-A372-37415388C220}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{0B92F3A3-3CAB-4BF1-8D04-021D4F9762F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiClient", "ApiClient\ApiClient.csproj", "{42846699-819B-40D4-9D16-2C1C79CFACAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiClient", "ApiClient\ApiClient.csproj", "{42846699-819B-40D4-9D16-2C1C79CFACAB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{15AC4088-72A3-4576-BE6D-B9BD08865754}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

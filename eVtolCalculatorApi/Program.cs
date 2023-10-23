@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Configuration;
-using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 var MyAllowedSpecificOrigins = "_myAllowSpecificOrigins";
@@ -60,35 +58,34 @@ builder.Services.AddCors(policy =>
          .AllowCredentials());
 });
 
-//builder.Services.AddAuthentication(options =>
-//{
-//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-//    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-//})
-//.AddJwtBearer("JwtBearer", jwtBearerOptions =>
-//{
-//    jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
-//    {
-//        ValidateIssuerSigningKey = true,
-//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("Secrets:SecurityKey")!)),
-//        ValidateIssuer = false,
-//        ValidateAudience = false,
-//        ValidateLifetime = true,
-//        ClockSkew = TimeSpan.FromMinutes(5)
-//    };
-//}).AddCookie(options =>
-//{
-//    options.LoginPath = "localhost:7197:/account/login";
-//    options.AccessDeniedPath = "/";
-//});
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, jwtBearerOptions =>
+{
+    jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = "https://localhost:7197",
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("Secrets:SecurityKey")!)),
+        ValidateIssuer = true,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.FromMinutes(5),
+    };
+});
 
-builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
+//builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
 
 
 builder.Services.AddAuthorizationBuilder();
 
-builder.Services.AddIdentityCore<IdentityUser>().AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddApiEndpoints();
+builder.Services.AddIdentityCore<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();//.AddApiEndpoints();
 
 
 var app = builder.Build();
@@ -111,6 +108,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapGroup("/account").MapIdentityApi<IdentityUser>();
+//app.MapGroup("/account").MapIdentityApi<IdentityUser>();
 
 app.Run();

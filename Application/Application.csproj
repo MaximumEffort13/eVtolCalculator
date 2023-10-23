@@ -17,14 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EditorConfigFiles Remove="C:\Users\Jacobus\Desktop\1_Projects\TUT - eVtolCalculator\eVtolCalculator\Application\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="C:\Users\Jacobus\Desktop\1_Projects\TUT - eVtolCalculator\eVtolCalculator\Application\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Validators\Fuselage\" />
     <Folder Include="Validators\Mission\" />
   </ItemGroup>

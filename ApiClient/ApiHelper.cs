@@ -39,13 +39,7 @@ public sealed class ApiHelper : IApiHelper
         return client;
     }
 
-    public void UnothorizeClient()
-    {
-        Client.DefaultRequestHeaders.Clear();
-    }
-
-
-    public async Task<Result<AuthenticatedUserModel>> Authenticate(AuthenticationUserModel loginUser)
+    public async Task<Result<AuthenticatedUserModel>> Authenticate(AuthenticationUserModel userForAuthentication)
     {
         var cancellationToken = new CancellationToken();
 
@@ -53,7 +47,7 @@ public sealed class ApiHelper : IApiHelper
             .Handle<Exception>()
             .WaitAndRetryAsync(3, attemtps => TimeSpan.FromMilliseconds(50 * attemtps));
 
-        PolicyResult<HttpResponseMessage> result = await policy.ExecuteAndCaptureAsync(() => Client.PostAsJsonAsync($"/account/login", loginUser, cancellationToken));
+        PolicyResult<HttpResponseMessage> result = await policy.ExecuteAndCaptureAsync(() => Client.PostAsJsonAsync($"/token", userForAuthentication, cancellationToken));
 
         if (result.Result.IsSuccessStatusCode == false)
         {
@@ -79,41 +73,6 @@ public sealed class ApiHelper : IApiHelper
         return Result.Ok(response);
     }
 
-    public async Task<Result<AuthenticatedUserModel>> RefreshLogin(string refreshToken)
-    {
-        var cancellationToken = new CancellationToken();
-
-        RefreshLoginCommand refreshCommand = new (refreshToken);
-
-        AsyncRetryPolicy policy = Policy
-            .Handle<Exception>()
-            .WaitAndRetryAsync(3, attemtps => TimeSpan.FromMilliseconds(50 * attemtps));
-
-        PolicyResult<HttpResponseMessage> result = await policy.ExecuteAndCaptureAsync(() => Client.PostAsJsonAsync($"/account/refresh", refreshCommand, cancellationToken));
-
-        if (result.Result is null || result.Result.IsSuccessStatusCode == false)
-        {
-            return Result.Fail<AuthenticatedUserModel>(result.FinalException.ToString());
-        }
-
-        if (result.Result.Content is null)
-        {
-            return Result.Fail("Refresh succeeded but no data returned from the server.");
-        }
-
-        var response = await result.Result.Content.ReadFromJsonAsync<AuthenticatedUserModel>(cancellationToken);
-
-        if (response is null)
-        {
-            return Result.Fail<AuthenticatedUserModel>("Invalid or no data returned from server.");
-        }
-
-        _loggedInUser.Token = response.AccessToken;
-        _loggedInUser.RefreshToken = response.RefreshToken;
-
-        return Result.Ok(response);
-    }
-
 
     public async Task<Result> GetLoggedInUserInfo(string token)
     {
@@ -125,7 +84,7 @@ public sealed class ApiHelper : IApiHelper
             .Handle<Exception>()
             .WaitAndRetryAsync(3, attemtps => TimeSpan.FromMilliseconds(50 * attemtps));
 
-        PolicyResult<PersonDto?> result = await policy.ExecuteAndCaptureAsync(() => Client.GetFromJsonAsync<PersonDto>($"/api/Person", cancellationToken));
+        PolicyResult<PersonDto?> result = await policy.ExecuteAndCaptureAsync(() => Client.GetFromJsonAsync<PersonDto>($"/api/User", cancellationToken));
 
 
         if (result is null)
@@ -150,8 +109,6 @@ public sealed class ApiHelper : IApiHelper
 
     public void Logout()
     {
-        UnothorizeClient();
-
         _loggedInUser.Token = string.Empty;
         _loggedInUser.EmailAddress = string.Empty;
         _loggedInUser.RefreshToken = string.Empty;

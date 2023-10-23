@@ -26,52 +26,6 @@ public class IdentityEndpoints : IIdentityEndpoints
     }
 
 
-    public async Task<Result<RegisterUserResponse>> RegisterUser(RegisterUserCommand user)
-    {
-        var cancellationToken = new CancellationToken();
-
-        AsyncRetryPolicy policy = Policy.Handle<Exception>().RetryAsync(3);
-
-        PolicyResult<HttpResponseMessage> result = await policy.ExecuteAndCaptureAsync(() => _apiHelper.Client.PostAsJsonAsync($"/account/register", user, cancellationToken));
-
-        if (result.Result is null || result.Result.IsSuccessStatusCode == false)
-        {
-            return Result.Fail<RegisterUserResponse>(result.FinalException.ToString());
-        }
-
-        if (result.Result.Content is null)
-        {
-            return Result.Fail("Refresh succeeded but no data returned from the server.");
-        }
-
-        var response = await result.Result.Content.ReadFromJsonAsync<RegisterUserResponse>(cancellationToken);
-
-        if (response is null)
-        {
-            return Result.Fail<RegisterUserResponse>("Invalid or no data returned from server.");
-        }
-
-        return response;
-    }
-
-    public async Task<Result> ResendEmailConfirmation(ResendConfirmationEmailCommand command)
-    {
-        var cancellationToken = new CancellationToken();
-
-        AsyncRetryPolicy policy = Policy.Handle<Exception>().RetryAsync(3);
-
-        PolicyResult<HttpResponseMessage> result = await policy.ExecuteAndCaptureAsync(() =>
-            _apiHelper.Client.PostAsJsonAsync($"resendConfirmationEmail", command, cancellationToken)
-        );
-
-        if (result.Result.IsSuccessStatusCode == false)
-        {
-            return Result.Fail("Email could not be sent.");
-        }
-
-        return Result.Ok();
-    }
-
 
     public async Task<Result<ManageAccountInfoResponse>> PostManageAccount(AccountManageInfoCommand account)
     {
