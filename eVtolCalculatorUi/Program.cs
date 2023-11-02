@@ -13,6 +13,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddAuthorizationCore();
+builder.Services.AddBlazorBootstrap();
 
 builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
 

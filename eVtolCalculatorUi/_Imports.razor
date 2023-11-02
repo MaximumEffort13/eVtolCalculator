@@ -11,8 +11,15 @@
 @using Microsoft.Extensions.Logging
 @using Microsoft.Extensions.Configuration
 @using Microsoft.AspNetCore.Authorization
-@attribute [Authorize(Roles = "Everyone")]
+@using System.Security.Claims
 @using eVtolCalculatorUi
 @using eVtolCalculatorUi.Pages
 @using eVtolCalculatorUi.Shared
 @using eVtolCalculatorUi.Authentication
+@using ApiClient.Abstractions
+@using ApiClient.DataTransferObjects
+@using ApiClient.DataTransferObjects.ApiRequests
+@using ApiClient.DataTransferObjects.ApiResponses
+@using ApiClient.DataTransferObjects.IdentityObjects
+@using BlazorBootstrap
+@attribute [Authorize(Roles = "Everyone")]

@@ -1,4 +1,4 @@
-﻿using ApiClient.Models;
+﻿using ApiClient.DataTransferObjects.ApiRequests;
 using FluentResults;
 
 namespace ApiClient.Abstractions

@@ -1,0 +1,176 @@
+﻿@page "/bladedesign"
+@inject IAuthenticationService AuthService
+@inject IBladeEndpoints BladeEndpoints
+
+<EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="container-fluid">
+        <h4>Blade Design:</h4>
+        <div class="row row-cols-3">
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputText id="bladeName" class="form-control" @bind-Value="model.BladeName" placeholder="Axial Flux M003" />
+                    <ValidationMessage For=@(() => model.BladeName) />
+                    <label for="bladeName">Name of Blade:</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <InputNumber id="bladeLenght" class="form-control" @bind-Value="model.Length_mm" placeholder="1600" />
+                    <ValidationMessage For=@(() => model.Length_mm) />
+                    <label for="bladeLenght">Length (mm)</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <InputNumber id="bladeWidth" class="form-control" @bind-Value="model.Width_mm" placeholder="40" />
+                    <ValidationMessage For=@(() => model.Width_mm) />
+                    <label for="bladeWidth">Width (mm)</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <InputNumber id="bladeThickness" class="form-control" @bind-Value="model.Thickness_mm" placeholder="40" />
+                    <ValidationMessage For=@(() => model.Thickness_mm) />
+                    <label for="bladeThickness">Thickness (mm)</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <InputNumber id="bladeWeight" class="form-control" @bind-Value="model.Weight_g" placeholder="30" />
+                    <ValidationMessage For=@(() => model.Weight_g) />
+                    <label for="bladeWeight">Blade Weight: </label>
+                </div>
+                <div class="form-floating mb-3">
+                    <InputNumber id="bladeAngleOfAttack" class="form-control" @bind-Value="model.AngelOfAttack" placeholder="25" />
+                    <ValidationMessage For=@(() => model.AngelOfAttack) />
+                    <label for="bladeAngleOfAttack">Angle of Attack (Degrees): </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="row-cols-lg">
+            <div class="col-8 float-right">
+                <Button Color="ButtonColor.Success" Outline="true"><Icon Name="IconName.Check" /> Submit </Button>
+            </div>
+        </div>
+    </div>
+    @if (errorMessage.Equals(string.Empty) == false)
+    {
+        <div class="row">
+            <div class="text-danger">
+                <p class="fw-bolder">
+                    @errorMessage;
+                </p>
+            </div>
+        </div>
+    }
+</EditForm>
+
+@if (designResults is not null && displayOutput)
+{
+    <section class="container-fluid">
+        <h4>Design Outputs:</h4>
+        <div class="row">
+            <div class="col">
+                <p>
+                    Name =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Name
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>
+                    Blade Length =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Length
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>
+                    Blade Width =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Width
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>
+                    Blade Thickness =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Thickness
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>
+                    Blade Weight =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Weight
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>
+                    Blade Angle of Attack =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.AngleOfAttack
+                </p>
+            </div>
+        </div>
+    </section>
+}
+
+@code {
+    bool displayOutput = false;
+    CreateBladeModel model = new();
+    string errorMessage = string.Empty;
+    BladeDto designResults = new();
+
+    protected async override Task OnInitializedAsync()
+    {
+    }
+
+    private async Task OnValidSubmit()
+    {
+        try
+        {
+            var result = await BladeEndpoints.CreateBladeAsync(model);
+
+            if (result is null)
+            {
+                throw new Exception("No data returned from the server.");
+            }
+
+            if (result is not null && result.IsFailed)
+            {
+                throw new Exception("Could not calculate design parameters.");
+            }
+
+            designResults = result!.Value;
+            displayOutput = true;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+}

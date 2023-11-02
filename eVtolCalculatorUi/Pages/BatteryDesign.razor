@@ -1,0 +1,193 @@
+﻿@page "/batterypackdesign"
+@inject IAuthenticationService AuthService
+@inject IBatteryPackEndpoints BatteryPackEndpoints
+
+<EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="container-fluid">
+        <h4>Battery Design:</h4>
+        <div class="row row-cols-3">
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputText id="cellName" class="form-control" @bind-Value="model.CellName" placeholder="Lit-Ion PO4" />
+                    <ValidationMessage For=@(() => model.CellName) />
+                    <label for="cellName">Name of Cells:</label>
+                </div>
+                 <div class="form-floating mb-3">
+                    <InputNumber id="cellVoltage" class="form-control" @bind-Value="model.CellVoltage_V" placeholder="12" />
+                    <ValidationMessage For=@(() => model.CellVoltage_V) />
+                    <label for="cellVoltage">Cell Voltage (V)</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <InputNumber id="cellCurrent" class="form-control" @bind-Value="model.CellCurrent_mA" placeholder="15" />
+                    <ValidationMessage For=@(() => model.CellVoltage_V) />
+                    <label for="cellCurrent">Cell Current (A)</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <InputNumber id="cellCapacity" class="form-control" @bind-Value="model.CellCapacity_mWh" placeholder="100" />
+                    <ValidationMessage For=@(() => model.CellCapacity_mWh) />
+                    <label for="cellCapacity">Cell Capacity (wH):</label>
+                </div>
+                 <div class="form-floating mb-3">
+                    <InputNumber id="parallelCells" class="form-control" @bind-Value="model.NumberOfCellsConnectedInParallel" placeholder="5" />
+                    <ValidationMessage For=@(() => model.NumberOfCellsConnectedInParallel) />
+                    <label for="parallelCells">Cells connected in parallel per module: </label>
+                </div>
+            </div>
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputNumber id="seriesCells" class="form-control" @bind-Value="model.NumberOfCellsConnectedInSeries" placeholder="5" />
+                    <ValidationMessage For=@(() => model.NumberOfCellsConnectedInSeries) />
+                    <label for="seriesCells">Cell Connected in series per module: </label>
+                </div>
+                <div class="form-floating mb-3">
+                    <InputNumber id="parallelModules" class="form-control" @bind-Value="model.NumberOfModulesConnectedInParallel" placeholder="5" />
+                    <ValidationMessage For=@(() => model.NumberOfModulesConnectedInParallel) />
+                    <label for="parallelModules">Number of modules connected in parallel: </label>
+                </div>
+                <div class="form-floating mb-3">
+                    <InputNumber id="seriesModules" class="form-control" @bind-Value="model.NumberOfCellsConnectedInSeries" placeholder="5" />
+                    <ValidationMessage For=@(() => model.NumberOfCellsConnectedInSeries) />
+                    <label for="seriesModules">Modules in Series: </label>
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText id="packName" class="form-control" @bind-Value="model.PackName" placeholder="Lit-Ion PO4" />
+                    <ValidationMessage For=@(() => model.PackName) />
+                    <label for="packName">Name of completed Battery Pack: </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row-cols-lg col-md auth float-end">
+        <div class="col-7">
+            <Button Color="ButtonColor.Success"><Icon Name="IconName.Check" />Submit</Button>
+        </div>
+    </div>
+    @if (errorMessage.Equals(string.Empty) == false)
+    {
+        <div class="row">
+            <div class="text-danger">
+                <p class="fw-bolder">
+                    @errorMessage;
+                </p>
+            </div>
+        </div>
+    }
+</EditForm>
+
+@if (designResults is not null && displayOutput)
+{
+    <section class="container-fluid">
+        <h4>Design Outputs:</h4>
+        <div class="row">
+            <div class="col">
+                <p>
+                    Name =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Name
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>
+                    Total Battery Voltage Rating =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Voltage
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>
+                    Battery Current Rating =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Current
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>
+                    Battery Capacity =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Capacity
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>
+                    Weight of Pack =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Weight
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>
+                    Specific Energy =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.SpecificEnergy
+                </p>
+            </div>
+        </div>
+    </section>
+}
+
+@code {
+    bool displayOutput = true;
+    CreateBatteryModel model = new ();
+    string errorMessage = string.Empty;
+    BatteryPackDto designResults = new();
+
+    protected async override Task OnInitializedAsync()
+    {
+    }
+
+    private async Task OnValidSubmit()
+    {
+        try
+        {
+            var result = await BatteryPackEndpoints.CreateBatteryPack(model);
+
+            if (result is null)
+            {
+                throw new Exception("No data returned from the server.");
+            }
+
+            if (result is not null && result.IsFailed)
+            {
+                throw new Exception("Could not calculate design parameters.");
+            }
+
+            designResults = result!.Value;
+            displayOutput = true;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+
+
+}

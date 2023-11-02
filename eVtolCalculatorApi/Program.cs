@@ -1,4 +1,5 @@
 using Application;
+using Domain.Entities.AuthenticationModels;
 using Infrastructure;
 using Infrastructure.Persistence.DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -68,24 +69,22 @@ builder.Services.AddAuthentication(options =>
 {
     jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidIssuer = "https://localhost:7197",
+        ValidIssuer = builder.Configuration.GetValue<string>("JwtSettings:ValidIssuer"),
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("Secrets:SecurityKey")!)),
         ValidateIssuer = true,
-        ValidateAudience = false,
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration.GetValue<string>("JwtSettings:ValidAudience"),
         ValidateLifetime = true,
         ClockSkew = TimeSpan.FromMinutes(5),
     };
 });
 
-//builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
-
-
 builder.Services.AddAuthorizationBuilder();
 
-builder.Services.AddIdentityCore<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentityCore<IdentityUserExtender>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();//.AddApiEndpoints();
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
 var app = builder.Build();
@@ -107,7 +106,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-//app.MapGroup("/account").MapIdentityApi<IdentityUser>();
 
 app.Run();

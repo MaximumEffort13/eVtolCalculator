@@ -14,7 +14,6 @@ namespace eVtolCalculatorUi.Authentication
         private readonly ILocalStorageService _localStorage;
         private readonly IConfiguration _config;
         private readonly string authTokenStorageKey;
-        private readonly string authRefreshTokenStorageKey;
 
         public AuthenticationService(IApiHelper apiHelper,
                                      AuthenticationStateProvider authStateProvider,
@@ -26,10 +25,9 @@ namespace eVtolCalculatorUi.Authentication
             _localStorage = localStorage;
             _config = config;
             authTokenStorageKey = _config["authTokenStorageKey"]!;
-            authRefreshTokenStorageKey = _config["authRefreshTokenStorageKey"]!;
         }
 
-        public async Task<AuthenticatedUserModel> Login(AuthenticationUserModel userForAuthentication)
+        public async Task<AuthenticatedUserModel?> Login(AuthenticationUserModel userForAuthentication)
         {
             var authResult = await _apiHelper.Authenticate(userForAuthentication);
 
@@ -40,9 +38,9 @@ namespace eVtolCalculatorUi.Authentication
 
             await _localStorage.SetItemAsync(authTokenStorageKey, authResult.Value.AccessToken);
 
-            await ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(authResult.Value.AccessToken);
+            var authenticationSuccessful = await ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(authResult.Value.AccessToken);
 
-            return authResult.Value;
+            return authenticationSuccessful ? authResult.Value : null;
         }
 
         public async Task Logout()

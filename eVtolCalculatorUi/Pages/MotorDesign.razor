@@ -1,0 +1,159 @@
+﻿@page "/motordesign"
+@inject IAuthenticationService AuthService
+@inject IMotorEndpoints MotorEndpoints
+
+<EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="container-fluid">
+        <h4>Motor Design:</h4>
+        <div class="row row-cols-3">
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputText id="motorName" class="form-control" @bind-Value="model.Name" placeholder="Axial Flux M003" />
+                    <ValidationMessage For=@(() => model.Name) />
+                    <label for="motorName">Name of Motor:</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <InputNumber id="motorVoltage" class="form-control" @bind-Value="model.VoltageRating_V" placeholder="50" />
+                    <ValidationMessage For=@(() => model.VoltageRating_V) />
+                    <label for="motorVoltage">Voltage (V)</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <InputNumber id="motorCurrent" class="form-control" @bind-Value="model.CurrentRating_A" placeholder="15" />
+                    <ValidationMessage For=@(() => model.CurrentRating_A) />
+                    <label for="motorCurrent">Motor Current (A)</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <InputNumber id="motorWeight" class="form-control" @bind-Value="model.Weight" placeholder="30" />
+                    <ValidationMessage For=@(() => model.Weight) />
+                    <label for="motorWeight">Motor Weight: </label>
+                </div>
+                <div class="form-floating mb-3">
+                    <InputNumber id="motorKvRating" class="form-control" @bind-Value="model.Kv" placeholder="200" />
+                    <ValidationMessage For=@(() => model.Kv) />
+                    <label for="motorKvRating">Motor Kv Rating: </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="row-col-lg">
+            <div class="col col-lg float-right">
+                <Button Color="ButtonColor.Success" Outline="true"><Icon Name="IconName.Check" /> Submit </Button>
+            </div>
+        </div>
+    </div>
+    @if (errorMessage.Equals(string.Empty) == false)
+    {
+        <div class="row">
+            <div class="text-danger">
+                <p class="fw-bolder">
+                    @errorMessage;
+                </p>
+            </div>
+        </div>
+    }
+</EditForm>
+
+@if (designResults is not null && displayOutput)
+{
+    <section class="container-fluid">
+        <h4>Design Outputs:</h4>
+        <div class="row">
+            <div class="col">
+                <p>
+                    Name =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Name
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>
+                    Motor Voltage Rating =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.VoltageRating
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>
+                    Motor Current Rating =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.CurrentRating
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>
+                    Weight =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Weight
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>
+                    Power To Weight Ratio =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.PowerToWeightRatio
+                </p>
+            </div>
+        </div>
+    </section>
+}
+
+@code {
+    bool displayOutput = false;
+    CreateMotorModel model = new();
+    string errorMessage = string.Empty;
+    MotorDto designResults = new();
+
+    protected async override Task OnInitializedAsync()
+    {
+    }
+
+    private async Task OnValidSubmit()
+    {
+        try
+        {
+            var result = await MotorEndpoints.CreateMotorAsync(model);
+
+            if (result is null)
+            {
+                throw new Exception("No data returned from the server.");
+            }
+
+            if (result is not null && result.IsFailed)
+            {
+                throw new Exception("Could not calculate design parameters.");
+            }
+
+            designResults = result!.Value;
+            displayOutput = true;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+}

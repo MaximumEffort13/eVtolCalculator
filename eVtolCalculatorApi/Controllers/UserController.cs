@@ -1,5 +1,6 @@
 ﻿using Application.Commands.Person;
 using Application.Queries.Person;
+using Domain.Entities.AuthenticationModels;
 using eVtolCalculatorApi.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -17,12 +18,12 @@ namespace eVtolCalculatorApi.Controllers;
 public class UserController : ControllerBase
 {
     private readonly ISender _sender;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<IdentityUserExtender> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly ILogger<UserController> _logger;
 
     public UserController(ISender sender,
-                          UserManager<IdentityUser> userManager,
+                          UserManager<IdentityUserExtender> userManager,
                           RoleManager<IdentityRole> roleManager,
                           ILogger<UserController> logger)
     {
@@ -77,7 +78,7 @@ public class UserController : ControllerBase
             return BadRequest();
         }
 
-        IdentityUser newUser = new()
+        IdentityUserExtender newUser = new()
         {
             Email = user.EmailAddress,
             EmailConfirmed = true,

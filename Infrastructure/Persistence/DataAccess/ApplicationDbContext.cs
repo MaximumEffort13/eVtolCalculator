@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.DataAccess
 {
-    public sealed class ApplicationDbContext : IdentityDbContext
+    public sealed class ApplicationDbContext : IdentityDbContext<IdentityUserExtender>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

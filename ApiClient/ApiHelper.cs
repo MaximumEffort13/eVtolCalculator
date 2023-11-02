@@ -15,7 +15,6 @@ public sealed class ApiHelper : IApiHelper
     private readonly ILogger<ApiHelper> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILoggedInUserModel _loggedInUser;
-    private readonly IPersonEndpoints _personEndpoints;
 
     public ApiHelper(ILogger<ApiHelper> logger, IHttpClientFactory httpClientFactory, ILoggedInUserModel loggedInUser)
     {

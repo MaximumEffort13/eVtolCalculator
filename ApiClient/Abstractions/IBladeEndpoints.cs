@@ -1,0 +1,11 @@
+﻿using ApiClient.DataTransferObjects.ApiRequests;
+using ApiClient.DataTransferObjects.ApiResponses;
+using FluentResults;
+
+namespace ApiClient.Abstractions
+{
+    public interface IBladeEndpoints
+    {
+        Task<Result<BladeDto>> CreateBladeAsync(CreateBladeModel blade);
+    }
+}

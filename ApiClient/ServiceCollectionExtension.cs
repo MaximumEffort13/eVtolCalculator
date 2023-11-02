@@ -27,5 +27,13 @@ public static class ServiceCollectionExtension
         services.AddTransient<IApiHelper, ApiHelper>();
         services.AddSingleton<ILoggedInUserModel, LoggedInUserModel>();
         services.AddTransient<IUserEndpoints, UserEndpoints>();
+        services.AddTransient<IBatteryPackEndpoints, BatteryPackEndpoints>();
+        services.AddTransient<IBladeEndpoints,  BladeEndpoints>();
+        services.AddTransient<IConceptualDesignEndpoints, ConceptualDesignEndpoints>();
+        services.AddTransient<IDetailDesignEndpoints, DetailDesignEndpoints>();
+        services.AddTransient<IInverterEndpoints,  InverterEndpoints>();
+        services.AddTransient<IMotorEndpoints,  MotorEndpoints>();
+
+        services.AddScoped<Utilities, Utilities>();
     }
 }

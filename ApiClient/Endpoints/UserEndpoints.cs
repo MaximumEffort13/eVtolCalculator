@@ -1,16 +1,10 @@
-﻿using ApiClient.DataTransferObjects.IdentityObjects;
-using FluentResults;
+﻿using FluentResults;
 using Polly.Retry;
 using Polly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ApiClient.Abstractions;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
-using ApiClient.Models;
+using ApiClient.DataTransferObjects.ApiRequests;
 
 namespace ApiClient.Endpoints;
 
@@ -60,5 +54,7 @@ public class UserEndpoints : IUserEndpoints
 
         return Result.Ok();
     }
+
+
 
 }

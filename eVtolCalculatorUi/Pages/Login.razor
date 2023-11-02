@@ -15,9 +15,9 @@
         <div class="row row-cols-2">
             <div class="col g-3">
                 <div class="form-floating mb-3">
-                    <label for="first-name">Email</label>
-                    <InputText id="email" class="form-control" @bind-Value="model.Email" placeholder="Email Address" />
-                    <ValidationMessage For=@(() => model.Email) />
+                    <InputText id="email" class="form-control" @bind-Value="model.UserName" placeholder="Email Address" />
+                    <ValidationMessage For=@(() => model.UserName) />
+                    <label for="email">Email</label>
                 </div>
             </div>
             <div class="col g-3">
@@ -34,7 +34,7 @@
                 <button type="submit" class="btn btn-success" @onclick="ExecuteLogin">Log In</button>
             </div>
             <div class="col-auto">
-                <button type="button" class="btn btn-primary" @onclick="RegisterUser">Register</button>
+                <button type="button" class="btn btn-primary bi bi-person" @onclick="RegisterUser">Register</button>
             </div>
         </div>
     </div>

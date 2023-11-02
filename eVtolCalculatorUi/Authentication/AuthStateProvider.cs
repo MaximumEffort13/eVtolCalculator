@@ -1,6 +1,7 @@
 ﻿using ApiClient.Abstractions;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 
@@ -45,9 +46,12 @@ public class AuthStateProvider : AuthenticationStateProvider
 
         _apiHelper.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
 
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var claims = tokenHandler.ReadJwtToken(token).Payload.Claims;
+
         return new AuthenticationState(
             new ClaimsPrincipal(
-            new ClaimsIdentity(JwtParser.ParseClaimsFromJwt(token), "jwtAuthType")));
+            new ClaimsIdentity(claims, "jwtAuthType")));
     }
 
     public async Task<bool> NotifyUserAuthentication(string token)
@@ -56,9 +60,12 @@ public class AuthStateProvider : AuthenticationStateProvider
         Task<AuthenticationState> authState;
         try
         {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var claims = tokenHandler.ReadJwtToken(token).Payload.Claims;
+
             await _apiHelper.GetLoggedInUserInfo(token);
             var authenticatedUser = new ClaimsPrincipal(
-                new ClaimsIdentity(JwtParser.ParseClaimsFromJwt(token), "jwtAuthType"));
+                new ClaimsIdentity(claims, "jwtAuthType"));
 
             authState = Task.FromResult(new AuthenticationState(authenticatedUser));
             NotifyAuthenticationStateChanged(authState);
@@ -76,9 +83,7 @@ public class AuthStateProvider : AuthenticationStateProvider
     public async Task NotifyUserLogout()
     {
         string authTokenStorageKey = _config["authTokenStorageKey"];
-        string authTokenRefreshStorageKey = _config["authRefreshTokenStorageKey"];
         await _localStorage.RemoveItemAsync(authTokenStorageKey);
-        await _localStorage.RemoveItemAsync(authTokenRefreshStorageKey);
 
         var authState = Task.FromResult(_anonymous);
         _apiHelper.Logout();

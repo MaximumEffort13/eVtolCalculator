@@ -19,6 +19,11 @@ public sealed class ConceptualDesignRepository : IConceptualDesignRepository
         return await _appContext.ConceptualDesign.SingleAsync(a => a.Id == id, cancellationToken = default);
     }
 
+    public async Task<List<ConceptualVtolDesign>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        return await _appContext.ConceptualDesign.ToListAsync(cancellationToken);
+    }
+
     public void Insert(ConceptualVtolDesign parameters)
     {
         _appContext.ConceptualDesign.Add(parameters);

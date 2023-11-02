@@ -1,0 +1,198 @@
+﻿@page "/register"
+@inject NavigationManager NavManager
+@inject IUserEndpoints UserEndpoint
+@inject IAuthenticationService AuthService
+@attribute [AllowAnonymous]
+
+<h3>Create a new account</h3>
+
+<EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="container-fluid">
+        <h4>User Details: </h4>
+        <div class="row row-cols-2">
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputText id="first-name" class="form-control" @bind-Value="model.FirstName" placeholder="John" />
+                    <ValidationMessage For=@(() => model.FirstName) />
+                    <label for="first-name">Name</label>
+                </div>
+            </div>
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputText id="last-name" class="form-control" @bind-Value="model.LastName" placeholder="Doe" />
+                    <ValidationMessage For=@(() => model.LastName) />
+                    <label for="last-name">Surname</label>
+                </div>
+            </div>
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputText id="email" type="email" class="form-control" @bind-Value="model.EmailAddress" placeholder="name@example.com" />
+                    <ValidationMessage For=@(() => model.EmailAddress) />
+                    <label for="email">Email</label>
+                </div>
+            </div>
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputText id="emailConfirm" type="email" class="form-control" @bind-Value="model.ConfirmEmail" placeholder="name@example.com" />
+                    <ValidationMessage For=@(() => model.ConfirmEmail) />
+                    <label for="emailConfirm">Confirm Email</label>
+                </div>
+            </div>
+        </div>
+        <div class="col g-3">
+            <div class="form-floating mb-3">
+                <InputText id="last-name" class="form-control" @bind-Value="model.PhoneNumber" placeholder="(012) 555 5555" />
+                <ValidationMessage For=@(() => model.PhoneNumber) />
+                <label for="last-name">Phone Number</label>
+            </div>
+        </div>
+        <div class="col g-3">
+            <div class="form-floating mb-3">
+                <InputText type="password" id="reg-password" class="form-control" @bind-Value="model.Password" placeholder="Password" />
+                <ValidationMessage For=@(() => model.Password) />
+                <label for="reg-password">Password</label>
+            </div>
+        </div>
+        <div class="col g-3">    
+            <div class="form-floating mb-3">
+                <InputText type="password" id="confirm-password" class="form-control" @bind-Value="model.ConfirmPassword" placeholder="Confirm Password" />
+                <ValidationMessage For=@(() => model.ConfirmPassword) />
+                <label for="confirm-password">Confirm Passowrd</label>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <h4>Address:</h4>
+        <div class="row row-cols-2 g-3">
+            <div class="col-md">
+                <div class="form-group row g-3">
+                    <div class="form-floating mb-3">
+                        <InputText id="user-building" class="form-control" @bind-Value="model.Building" placeholder="Unit and Building" />
+                        <ValidationMessage For=@(() => model.Building) />
+                        <label for="user-building">Building</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col">    
+                <div class="form-group row g-3">
+                    <div class="form-floating mb-3">
+                        <InputText id="user-street-address" class="form-control" @bind-Value="model.StreetName" placeholder="123 Church Street." />
+                        <ValidationMessage For=@(() => model.StreetName) />
+                        <label for="user-street-address">Street</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group row g-3">
+                    <div class="form-floating mb-3">
+                        <InputText id="user-address-suburb" class="form-control" @bind-Value="model.Suburb" placeholder="Gezina" />
+                        <ValidationMessage For=@(() => model.Suburb) />
+                        <label for="user-address-suburb">Suburb</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col">    
+                <div class="form-group row g-3">
+                    <div class="form-floating mb-3">
+                        <InputText id="user-address-city" class="form-control" @bind-Value="model.City" placeholder="Pretoria" />
+                        <ValidationMessage For=@(() => model.City) />
+                        <label for="user-address-city">City</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <InputText id="user-address-province" class="form-control" @bind-Value="model.Province" placeholder="Gauteng" />
+                    <ValidationMessage For=@(() => model.Province) />
+                    <label for="user-address-zip-code">Province</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <InputText id="Country" class="form-control" @bind-Value="model.Country" placeholder="South Africa" />
+                    <ValidationMessage For=@(() => model.Country) />
+                    <label for="user-address-zip-code">Country</label>
+                </div>
+            </div>
+            <div class="col">    
+                <div class="form-floating mb-3">
+                    <InputText id="user-address-zip-code" class="form-control" @bind-Value="model.PostalCode" placeholder="0001" />
+                    <ValidationMessage For=@(() => model.PostalCode) />
+                    <label for="user-address-zip-code">Postal Code</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row-cols-lg float-end">
+        <div class="col-10 float-start">
+            <button type="submit" class="btn btn-outline-success">Submit</button>
+        </div>
+    </div>
+    @if (errorMessage.Equals(string.Empty) == false)
+    {
+        <div class="row">
+            <div class="text-danger">
+                <p class="fw-bolder">
+                    @errorMessage;
+                </p>
+            </div>
+        </div>
+    }
+</EditForm>
+
+@code {
+    CreateUserModel model = new();
+    string errorMessage = string.Empty;
+
+    protected async override Task OnInitializedAsync()
+    {
+    }
+
+    protected Task OnProvinceChange(string selectedProvince)
+    {
+        if(selectedProvince == null || selectedProvince.Equals(string.Empty))
+        {
+            errorMessage = "Please select a valid province.";
+            return Task.CompletedTask;
+        }
+        model.Province = selectedProvince;
+        return Task.CompletedTask;
+    }
+
+    protected Task OnCountryChange(string selectedCountry)
+    {
+        if(selectedCountry == null || selectedCountry.Equals("Select"))
+        {
+            errorMessage = "Please select a valid province.";
+            return Task.CompletedTask;
+        }
+        model.Country = selectedCountry;
+        return Task.CompletedTask;
+
+    }
+
+    private async Task OnValidSubmit()
+    {
+        errorMessage = string.Empty;
+
+        try
+        {
+            await UserEndpoint.RegisterUser(model);
+
+            AuthenticatedUserModel result = await AuthService.Login(new (){ UserName = model.EmailAddress, Password = model.Password });
+
+            if (result == null)
+            {
+                errorMessage = "The registration was successful but there was a error while trying to authenticate you.";
+            }
+
+            NavManager.NavigateTo("/");
+
+        }
+        catch(Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+}
