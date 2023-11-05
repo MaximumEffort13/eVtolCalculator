@@ -24,7 +24,7 @@ internal sealed class CreateBladeCommandHandler : ICommandHandler<CreateBladeCom
     public async Task<Result<BladeDto>> Handle(CreateBladeCommand request, CancellationToken cancellationToken)
     {
         MeasureandQuantity length = new(request.Length_mm, SiPrefixes.Milli.Name + SiUnits.Meter.Name);
-        MeasureandQuantity width = new(request.Widht_mm, SiPrefixes.Milli.Name + SiUnits.Meter.Name);
+        MeasureandQuantity width = new(request.Width_mm, SiPrefixes.Milli.Name + SiUnits.Meter.Name);
         MeasureandQuantity thickness = new(request.Thickness_mm, SiPrefixes.Milli.Name + SiUnits.Meter.Name);
         MeasureandQuantity weight = new(request.Weight_g, SiUnits.Mass.Name);
         MeasureandQuantity angleOfAttack = new(request.AngleOfAttack, SiUnits.Degress.Name);

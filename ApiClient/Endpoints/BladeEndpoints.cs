@@ -1,6 +1,7 @@
 ﻿using ApiClient.Abstractions;
 using ApiClient.DataTransferObjects.ApiRequests;
 using ApiClient.DataTransferObjects.ApiResponses;
+using ApiClient.Enums;
 using FluentResults;
 using Microsoft.Extensions.Logging;
 
@@ -19,15 +20,26 @@ public class BladeEndpoints : IBladeEndpoints
 
     public async Task<Result<BladeDto>> CreateBladeAsync(CreateBladeModel blade)
     {
-        var apiEndpoint = "/api/Blade";
+        var result = await _utilities.PostCommandAsync<CreateBladeModel, BladeDto>(blade, BladeRoutes.Create.Name);
 
-        var result = await _utilities.PostCommandAsync<CreateBladeModel, BladeDto>(blade, apiEndpoint);
-
-        if (result is null)
+        if (result is null || result.IsFailed)
         {
-            return Result.Fail("We could not create the battery");
+
+            return Result.Fail(result!.Reasons.Last().ToString());
         }
 
         return result;
+    }
+
+    public async Task<Result<List<BladeDto>>> GetBlades()
+    {
+        var results = await _utilities.GetRequestAsync<List<BladeDto>>(BladeRoutes.GetAll.Name);
+
+        if (results is null || results.IsFailed)
+        {
+            return Result.Fail(results!.Reasons.Last().ToString());
+        }
+
+        return results;
     }
 }

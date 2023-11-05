@@ -39,9 +39,9 @@ public sealed class ElectricVtolDesign : Entity
     public string Name { get; private set; }
     public int MotorQuantity { get; private set; }
     public int BladePerMotorQuantity { get; private set; }
-    public TimeSpan FlightTimeInMinutes { get; private set; }
-    public MeasureandQuantity PayloadWeight { get; private set; }
+    public MeasureandQuantity PayloadWeight { get; set; }
 
+    public TimeSpan FlightTimeInMinutes { get;  set; }
     public MeasureandQuantity ThrustArea { get; set; }
     public MeasureandQuantity LiftOffWeight { get; set; }
     public MeasureandQuantity DiscLoading { get; set; }

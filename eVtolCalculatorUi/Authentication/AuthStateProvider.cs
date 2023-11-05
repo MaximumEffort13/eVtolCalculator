@@ -83,7 +83,10 @@ public class AuthStateProvider : AuthenticationStateProvider
     public async Task NotifyUserLogout()
     {
         string authTokenStorageKey = _config["authTokenStorageKey"];
+        string authRefreshTokenStorageKey = _config["authRefreshTokenStorageKey"];
+
         await _localStorage.RemoveItemAsync(authTokenStorageKey);
+        await _localStorage.RemoveItemAsync(authRefreshTokenStorageKey);
 
         var authState = Task.FromResult(_anonymous);
         _apiHelper.Logout();

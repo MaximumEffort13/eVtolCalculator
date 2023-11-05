@@ -24,16 +24,21 @@
                     <label for="motorCurrent">Inverter Current (A)</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <InputNumber id="motorWeight" class="form-control" @bind-Value="model.Weight" placeholder="30" />
-                    <ValidationMessage For=@(() => model.Weight) />
-                    <label for="motorWeight">Inverter Weight: </label>
+                    <InputNumber id="motorWeight" class="form-control" @bind-Value="model.Weight_kg" placeholder="30" />
+                    <ValidationMessage For=@(() => model.Weight_kg) />
+                    <label for="motorWeight">Inverter Weight (kg): </label>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row-cols-lg float-end">
-        <div class="col-7">
-            <Button Color="ButtonColor.Success"><Icon Name="IconName.Check" />Submit</Button>
+    <div class="row row-cols-6">
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col">
+            <Button Type="ButtonType.Submit" Color="ButtonColor.Success"><Icon Name="IconName.Check" @onclick="OnValidSubmit" />Submit</Button>
         </div>
     </div>
     @if (errorMessage.Equals(string.Empty) == false)
@@ -52,7 +57,7 @@
 {
     <section class="container-fluid">
         <h4>Design Outputs:</h4>
-        <div class="row">
+        <div class="row row-cols-4">
             <div class="col">
                 <p>
                     Name =
@@ -64,10 +69,10 @@
                 </p>
             </div>
         </div>
-        <div class="row">
+        <div class="row row-cols-4">
             <div class="col">
                 <p>
-                    Motor Voltage Rating =
+                    Voltage Rating =
                 </p>
             </div>
             <div class="col">
@@ -76,10 +81,10 @@
                 </p>
             </div>
         </div>
-        <div class="row">
+        <div class="row row-cols-4">
             <div class="col">
                 <p>
-                    Motor Current Rating =
+                    Current Rating =
                 </p>
             </div>
             <div class="col">
@@ -88,7 +93,7 @@
                 </p>
             </div>
         </div>
-        <div class="row">
+        <div class="row row-cols-4">
             <div class="col">
                 <p>
                     Weight =
@@ -100,7 +105,7 @@
                 </p>
             </div>
         </div>
-        <div class="row">
+        <div class="row row-cols-4">
             <div class="col">
                 <p>
                     Power To Weight Ratio =

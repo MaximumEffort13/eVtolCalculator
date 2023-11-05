@@ -3,4 +3,4 @@ using Application.DTO;
 
 namespace Application.Queries.Battery;
 
-public sealed record GetAllBatteryPacksQuery() : IQuery<IEnumerable<BatteryPackDto>>;
+public sealed record GetAllBatteryPacksQuery() : IQuery<List<BatteryPackDto>>;

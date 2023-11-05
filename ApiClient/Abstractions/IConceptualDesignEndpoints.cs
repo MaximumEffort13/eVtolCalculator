@@ -2,10 +2,10 @@
 using ApiClient.DataTransferObjects.ApiResponses;
 using FluentResults;
 
-namespace ApiClient.Abstractions
+namespace ApiClient.Abstractions;
+
+public interface IConceptualDesignEndpoints
 {
-    public interface IConceptualDesignEndpoints
-    {
-        Task<Result<ConceptualDesignDto>> CreateConceptualDesign(CreateConceptualDesignModel conceptualDesign);
-    }
+    Task<Result<ConceptualDesignDto>> CreateConceptualDesign(CreateConceptualDesignModel conceptualDesign);
+    Task<Result<List<ConceptualDesignDto>>> GetConceptualDesigns();
 }

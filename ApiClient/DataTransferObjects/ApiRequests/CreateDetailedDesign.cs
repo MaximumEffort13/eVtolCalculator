@@ -8,16 +8,16 @@ public class CreateDetailedDesign
     public string? Name { get; set; }
 
     [Required]
-    public CreateBatteryModel BatteryPack { get; set; }
+    public string BatteryPackId { get; set; }
 
     [Required]
-    public CreateInverterModel Inverter { get; set; }
+    public string InverterId { get; set; }
 
     [Required]
-    public CreateMotorModel Motor { get; set; }
+    public string MotorId { get; set; }
 
     [Required]
-    public CreateBladeModel Blade { get; set; }
+    public string BladeId { get; set; }
 
     [Required]
     public CreateFueslageModel Fuselage { get; set; }
@@ -29,6 +29,6 @@ public class CreateDetailedDesign
     public int MotorQuantity { get; set; }
 
     [Required]
-    public int BladeQuantity { get; set; }
+    public int BladePerMotorQuantity { get; set; }
 
 }

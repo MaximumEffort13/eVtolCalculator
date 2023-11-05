@@ -11,9 +11,9 @@ public sealed class DesignConstraintsCalculations
         double normalisedStructureWeight = SiPrefixes.NormaliseValue(structureWeight, SiUnits.Mass);
         double normalisedPayloadWeight = SiPrefixes.NormaliseValue(payloadWeight, SiUnits.Mass);
 
-        var powerRequirement = (normalisedStructureWeight + normalisedPayloadWeight) * SiPrefixes.Kilo.Value / PredefinedConstantValues.motorThrustToPowerRatio;
+        var powerRequirement = ((normalisedStructureWeight + normalisedPayloadWeight) / SiPrefixes.Kilo.Value) / PredefinedConstantValues.motorThrustToPowerRatio;
 
-        return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(powerRequirement, SiUnits.Watt);
+        return new MeasureandQuantity(powerRequirement, SiPrefixes.Kilo.Name + SiUnits.Watt.Name);
     }
 
     public static MeasureandQuantity CalculateBatteryCapacityRequired(MeasureandQuantity powerRequirement, TimeSpan flightTimeRequirement)
@@ -27,21 +27,21 @@ public sealed class DesignConstraintsCalculations
     {
         var normalisedCapacity = SiPrefixes.NormaliseValue(capacityRequirement, SiUnits.WattHour);
 
-        return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(normalisedCapacity / PredefinedConstantValues.currentBatteryCapacityPerKg, SiUnits.Mass);
+        return new MeasureandQuantity(normalisedCapacity / PredefinedConstantValues.currentBatteryCapacityPerKg, SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
     }
 
     public static MeasureandQuantity CalculateEstimatedMotorWeight(MeasureandQuantity powerRequirement)
     {
         var normalisedPower = SiPrefixes.NormaliseValue(powerRequirement, SiUnits.Watt);
-        var scaleToKiloWatt = normalisedPower * SiPrefixes.Kilo.Value;
+        var scaleToKiloWatt = SiPrefixes.ScaleNormalisedValueToAppropriateUnit(normalisedPower, SiUnits.Watt);
 
-        return new MeasureandQuantity(scaleToKiloWatt / PredefinedConstantValues.motorPowerLoading, SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
+        return new MeasureandQuantity(scaleToKiloWatt.Value / PredefinedConstantValues.motorPowerLoading, SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
     }
 
     public static MeasureandQuantity CalculateHorsepower(MeasureandQuantity powerRequirement)
     {
         var normalisedPower = SiPrefixes.NormaliseValue(powerRequirement, SiUnits.Watt);
 
-        return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(normalisedPower / PredefinedConstantValues.horsepowerToWatConversion, SiUnits.Horsepower);
+        return new MeasureandQuantity(normalisedPower / PredefinedConstantValues.horsepowerToWatConversion, SiUnits.Horsepower.Name);
     }
 }

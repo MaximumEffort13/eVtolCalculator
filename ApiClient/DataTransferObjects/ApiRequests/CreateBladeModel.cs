@@ -5,7 +5,7 @@ namespace ApiClient.DataTransferObjects.ApiRequests;
 public class CreateBladeModel
 {
     [Required]
-    public string BladeName { get; set; }
+    public string Name { get; set; }
 
     [Required]
     public double Length_mm { get; set; }
@@ -20,5 +20,5 @@ public class CreateBladeModel
     public double Weight_g { get; set; }
 
     [Required]
-    public double AngelOfAttack { get; set; }
+    public double AngleOfAttack { get; set; }
 }

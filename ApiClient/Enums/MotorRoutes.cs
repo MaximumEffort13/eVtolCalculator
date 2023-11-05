@@ -7,10 +7,10 @@ namespace ApiClient.Enums;
 /// </summary>
 public sealed class MotorRoutes : SmartEnum<MotorRoutes>
 {
-    public static readonly MotorRoutes Create = new("/api/CreateMotor", 0);
-    public static readonly MotorRoutes GetById = new("/api/GetMotor", 1);
-    public static readonly MotorRoutes GetByName = new("/api/GetMotor", 2);
-    public static readonly MotorRoutes GetByAll = new("/api/GetAll", 3);
+    public static readonly MotorRoutes Create = new("/api/Motor/CreateMotor", 0);
+    public static readonly MotorRoutes GetById = new("/api/Motor/GetMotorById", 1);
+    public static readonly MotorRoutes GetByName = new("/api/Motor/GetMotorByName", 2);
+    public static readonly MotorRoutes GetAll = new("/api/Motor/GetAll", 3);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WebServerRequestEndpoint"/> class.

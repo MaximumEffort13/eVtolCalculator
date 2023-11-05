@@ -1,6 +1,7 @@
 ﻿using ApiClient.Abstractions;
 using ApiClient.DataTransferObjects.ApiRequests;
 using ApiClient.DataTransferObjects.ApiResponses;
+using ApiClient.Enums;
 using FluentResults;
 using Microsoft.Extensions.Logging;
 
@@ -19,13 +20,35 @@ public class DetailDesignEndpoints : IDetailDesignEndpoints
 
     public async Task<Result<ElectricVtolDesignDto>> CreateElectricVtolDesign(CreateDetailedDesign detailedDesign)
     {
-        string apiEndpoint = "/api/DetailDesign";
-
-        var result = await _utilities.PostCommandAsync<CreateDetailedDesign, ElectricVtolDesignDto>(detailedDesign, apiEndpoint);
+        var result = await _utilities.PostCommandAsync<CreateDetailedDesign, ElectricVtolDesignDto>(detailedDesign, DetailDesignRoutes.Create.Name);
 
         if (result.IsFailed)
         {
-            return Result.Fail("Could not create a detail design of the eVTOL");
+            return Result.Fail(result!.Reasons.Last().ToString());
+        }
+
+        return result;
+    }
+
+    public async Task<Result<List<ElectricVtolDesignDto>>> GetAllDetailDesigns()
+    {
+        var result = await _utilities.GetRequestAsync<List<ElectricVtolDesignDto>>(DetailDesignRoutes.GetAll.Name);
+
+        if (result.IsFailed)
+        {
+            return Result.Fail(result!.Reasons.Last().ToString());
+        }
+
+        return result;
+    }
+
+    public async Task<Result<ElectricVtolDesignDto>> GetDetailDesignByIdAsync(string id)
+    {
+        var result = await _utilities.GetRequestAsync<ElectricVtolDesignDto>($"{DetailDesignRoutes.GetById.Name}/{id}");
+
+        if (result.IsFailed)
+        {
+            return Result.Fail(result!.Reasons.Last().ToString());
         }
 
         return result;

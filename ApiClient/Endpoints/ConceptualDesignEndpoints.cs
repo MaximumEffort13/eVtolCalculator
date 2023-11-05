@@ -1,6 +1,7 @@
 ﻿using ApiClient.Abstractions;
 using ApiClient.DataTransferObjects.ApiRequests;
 using ApiClient.DataTransferObjects.ApiResponses;
+using ApiClient.Enums;
 using FluentResults;
 using Microsoft.Extensions.Logging;
 
@@ -19,16 +20,26 @@ public class ConceptualDesignEndpoints : IConceptualDesignEndpoints
 
     public async Task<Result<ConceptualDesignDto>> CreateConceptualDesign(CreateConceptualDesignModel conceptualDesign)
     {
-        string apiEndpoint = "/api/createConceptualDesign";
-        var result = await _utilities.PostCommandAsync<CreateConceptualDesignModel, ConceptualDesignDto>(conceptualDesign, apiEndpoint);
+        var result = await _utilities.PostCommandAsync<CreateConceptualDesignModel, ConceptualDesignDto>(conceptualDesign, ConceptualDesignRoutes.Create.Name);
 
         if (result is null)
         {
-            return Result.Fail("Could not create new conceptual design.");
+            return Result.Fail(result!.Reasons.Last().ToString());
         }
 
         return result;
     }
 
+    public async Task<Result<List<ConceptualDesignDto>>> GetConceptualDesigns()
+    {
+        var results = await _utilities.GetRequestAsync<List<ConceptualDesignDto>>(ConceptualDesignRoutes.GetAll.Name);
+
+        if (results is null || results.IsFailed)
+        {
+            return Result.Fail(results!.Reasons.Last().ToString());
+        }
+
+        return results;
+    }
 
 }

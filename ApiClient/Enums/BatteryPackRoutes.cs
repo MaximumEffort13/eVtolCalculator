@@ -7,10 +7,10 @@ namespace ApiClient.Enums;
 /// </summary>
 public sealed class BatteryPackRoutes : SmartEnum<BatteryPackRoutes>
 {
-    public static readonly BatteryPackRoutes Create = new("/api/CreateBatteryPack", 0);
-    public static readonly BatteryPackRoutes GetById = new("/api/GetBatteryPack", 1);
-    public static readonly BatteryPackRoutes GetByName = new("/api/GetBatteryPack", 2);
-    public static readonly BatteryPackRoutes GetByAll = new("/api/GetAll", 3);
+    public static readonly BatteryPackRoutes Create = new("/api/BatteryPack/CreateBatteryPack", 0);
+    public static readonly BatteryPackRoutes GetById = new("/api/BatteryPack/GetBatteryPackById", 1);
+    public static readonly BatteryPackRoutes GetByName = new("/api/BatteryPack/GetBatteryPackByName", 2);
+    public static readonly BatteryPackRoutes GetAll = new("/api/BatteryPack/GetAll", 3);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WebServerRequestEndpoint"/> class.

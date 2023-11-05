@@ -7,7 +7,7 @@ using FluentResults;
 
 namespace Application.Handlers.Battery;
 
-internal sealed class GetAllBatteryPackQueryHandler : IQueryHandler<GetAllBatteryPacksQuery, IEnumerable<BatteryPackDto>>
+internal sealed class GetAllBatteryPackQueryHandler : IQueryHandler<GetAllBatteryPacksQuery, List<BatteryPackDto>>
 {
     private readonly IBatteryPackRepository _batteryPackRepository;
 
@@ -17,7 +17,7 @@ internal sealed class GetAllBatteryPackQueryHandler : IQueryHandler<GetAllBatter
     }
 
 
-    public async Task<Result<IEnumerable<BatteryPackDto>>> Handle(GetAllBatteryPacksQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<BatteryPackDto>>> Handle(GetAllBatteryPacksQuery request, CancellationToken cancellationToken)
     {
         var batteries = await _batteryPackRepository.GetAllAsync(cancellationToken);
 

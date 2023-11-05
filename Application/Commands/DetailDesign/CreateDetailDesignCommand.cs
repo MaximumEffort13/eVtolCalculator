@@ -9,7 +9,8 @@ using Application.DTO;
 
 namespace Application.Commands.DetailDesign;
 
-public sealed record CreateDetailedDesignCommand(string Name,
+public sealed record CreateDetailedDesignCommand(
+        string Name,
         BatteryPackDto Battery,
         InverterDto Inverter,
         MotorDto Motor,

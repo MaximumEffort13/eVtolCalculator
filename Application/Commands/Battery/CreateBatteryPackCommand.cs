@@ -11,7 +11,7 @@ public sealed record CreateBatteryPackCommand(
     double CellCapacity_mWh,
     int NumberOfCellsConnectedInSeries,
     int NumberOfCellsConnectedInParallel,
-    int ModuleCountConnectedInSeries,
-    int ModuleCountConnectedInParallel,
+    int NumberOfModulesConnectedInSeries,
+    int NumberOfModulesConnectedInParallel,
     double MiscellaneousPackWeight_kg,
     string PackName) : ICommand<BatteryPackDto>;

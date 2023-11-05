@@ -1,6 +1,7 @@
 ﻿using ApiClient.Abstractions;
 using ApiClient.DataTransferObjects.ApiRequests;
 using ApiClient.DataTransferObjects.ApiResponses;
+using ApiClient.Enums;
 using FluentResults;
 using Microsoft.Extensions.Logging;
 
@@ -19,9 +20,7 @@ public class BatteryPackEndpoints : IBatteryPackEndpoints
 
     public async Task<Result<BatteryPackDto>> CreateBatteryPack(CreateBatteryModel battery)
     {
-        var apiEndpoint = "/api/BatteryPack";
-
-        var result = await _utilities.PostCommandAsync<CreateBatteryModel, BatteryPackDto>(battery, apiEndpoint);
+        var result = await _utilities.PostCommandAsync<CreateBatteryModel, BatteryPackDto>(battery, BatteryPackRoutes.Create.Name);
 
         if (result is null)
         {
@@ -31,9 +30,16 @@ public class BatteryPackEndpoints : IBatteryPackEndpoints
         return result;
     }
 
-    public async Task<Result<IEnumerable<BatteryPackDto>>> GetBatteries()
+    public async Task<Result<List<BatteryPackDto>>> GetBatteries()
     {
-        throw new NotImplementedException();
+        var results = await _utilities.GetRequestAsync<List<BatteryPackDto>>(BatteryPackRoutes.GetAll.Name);
+
+        if (results is null || results.IsFailed)
+        {
+            return Result.Fail("We could not retrieve the requested data.");
+        }
+
+        return results;
     }
 
     public async Task<Result<BatteryPackDto>> GetBatteryById(Guid id)

@@ -8,7 +8,7 @@ public static class PersonDtoMapper
     {
         return new PersonDto
         {
-            Id = person.Id,
+            Id = person.Id.ToString(),
             FirsName = person.FirstName,
             LastName = person.LastName,
             PhoneNumber = person.PhoneNumber,

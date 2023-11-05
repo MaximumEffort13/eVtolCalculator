@@ -55,7 +55,7 @@ public class SiPrefixes : SmartEnum<SiPrefixes, double>
 
     public static MeasureandQuantity ScaleNormalisedValueToAppropriateUnit(double value, SiUnits baseUnit)
     {
-        double scaledValue = 0;
+        double scaledValue = value;
 
         SiPrefixes prefix = SiPrefixes.None;
 
@@ -77,9 +77,16 @@ public class SiPrefixes : SmartEnum<SiPrefixes, double>
 
     public static double NormaliseValue(MeasureandQuantity valueToNormalise, SiUnits baseUnit)
     {
-        double normalisedValue = 0;
+        double normalisedValue = valueToNormalise.Value;
 
         if (valueToNormalise.Unit != null && valueToNormalise.Unit.StartsWith(baseUnit.Name) == false)
+        {
+            var prefix = SiPrefixes.FindPrefixFromName(valueToNormalise.Unit[0]);
+
+            normalisedValue = valueToNormalise.Value * prefix.Value;
+        }
+
+        if (valueToNormalise.Unit == "mm")
         {
             var prefix = SiPrefixes.FindPrefixFromName(valueToNormalise.Unit[0]);
 

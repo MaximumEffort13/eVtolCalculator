@@ -7,6 +7,8 @@ using Polly.Retry;
 using Polly;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using ApiClient.Enums;
+using System.Threading;
 
 namespace ApiClient;
 
@@ -30,9 +32,9 @@ public sealed class ApiHelper : IApiHelper
     {
         var client = _httpClientFactory.CreateClient("apiClient");
 
-        if (string.IsNullOrEmpty(_loggedInUser.Token) == false)
+        if (string.IsNullOrEmpty(_loggedInUser.AccessToken) == false)
         {
-            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _loggedInUser.Token);
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _loggedInUser.AccessToken);
         }
 
         return client;
@@ -46,7 +48,7 @@ public sealed class ApiHelper : IApiHelper
             .Handle<Exception>()
             .WaitAndRetryAsync(3, attemtps => TimeSpan.FromMilliseconds(50 * attemtps));
 
-        PolicyResult<HttpResponseMessage> result = await policy.ExecuteAndCaptureAsync(() => Client.PostAsJsonAsync($"/token", userForAuthentication, cancellationToken));
+        PolicyResult<HttpResponseMessage> result = await policy.ExecuteAndCaptureAsync(() => Client.PostAsJsonAsync(UserRoutes.Authenticate.Name, userForAuthentication, cancellationToken));
 
         if (result.Result.IsSuccessStatusCode == false)
         {
@@ -69,9 +71,58 @@ public sealed class ApiHelper : IApiHelper
 
         Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", response.AccessToken);
 
+        _loggedInUser.AccessToken = response.AccessToken;
+        _loggedInUser.RefreshToken = response.RefreshToken;
+
         return Result.Ok(response);
     }
 
+    public async Task<Result<AuthenticatedUserModel>> RefreshAuthentication()
+    {
+        if (_loggedInUser == null || string.IsNullOrEmpty(_loggedInUser.AccessToken) || string.IsNullOrEmpty(_loggedInUser.RefreshToken))
+        {
+            Logout();
+            return new AuthenticatedUserModel();
+        }
+
+        var cancellationToken = new CancellationToken();
+
+        RefreshAuthenticationModel refreshModel = new(_loggedInUser.AccessToken, _loggedInUser.RefreshToken);
+
+        Client.DefaultRequestHeaders.Authorization = null;
+
+        AsyncRetryPolicy policy = Policy
+        .Handle<Exception>()
+        .WaitAndRetryAsync(3, attemtps => TimeSpan.FromMilliseconds(200 * attemtps));
+
+        PolicyResult<HttpResponseMessage> result = await policy.ExecuteAndCaptureAsync(() => Client.PostAsJsonAsync(UserRoutes.Refresh.Name, refreshModel, cancellationToken));
+
+        if (result.Result.IsSuccessStatusCode == false)
+        {
+            _logger.LogWarning("Login failed.");
+            return Result.Fail<AuthenticatedUserModel>(result.FinalException.ToString());
+        }
+
+        if (result.Result.Content is null)
+        {
+            _logger.LogWarning("Could not parse response from server.");
+            return Result.Fail("Login succeeded but no data returned from the server.");
+        }
+
+        var response = await result.Result.Content.ReadFromJsonAsync<AuthenticatedUserModel>(cancellationToken);
+
+        if (response is null)
+        {
+            return Result.Fail<AuthenticatedUserModel>("Invalid Data Returned From Server");
+        }
+
+        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", response.AccessToken);
+
+        _loggedInUser.AccessToken = response.AccessToken;
+        _loggedInUser.RefreshToken = response.RefreshToken;
+
+        return Result.Ok(response);
+    }
 
     public async Task<Result> GetLoggedInUserInfo(string token)
     {
@@ -83,7 +134,7 @@ public sealed class ApiHelper : IApiHelper
             .Handle<Exception>()
             .WaitAndRetryAsync(3, attemtps => TimeSpan.FromMilliseconds(50 * attemtps));
 
-        PolicyResult<PersonDto?> result = await policy.ExecuteAndCaptureAsync(() => Client.GetFromJsonAsync<PersonDto>($"/api/User", cancellationToken));
+        PolicyResult<PersonDto?> result = await policy.ExecuteAndCaptureAsync(() => Client.GetFromJsonAsync<PersonDto>(UserRoutes.User.Name, cancellationToken));
 
 
         if (result is null)
@@ -108,7 +159,7 @@ public sealed class ApiHelper : IApiHelper
 
     public void Logout()
     {
-        _loggedInUser.Token = string.Empty;
+        _loggedInUser.AccessToken = string.Empty;
         _loggedInUser.EmailAddress = string.Empty;
         _loggedInUser.RefreshToken = string.Empty;
         _loggedInUser.StreetName = string.Empty;

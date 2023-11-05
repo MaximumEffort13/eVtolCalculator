@@ -9,6 +9,7 @@ public static class ElectricVtolDesignDtoMapper
     {
         return new ElectricVtolDesignDto
         {
+            Id = eVtolDesign.Id.ToString(),
             Name = eVtolDesign.Name,
             LiftOffWeight = $"{eVtolDesign.LiftOffWeight.Value} {eVtolDesign.LiftOffWeight.Unit}",
             FlightTimeInMinutes = eVtolDesign.FlightTimeInMinutes.TotalMinutes,

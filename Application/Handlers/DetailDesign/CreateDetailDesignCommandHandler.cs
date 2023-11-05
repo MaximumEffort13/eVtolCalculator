@@ -36,16 +36,16 @@ internal class CreateDetailDesignCommandHandler : ICommandHandler<CreateDetailed
         var electricVtol = new ElectricVtolDesign(
             Guid.NewGuid(),
             request.Name,
-            request.Battery.Id,
-            request.Inverter.Id,
-            request.Motor.Id,
-            request.Blade.Id,
-            request.Fuselage.Id,
-            request.MissionParameter.Id,
+            Guid.Parse(request.Battery.Id),
+            Guid.Parse(request.Inverter.Id),
+            Guid.Parse(request.Motor.Id),
+            Guid.Parse(request.Blade.Id),
+            Guid.Parse(request.Fuselage.Id),
+            Guid.Parse(request.MissionParameter.Id),
             request.MotorQuantity,
             request.BladePerMotorQuantity);
 
-        electricVtol.ThrustArea = AerodynamicCalculations.CalculateThrustArea(bladeLength, request.MotorQuantity);
+        electricVtol.ThrustArea = AerodynamicCalculations.CalculateThrustArea(bladeLength, request.MotorQuantity, request.BladePerMotorQuantity);
         electricVtol.Thrust = AerodynamicCalculations.CalculateThrustRequirement(powerRequirement, electricVtol.ThrustArea);
 
         electricVtol.LiftOffWeight = MechanicalCalculations.CalculateLiftOffWeight(
@@ -60,7 +60,7 @@ internal class CreateDetailDesignCommandHandler : ICommandHandler<CreateDetailed
 
         electricVtol.DiscLoading = AerodynamicCalculations.CalculateDiscLoading(electricVtol.LiftOffWeight, electricVtol.ThrustArea);
         electricVtol.PowerLoading = AerodynamicCalculations.CalculatePowerLoading(electricVtol.LiftOffWeight, horsepowerRequired);
-
+        electricVtol.PayloadWeight = payloadWeight;
 
         _electricVtolRepository.Create(electricVtol);
         await _unitOfWork.SaveChangesAsync();

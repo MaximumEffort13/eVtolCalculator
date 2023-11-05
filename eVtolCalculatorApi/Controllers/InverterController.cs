@@ -1,4 +1,5 @@
 ﻿using Application.Commands.Inverter;
+using Application.Queries.Battery;
 using Application.Queries.Inverter;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +11,7 @@ namespace eVtolCalculatorApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+//[Authorize]
 public class InverterController : ControllerBase
 {
     private readonly ISender _sender;
@@ -21,18 +22,42 @@ public class InverterController : ControllerBase
     }
 
     // GET api/<InverterController>/5
-    [HttpGet("{id}")]
-    public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
+    [HttpGet]
+    [Route("GetInverterById/{id}")]
+    public async Task<IActionResult> GetAsync(Guid id, CancellationToken cancellationToken)
     {
         var query = new GetInverterByIdQuery(id);
 
         var response = await _sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response) : NotFound(response.Errors);
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Errors);
+    }
+
+    // GET api/<InverterController>
+    [HttpGet]
+    [Route("GetInverterByName/{name}")]
+    public async Task<IActionResult> GetAsync(string name, CancellationToken cancellationToken)
+    {
+        var query = new GetInverterByNameQuery(name);
+
+        var response = await _sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Errors);
+    }
+
+    [HttpGet]
+    [Route("GetAll")]
+    public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
+    {
+        var query = new GetAllInvertersQuery();
+        var response = await _sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Errors);
     }
 
     // POST api/<InverterController>
     [HttpPost]
+    [Route("CreateInverter")]
     public async Task<IActionResult> Post(CreateInverterCommand command, CancellationToken cancellationToken)
     {
         if (ModelState.IsValid == false)
@@ -42,6 +67,6 @@ public class InverterController : ControllerBase
 
         var response = await _sender.Send(command, cancellationToken);
 
-        return response.IsSuccess ? Ok(response) : BadRequest(response.Errors);
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Errors);
     }
 }

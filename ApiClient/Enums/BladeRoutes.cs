@@ -7,10 +7,10 @@ namespace ApiClient.Enums;
 /// </summary>
 public sealed class BladeRoutes : SmartEnum<BladeRoutes>
 {
-    public static readonly BladeRoutes Create = new("/api/CreateBlade", 0);
-    public static readonly BladeRoutes GetById = new("/api/GetBlade", 1);
-    public static readonly BladeRoutes GetByName = new("/api/GetBlade", 2);
-    public static readonly BladeRoutes GetByAll = new("/api/GetAll", 3);
+    public static readonly BladeRoutes Create = new("/api/Blade/CreateBlade", 0);
+    public static readonly BladeRoutes GetById = new("/api/Blade/GetBladeById", 1);
+    public static readonly BladeRoutes GetByName = new("/api/Blade/GetBladeByName", 2);
+    public static readonly BladeRoutes GetAll = new("/api/Blade/GetAll", 3);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WebServerRequestEndpoint"/> class.

@@ -2,7 +2,7 @@
 
 public class BatteryPackDto
 {
-    public Guid Id { get; set; }
+    public string Id { get; set; }
     public string Name { get; set; }
     public string Capacity { get; set; }
     public string Voltage { get; set; }
@@ -10,3 +10,4 @@ public class BatteryPackDto
     public string Weight { get; set; }
     public string SpecificEnergy { get; set; }
 }
+

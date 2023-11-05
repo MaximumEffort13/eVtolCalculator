@@ -7,7 +7,7 @@ using FluentResults;
 
 namespace Application.Handlers.Blade;
 
-internal sealed class GetAllBladesQueryHandler : IQueryHandler<GetAllBladesQuery, IEnumerable<BladeDto>>
+internal sealed class GetAllBladesQueryHandler : IQueryHandler<GetAllBladesQuery, List<BladeDto>>
 {
     private readonly IBladeRepository _bladeRepository;
 
@@ -16,7 +16,7 @@ internal sealed class GetAllBladesQueryHandler : IQueryHandler<GetAllBladesQuery
         _bladeRepository = bladeRepository;
     }
 
-    public async Task<Result<IEnumerable<BladeDto>>> Handle(GetAllBladesQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<BladeDto>>> Handle(GetAllBladesQuery request, CancellationToken cancellationToken)
     {
         var blades = await _bladeRepository.GetAllAsync(cancellationToken);
 

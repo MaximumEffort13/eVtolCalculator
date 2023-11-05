@@ -3,4 +3,4 @@ using Application.DTO;
 
 namespace Application.Queries.DetailDesign;
 
-public sealed record GetAllDetailDesignsQuery() : IQuery<IEnumerable<ElectricVtolDesignDto>>;
+public sealed record GetAllDetailDesignsQuery() : IQuery<List<ElectricVtolDesignDto>>;

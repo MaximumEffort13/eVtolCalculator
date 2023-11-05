@@ -2,10 +2,10 @@
 using ApiClient.DataTransferObjects.ApiResponses;
 using FluentResults;
 
-namespace ApiClient.Abstractions
+namespace ApiClient.Abstractions;
+
+public interface IMotorEndpoints
 {
-    public interface IMotorEndpoints
-    {
-        Task<Result<MotorDto>> CreateMotorAsync(CreateMotorModel blade);
-    }
+    Task<Result<MotorDto>> CreateMotorAsync(CreateMotorModel blade);
+    Task<Result<List<MotorDto>>> GetMotors();
 }

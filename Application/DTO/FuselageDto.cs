@@ -2,6 +2,6 @@
 
 public class FuselageDto
 {
-    public Guid Id { get; set; }
+    public string Id { get; set; }
     public string Weight { get; set; }
 }

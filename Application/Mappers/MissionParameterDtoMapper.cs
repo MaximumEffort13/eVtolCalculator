@@ -9,7 +9,7 @@ public static class MissionParameterDtoMapper
     {
         return new MissionParameterDto
         {
-            Id = missionParameters.Id,
+            Id = missionParameters.Id.ToString(),
             EstimatedPowerRequirement = $"{missionParameters.EstimatedPowerRequirement.Value} {missionParameters.EstimatedPowerRequirement.Unit}",
             EstimatedBatteryCapacityRequirement = $"{missionParameters.EstimatedBatteryCapacityRequirement.Value} {missionParameters.EstimatedBatteryCapacityRequirement.Unit}",
             EstimatedBatteryWeight = $"{missionParameters.EstimatedBatteryWeight.Value} {missionParameters.EstimatedBatteryWeight.Unit}",

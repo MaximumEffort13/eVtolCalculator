@@ -8,7 +8,7 @@ namespace eVtolCalculatorApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+//[Authorize]
 public class BatteryPackController : ControllerBase
 {
     private readonly ISender _sender;
@@ -21,34 +21,37 @@ public class BatteryPackController : ControllerBase
     }
 
     // GET api/<BatterPackController>/5
-    [HttpGet("{id}")]
-    [Route("GetBatteryPack")]
-    public async Task<IActionResult> GetAsync(Guid id, CancellationToken cancellationToken)
+    [HttpGet]
+    [Route("GetBatteryPackById/{id}")]
+    public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"{nameof(GetAsync)}BatteryController");
+        _logger.LogInformation($"{nameof(GetByIdAsync)}BatteryController");
         var query = new GetBatteryPackByIdQuery(id);
         var response = await _sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response) : NotFound(response.Errors);
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Errors);
     }
 
     // GET api/<BatterPackController>/5
     [HttpGet]
-    [Route("GetBatteryPack")]
-    public async Task<IActionResult> GetAsync(string name, CancellationToken cancellationToken)
+    [Route("GetBatteryPackByName/{name}")]
+    public async Task<IActionResult> GetByNameAsync(string name, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"{nameof(GetAsync)} BatteryPack - {name}");
+        _logger.LogInformation($"{nameof(GetByNameAsync)} BatteryPack - {name}");
         var query = new GetBatteryPackByNameQuery(name);
         var response = await _sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response) : NotFound(response.Errors);
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Errors);
     }
 
     [HttpGet]
     [Route("GetAll")]
     public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
     {
-        var query = new GetBattery
+        var query = new GetAllBatteryPacksQuery();
+        var response = await _sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Errors);
     }
 
     // POST api/<BatterPackController>
@@ -63,6 +66,6 @@ public class BatteryPackController : ControllerBase
 
         var response = await _sender.Send(command, cancellationToken);
 
-        return response.IsSuccess ? Ok(response) : BadRequest(response.Errors);
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Errors);
     }
 }

@@ -7,10 +7,10 @@ namespace ApiClient.Enums;
 /// </summary>
 public sealed class InverterRoutes : SmartEnum<InverterRoutes>
 {
-    public static readonly InverterRoutes Create = new("/api/CreateInverter", 0);
-    public static readonly InverterRoutes GetById = new("/api/GetInverter", 1);
-    public static readonly InverterRoutes GetByName = new("/api/GetInverter", 2);
-    public static readonly InverterRoutes GetByAll = new("/api/GetAll", 3);
+    public static readonly InverterRoutes Create = new("/api/Inverter/CreateInverter", 0);
+    public static readonly InverterRoutes GetById = new("/api/Inverter/GetInverterById", 1);
+    public static readonly InverterRoutes GetByName = new("/api/Inverter/GetInverterByName", 2);
+    public static readonly InverterRoutes GetAll = new("/api/Inverter/GetAll", 3);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WebServerRequestEndpoint"/> class.

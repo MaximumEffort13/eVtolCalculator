@@ -7,7 +7,7 @@ using FluentResults;
 
 namespace Application.Handlers.ConceptualDesign;
 
-internal sealed class GetAllConceptualDesignQueryHandler : IQueryHandler<GetAllConceptualDesignsQuery, IEnumerable<ConceptualDesignDto>>
+internal sealed class GetAllConceptualDesignQueryHandler : IQueryHandler<GetAllConceptualDesignsQuery, List<ConceptualDesignDto>>
 {
     private readonly IConceptualDesignRepository _conceptualDesignRepository;
 
@@ -16,7 +16,7 @@ internal sealed class GetAllConceptualDesignQueryHandler : IQueryHandler<GetAllC
         _conceptualDesignRepository = conceptualDesignRepository;
     }
 
-    public async Task<Result<IEnumerable<ConceptualDesignDto>>> Handle(GetAllConceptualDesignsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<ConceptualDesignDto>>> Handle(GetAllConceptualDesignsQuery request, CancellationToken cancellationToken)
     {
         var concepts = await _conceptualDesignRepository.GetAllAsync(cancellationToken);
 

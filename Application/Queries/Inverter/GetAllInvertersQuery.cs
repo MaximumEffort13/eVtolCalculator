@@ -3,4 +3,4 @@ using Application.DTO;
 
 namespace Application.Queries.Inverter;
 
-public sealed record GetAllInvertersQuery() : IQuery<IEnumerable<InverterDto>>;
+public sealed record GetAllInvertersQuery() : IQuery<List<InverterDto>>;

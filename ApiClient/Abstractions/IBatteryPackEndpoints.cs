@@ -2,10 +2,10 @@
 using ApiClient.DataTransferObjects.ApiResponses;
 using FluentResults;
 
-namespace ApiClient.Abstractions
+namespace ApiClient.Abstractions;
+
+public interface IBatteryPackEndpoints
 {
-    public interface IBatteryPackEndpoints
-    {
-        Task<Result<BatteryPackDto>> CreateBatteryPack(CreateBatteryModel battery);
-    }
+    Task<Result<BatteryPackDto>> CreateBatteryPack(CreateBatteryModel battery);
+    Task<Result<List<BatteryPackDto>>> GetBatteries();
 }

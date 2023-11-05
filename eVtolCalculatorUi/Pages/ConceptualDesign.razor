@@ -26,9 +26,13 @@
             </div>
         </div>
     </div>
-    <div class="row-cols-lg float-end">
-        <div class="col-10 float-start">
-            <button type="submit" class="btn btn-outline-success">Submit</button>
+    <div class="row row-cols-6">
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col">
+            <Button Type="ButtonType.Submit" Color="ButtonColor.Success" Outline="true">Submit</Button>
         </div>
     </div>
     @if (errorMessage.Equals(string.Empty) == false)
@@ -47,7 +51,7 @@
 {
     <section class="container-fluid">
         <h4>Design Outputs:</h4>
-        <div class="row">
+        <div class="row row-cols-4">
             <div class="col">
                 <p>
                     Total Power Required =
@@ -59,7 +63,7 @@
                 </p>
             </div>
         </div>
-        <div class="row">
+        <div class="row row-cols-4">
             <div class="col">
                 <p>
                     Total Battery Size = 
@@ -71,7 +75,7 @@
                 </p>
             </div>
         </div>
-        <div class="row">
+        <div class="row row-cols-4">
             <div class="col">
                 <p>
                     Battery Weight = 
@@ -83,7 +87,7 @@
                 </p>
             </div>
         </div>
-        <div class="row">
+        <div class="row row-cols-4">
             <div class="col">
                 <p>
                     Motor Weight = 
@@ -95,7 +99,7 @@
                 </p>
             </div>
         </div>
-        <div class="row">
+        <div class="row row-cols-4">
             <div class="col">
                 <p>
                     Horsepower required for liftoff = 

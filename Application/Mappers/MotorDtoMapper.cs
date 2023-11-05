@@ -9,12 +9,13 @@ public static class MotorDtoMapper
     {
         return new MotorDto
         { 
-            Id = motor.Id,
+            Id = motor.Id.ToString(),
             Name = motor.Name,
             VoltageRating = $"{motor.VoltageRating.Value} {motor.VoltageRating.Unit}",
             CurrentRating = $"{motor.CurrentRating.Value} {motor.CurrentRating.Unit}",
             Weight = $"{motor.Weight.Value} {motor.Weight.Unit}",
-            PowerToWeightRatio = $"{motor.PowerToWeightRatio.Value} {motor.PowerToWeightRatio.Unit}"
+            PowerToWeightRatio = $"{motor.PowerToWeightRatio.Value} {motor.PowerToWeightRatio.Unit}",
+            RpmValue  = $"{motor.Rpm.Value} {motor.Rpm.Unit}"
         };
     }
 }

@@ -40,5 +40,5 @@ public class CreateBatteryModel
     public int NumberOfModulesConnectedInParallel { get; set; }
 
     [Required]
-    public double MiscellaneousPackWeight { get; set; }
+    public double MiscellaneousPackWeight_kg { get; set; }
 }

@@ -7,7 +7,7 @@ using FluentResults;
 
 namespace Application.Handlers.Inverter;
 
-internal sealed class GetAllInvertersQueryHandler : IQueryHandler<GetAllInvertersQuery, IEnumerable<InverterDto>>
+internal sealed class GetAllInvertersQueryHandler : IQueryHandler<GetAllInvertersQuery, List<InverterDto>>
 {
     private readonly IInvererRepository _inverterRepository;
 
@@ -16,11 +16,11 @@ internal sealed class GetAllInvertersQueryHandler : IQueryHandler<GetAllInverter
         _inverterRepository = inverterRepository;
     }
 
-    public async Task<Result<IEnumerable<InverterDto>>> Handle(GetAllInvertersQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<InverterDto>>> Handle(GetAllInvertersQuery request, CancellationToken cancellationToken)
     {
         var inverters = await _inverterRepository.GetAllAsync(cancellationToken);
 
-        List<InverterDto> inverterDtos = new List<InverterDto>();
+        List<InverterDto> inverterDtos = new ();
 
         inverters.ForEach(inverter =>
         {

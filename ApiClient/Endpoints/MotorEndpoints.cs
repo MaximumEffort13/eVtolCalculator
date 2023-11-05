@@ -1,6 +1,7 @@
 ﻿using ApiClient.Abstractions;
 using ApiClient.DataTransferObjects.ApiRequests;
 using ApiClient.DataTransferObjects.ApiResponses;
+using ApiClient.Enums;
 using FluentResults;
 using Microsoft.Extensions.Logging;
 
@@ -17,17 +18,27 @@ public class MotorEndpoints : IMotorEndpoints
         _logger = logger;
     }
 
-    public async Task<Result<MotorDto>> CreateMotorAsync(CreateMotorModel blade)
+    public async Task<Result<MotorDto>> CreateMotorAsync(CreateMotorModel motor)
     {
-        var apiEndpoint = "/api/Motor";
+        var result = await _utilities.PostCommandAsync<CreateMotorModel, MotorDto>(motor, MotorRoutes.Create.Name);
 
-        var result = await _utilities.PostCommandAsync<CreateMotorModel, MotorDto>(blade, apiEndpoint);
-
-        if (result is null)
+        if (result is null || result.IsFailed)
         {
-            return Result.Fail("We could not create the battery");
+            return Result.Fail(result!.Reasons.Last().ToString());
         }
 
         return result;
+    }
+
+    public async Task<Result<List<MotorDto>>> GetMotors()
+    {
+        var results = await _utilities.GetRequestAsync<List<MotorDto>>(MotorRoutes.GetAll.Name);
+
+        if (results is null || results.IsFailed)
+        {
+            return Result.Fail(results!.Reasons.Last().ToString());
+        }
+
+        return results;
     }
 }

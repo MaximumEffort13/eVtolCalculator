@@ -1,5 +1,6 @@
 ﻿using Domain.Enums;
 using Domain.Primitives;
+using System.Text.RegularExpressions;
 
 namespace Domain.EntityCalculations;
 
@@ -7,7 +8,14 @@ public sealed class ElectricCalculations
 {
     public static MeasureandQuantity CalculateVoltageFromUnitConnectionCount(MeasureandQuantity voltageRating, int numberOfUnitsConnectedInSeries)
     {
-        double normalisedVoltage = 0;
+        MeasureandQuantity[] inputs = { voltageRating };
+
+        if (ValidInput(inputs) == false)
+        {
+            return new MeasureandQuantity(0, string.Empty);
+        }
+
+        double normalisedVoltage = voltageRating.Value;
 
         if (voltageRating.Unit != null && voltageRating.Unit.StartsWith(SiUnits.Voltage.Name) == false)
         {
@@ -23,7 +31,14 @@ public sealed class ElectricCalculations
 
     public static MeasureandQuantity CalculateCurrentFromUnitConnectionCount(MeasureandQuantity current, int numberOfUnitsConnectedInParallel)
     {
-        double normalisedCurrent = 0;
+        MeasureandQuantity[] inputs = { current };
+
+        if (ValidInput(inputs) == false)
+        {
+            return new MeasureandQuantity(0, string.Empty);
+        }
+
+        double normalisedCurrent = current.Value;
 
         if (current.Unit != null && current.Unit.StartsWith(SiUnits.Current.Name) == false)
         {
@@ -37,9 +52,16 @@ public sealed class ElectricCalculations
         return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(newCurrent, SiUnits.Current);
     }
 
-    public static MeasureandQuantity CalculateCapacityBaseOnUnitConnections(MeasureandQuantity capacityOfUnit, int connectionsInParallel)
+    public static MeasureandQuantity CalculateCapacityBaseOnUnitConnections(MeasureandQuantity capacityOfUnit, int connectionsInParallel, int connectionsInSeries)
     {
-        double normalisedCapacity = 0;
+        MeasureandQuantity[] inputs = { capacityOfUnit };
+
+        if (ValidInput(inputs) == false)
+        {
+            return new MeasureandQuantity(0, string.Empty);
+        }
+
+        double normalisedCapacity = capacityOfUnit.Value;
 
         if (capacityOfUnit.Unit != null && capacityOfUnit.Unit.StartsWith(SiUnits.WattHour.Name) == false)
         {
@@ -48,15 +70,22 @@ public sealed class ElectricCalculations
             normalisedCapacity = capacityOfUnit.Value * prefix.Value;
         }
 
-        var capacity = normalisedCapacity * connectionsInParallel;
+        var capacity = normalisedCapacity * connectionsInParallel * connectionsInSeries;
 
         return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(capacity, SiUnits.WattHour);
     }
 
     public static MeasureandQuantity CalculatePower(MeasureandQuantity voltage, MeasureandQuantity current)
     {
-        double normalisedCurrent = 0;
-        double normalisedVoltage = 0;
+        MeasureandQuantity[] inputs = { voltage, current };
+
+        if (ValidInput(inputs) == false)
+        {
+            return new MeasureandQuantity(0, string.Empty);
+        }
+
+        double normalisedCurrent = current.Value;
+        double normalisedVoltage = voltage.Value;
 
         if (current.Unit != null && current.Unit.StartsWith(SiUnits.Current.Name) == false)
         {
@@ -80,9 +109,14 @@ public sealed class ElectricCalculations
 
     public static MeasureandQuantity CalculateSpecificEnergy(MeasureandQuantity capacity, MeasureandQuantity weight)
     {
-        double normalisedCapacity = 0;
-        double newWeight = 0;
-        string weightUnit = string.Empty;
+        MeasureandQuantity[] inputs = { capacity, weight };
+
+        if (ValidInput(inputs) == false)
+        {
+            return new MeasureandQuantity(0, string.Empty);
+        }
+
+        double normalisedCapacity = capacity.Value;
 
         if (capacity.Unit != null && capacity.Unit.StartsWith(SiUnits.Watt.Name) == false)
         {
@@ -91,13 +125,16 @@ public sealed class ElectricCalculations
             normalisedCapacity = capacity.Value * prefix.Value;
         }
 
+        string weightUnit = weight.Unit;
+        double newWeight = weight.Value;
+
         if (weight.Unit != null && weight.Unit.StartsWith(SiUnits.Mass.Name) == false)
         {
             var prefix = SiPrefixes.FindPrefixFromName(weight.Unit[0]);
 
             var normalisedWeight = weight.Value * prefix.Value;
 
-            newWeight = normalisedWeight * SiPrefixes.Kilo.Value;
+            newWeight = normalisedWeight / SiPrefixes.Kilo.Value;
             weightUnit = $"{SiPrefixes.Kilo.Name}{SiUnits.Mass.Name}";
         }
 
@@ -106,12 +143,19 @@ public sealed class ElectricCalculations
         return new MeasureandQuantity(specificEnergy.Value, $"{specificEnergy.Unit}/{weightUnit}");
     }
 
-    public static MeasureandQuantity CalculatePowerToWeightRatio(MeasureandQuantity voltage, MeasureandQuantity curent, MeasureandQuantity weight)
+    public static MeasureandQuantity CalculatePowerToWeightRatio(MeasureandQuantity voltage, MeasureandQuantity current, MeasureandQuantity weight)
     {
-        var power = CalculatePower(voltage, curent);
+        MeasureandQuantity[] inputs = { voltage, current, weight };
 
-        double newWeight = 0;
-        string weightUnit = string.Empty;
+        if (ValidInput(inputs) == false)
+        {
+            return new MeasureandQuantity(0, string.Empty);
+        }
+
+        var power = CalculatePower(voltage, current);
+
+        double newWeight = weight.Value;
+        string weightUnit = weight.Unit;
 
         if (weight.Unit != null && weight.Unit.StartsWith(SiUnits.Mass.Name) == false)
         {
@@ -119,10 +163,23 @@ public sealed class ElectricCalculations
 
             var normalisedWeight = weight.Value * prefix.Value;
 
-            newWeight = normalisedWeight * SiPrefixes.Kilo.Value;
+            newWeight = normalisedWeight / SiPrefixes.Kilo.Value;
             weightUnit = $"{SiPrefixes.Kilo.Name}{SiUnits.Mass.Name}";
         }
 
         return new MeasureandQuantity(power.Value / newWeight,$"{power.Unit}/{weightUnit}");
+    }
+
+    private static bool ValidInput(MeasureandQuantity[] values)
+    {
+        foreach (MeasureandQuantity value in values)
+        {
+            if (value is null || value.Value is 0 || value.Unit is null)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

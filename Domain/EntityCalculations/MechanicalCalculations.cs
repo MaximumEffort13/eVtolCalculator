@@ -7,7 +7,7 @@ public static  class MechanicalCalculations
 {
     public static MeasureandQuantity CalculateBatteryModuleWeight(MeasureandQuantity cellWeight, int numberOfCellsInModule)
     {
-        double normalisedWeight = 0.0;
+        double normalisedWeight = cellWeight.Value;
 
         if (cellWeight.Unit is not null && cellWeight.Unit.StartsWith(SiUnits.Mass.Name) == false)
         {
@@ -21,9 +21,10 @@ public static  class MechanicalCalculations
         return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(moduleWeight, SiUnits.Mass);
     }
 
-    public static MeasureandQuantity CalculateBatteryPackWeightUsingBatteryModule(MeasureandQuantity moduleWeight, int numberOfModulesInPack)
+    public static MeasureandQuantity CalculateBatteryPackWeightUsingBatteryModule(MeasureandQuantity moduleWeight, int numberOfModulesInPack, MeasureandQuantity miscellaneousPackWeight)
     {
-        double normalisedWeight = 0.0;
+        double normalisedWeight = moduleWeight.Value;
+        double normalisedMiscellaneousWeight = miscellaneousPackWeight.Value;
 
         if (moduleWeight.Unit is not null && moduleWeight.Unit.StartsWith(SiUnits.Mass.Name) == false)
         {
@@ -32,7 +33,14 @@ public static  class MechanicalCalculations
             normalisedWeight = moduleWeight.Value * prefix.Value;
         }
 
-        var packWeight = normalisedWeight * numberOfModulesInPack;
+        if (miscellaneousPackWeight.Unit is not null && miscellaneousPackWeight.Unit.StartsWith(SiUnits.Mass.Name) == false)
+        {
+            var prefix = SiPrefixes.FindPrefixFromName(miscellaneousPackWeight.Unit[0]);
+
+            normalisedMiscellaneousWeight = miscellaneousPackWeight.Value * prefix.Value;
+        }
+
+        var packWeight = normalisedWeight * numberOfModulesInPack + normalisedMiscellaneousWeight;
 
         return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(packWeight, SiUnits.Mass);
     }
@@ -40,7 +48,7 @@ public static  class MechanicalCalculations
 
     public static MeasureandQuantity CalculateRpm(double kv, MeasureandQuantity voltageRating)
     {
-        double normalisedVoltage = 0;
+        double normalisedVoltage = voltageRating.Value;
 
         if (voltageRating.Unit != null && voltageRating.Unit.StartsWith(SiUnits.Voltage.Name) == false)
         {

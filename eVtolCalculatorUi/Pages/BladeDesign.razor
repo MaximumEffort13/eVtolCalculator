@@ -9,8 +9,8 @@
         <div class="row row-cols-3">
             <div class="col g-3">
                 <div class="form-floating mb-3">
-                    <InputText id="bladeName" class="form-control" @bind-Value="model.BladeName" placeholder="Axial Flux M003" />
-                    <ValidationMessage For=@(() => model.BladeName) />
+                    <InputText id="bladeName" class="form-control" @bind-Value="model.Name" placeholder="Axial Flux M003" />
+                    <ValidationMessage For=@(() => model.Name) />
                     <label for="bladeName">Name of Blade:</label>
                 </div>
                 <div class="form-floating mb-3">
@@ -31,20 +31,24 @@
                 <div class="form-floating mb-3">
                     <InputNumber id="bladeWeight" class="form-control" @bind-Value="model.Weight_g" placeholder="30" />
                     <ValidationMessage For=@(() => model.Weight_g) />
-                    <label for="bladeWeight">Blade Weight: </label>
+                    <label for="bladeWeight">Blade Weight (g)</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <InputNumber id="bladeAngleOfAttack" class="form-control" @bind-Value="model.AngelOfAttack" placeholder="25" />
-                    <ValidationMessage For=@(() => model.AngelOfAttack) />
+                    <InputNumber id="bladeAngleOfAttack" class="form-control" @bind-Value="model.AngleOfAttack" placeholder="25" />
+                    <ValidationMessage For=@(() => model.AngleOfAttack) />
                     <label for="bladeAngleOfAttack">Angle of Attack (Degrees): </label>
                 </div>
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="row-cols-lg">
-            <div class="col-8 float-right">
-                <Button Color="ButtonColor.Success" Outline="true"><Icon Name="IconName.Check" /> Submit </Button>
+        <div class="row row-cols-6">
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col">
+                <Button Type="ButtonType.Submit" Color="ButtonColor.Success" Outline="true"><Icon Name="IconName.Check" /> Submit </Button>
             </div>
         </div>
     </div>
@@ -64,7 +68,7 @@
 {
     <section class="container-fluid">
         <h4>Design Outputs:</h4>
-        <div class="row">
+        <div class="row row-cols-4">
             <div class="col">
                 <p>
                     Name =
@@ -76,7 +80,7 @@
                 </p>
             </div>
         </div>
-        <div class="row">
+        <div class="row row-cols-4">
             <div class="col">
                 <p>
                     Blade Length =
@@ -88,7 +92,7 @@
                 </p>
             </div>
         </div>
-        <div class="row">
+        <div class="row row-cols-4">
             <div class="col">
                 <p>
                     Blade Width =
@@ -100,7 +104,7 @@
                 </p>
             </div>
         </div>
-        <div class="row">
+        <div class="row row-cols-4">
             <div class="col">
                 <p>
                     Blade Thickness =
@@ -112,7 +116,7 @@
                 </p>
             </div>
         </div>
-        <div class="row">
+        <div class="row row-cols-4">
             <div class="col">
                 <p>
                     Blade Weight =
@@ -124,7 +128,7 @@
                 </p>
             </div>
         </div>
-        <div class="row">
+        <div class="row row-cols-4">
             <div class="col">
                 <p>
                     Blade Angle of Attack =

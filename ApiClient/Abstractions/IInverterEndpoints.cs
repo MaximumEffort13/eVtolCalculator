@@ -7,5 +7,6 @@ namespace ApiClient.Abstractions
     public interface IInverterEndpoints
     {
         Task<Result<InverterDto>> CreateInverterAsync(CreateInverterModel blade);
+        Task<Result<List<InverterDto>>> GetInverters();
     }
 }

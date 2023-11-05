@@ -12,11 +12,14 @@ public static class ServiceCollectionExtension
 {
     public static void AddeVtolApiClient(this IServiceCollection services, IConfiguration config)
     {
+        string url = config.GetRequiredSection("ApiSetting")["ApiEndPointBaseAddress"]!;
+        var timeoutSetting = config.GetRequiredSection("ApiSetting")["RequestTimeout"];
+
         services.AddHttpClient("apiClient", client =>
         {
-            client.BaseAddress = new Uri(config.GetRequiredSection("ApiSetting")["ApiEndPointBaseAddress"] = "https://localhost:7197");
+            client.BaseAddress = new Uri(url = "https://localhost:7197");
 
-            double timeout = Convert.ToDouble(config.GetRequiredSection("ApiSetting")["RequestTimeout"]);
+            double timeout = Convert.ToDouble(timeoutSetting);
             client.Timeout = TimeSpan.FromMilliseconds(timeout);
 
             client.DefaultRequestHeaders.Accept.Clear();
@@ -24,7 +27,7 @@ public static class ServiceCollectionExtension
         });
 
         services.AddTransient<IIdentityEndpoints, IdentityEndpoints>();
-        services.AddTransient<IApiHelper, ApiHelper>();
+        services.AddScoped<IApiHelper, ApiHelper>();
         services.AddSingleton<ILoggedInUserModel, LoggedInUserModel>();
         services.AddTransient<IUserEndpoints, UserEndpoints>();
         services.AddTransient<IBatteryPackEndpoints, BatteryPackEndpoints>();

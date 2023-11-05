@@ -3,7 +3,7 @@
 namespace Application.DTO;
 public sealed class PersonDto
 {
-    public Guid Id { get; set; }
+    public string Id { get; set; }
     public string FirsName { get; set; }
     public string LastName { get; set; }
     public string PhoneNumber { get; set; }

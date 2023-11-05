@@ -2,7 +2,7 @@
 
 public class MissionParameterDto
 {
-    public Guid Id { get; set; }
+    public string Id { get; set; }
     public string EstimatedPowerRequirement { get; set; }
     public string EstimatedBatteryCapacityRequirement { get; set; }
     public string EstimatedBatteryWeight { get; set; }

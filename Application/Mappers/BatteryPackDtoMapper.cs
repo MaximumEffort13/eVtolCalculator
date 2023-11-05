@@ -9,7 +9,7 @@ public static class BatteryPackDtoMapper
     {
         return new BatteryPackDto
         {
-            Id = batteryPack.Id,
+            Id = batteryPack.Id.ToString(),
             Name = batteryPack.Name,
             Capacity = $"{batteryPack.Capacity.Value} {batteryPack.Capacity.Unit}",
             Voltage = $"{batteryPack.Voltage.Value} {batteryPack.Voltage.Unit}",

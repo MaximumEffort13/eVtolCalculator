@@ -3,4 +3,4 @@ using Application.DTO;
 
 namespace Application.Queries.Blade;
 
-public sealed record GetAllBladesQuery() : IQuery<IEnumerable<BladeDto>>;
+public sealed record GetAllBladesQuery() : IQuery<List<BladeDto>>;

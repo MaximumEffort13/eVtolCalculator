@@ -14,5 +14,5 @@ public class CreateInverterModel
     public double CurrentRating_A { get; set; }
 
     [Required]
-    public double Weight { get; set; }
+    public double Weight_kg { get; set; }
 }

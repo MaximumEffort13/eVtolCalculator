@@ -5,6 +5,7 @@ using ApiClient.Abstractions;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 using ApiClient.DataTransferObjects.ApiRequests;
+using ApiClient.Enums;
 
 namespace ApiClient.Endpoints;
 
@@ -40,7 +41,7 @@ public class UserEndpoints : IUserEndpoints
 
         AsyncRetryPolicy policy = Policy.Handle<Exception>().RetryAsync(3);
 
-        PolicyResult<HttpResponseMessage> result = await policy.ExecuteAndCaptureAsync(() => _apiHelper.Client.PostAsJsonAsync($"/api/user/register", user, cancellationToken));
+        PolicyResult<HttpResponseMessage> result = await policy.ExecuteAndCaptureAsync(() => _apiHelper.Client.PostAsJsonAsync(UserRoutes.Register.Name, user, cancellationToken));
 
         if (result.Result is null || result.Result.IsSuccessStatusCode == false)
         {

@@ -7,7 +7,7 @@ using FluentResults;
 
 namespace Application.Handlers.Motors;
 
-internal sealed class GetAllMotorsQueryHandler : IQueryHandler<GetAllMotorsQuery, IEnumerable<MotorDto>>
+internal sealed class GetAllMotorsQueryHandler : IQueryHandler<GetAllMotorsQuery, List<MotorDto>>
 {
     private readonly IMotorRepository _motorRepository;
 
@@ -15,15 +15,16 @@ internal sealed class GetAllMotorsQueryHandler : IQueryHandler<GetAllMotorsQuery
     {
         _motorRepository = motorRepository;
     }
-    public async Task<Result<IEnumerable<MotorDto>>> Handle(GetAllMotorsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<MotorDto>>> Handle(GetAllMotorsQuery request, CancellationToken cancellationToken)
     {
         var motors = await _motorRepository.GetAllAsync(cancellationToken);
 
-        List<MotorDto> motorDtos = new List<MotorDto>();
+        List<MotorDto> motorDtos = new ();
 
         motors.ForEach(motor =>
         {
-            motorDtos.Add(MotorDtoMapper.Map(motor));
+            var mapped = MotorDtoMapper.Map(motor);
+            motorDtos.Add(mapped);
         });
 
         return motorDtos;

@@ -2,10 +2,10 @@
 using ApiClient.DataTransferObjects.ApiResponses;
 using FluentResults;
 
-namespace ApiClient.Abstractions
+namespace ApiClient.Abstractions;
+
+public interface IBladeEndpoints
 {
-    public interface IBladeEndpoints
-    {
-        Task<Result<BladeDto>> CreateBladeAsync(CreateBladeModel blade);
-    }
+    Task<Result<BladeDto>> CreateBladeAsync(CreateBladeModel blade);
+    Task<Result<List<BladeDto>>> GetBlades();
 }

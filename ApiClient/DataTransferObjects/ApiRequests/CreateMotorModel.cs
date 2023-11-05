@@ -14,7 +14,7 @@ public class CreateMotorModel
     public double CurrentRating_A { get; set; }
 
     [Required]
-    public double Weight { get; set; }
+    public double Weight_kg { get; set; }
 
     [Required]
     public int Kv { get; set; }

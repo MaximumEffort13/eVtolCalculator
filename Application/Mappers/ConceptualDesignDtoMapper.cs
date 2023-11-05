@@ -9,6 +9,7 @@ public static class ConceptualDesignDtoMapper
     {
         return new ConceptualDesignDto
         {
+            Id = conceptDesign.Id.ToString(),
             ProwerRequirement = $"{conceptDesign.PowerRequirement.Value} {conceptDesign.PowerRequirement.Unit}",
             BatteryCapacityRequirement = $"{conceptDesign.BatteryCapacityRequirement.Value} {conceptDesign.BatteryCapacityRequirement.Unit}",
             BatteryWeight = $"{conceptDesign.BatteryWeight.Value} {conceptDesign.BatteryWeight.Unit}",

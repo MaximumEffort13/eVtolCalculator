@@ -1,10 +1,9 @@
 ﻿using ApiClient.DataTransferObjects.ApiRequests;
 using FluentResults;
 
-namespace ApiClient.Abstractions
+namespace ApiClient.Abstractions;
+
+public interface IUserEndpoints
 {
-    public interface IUserEndpoints
-    {
-        Task<Result> RegisterUser(CreateUserModel user);
-    }
+    Task<Result> RegisterUser(CreateUserModel user);
 }

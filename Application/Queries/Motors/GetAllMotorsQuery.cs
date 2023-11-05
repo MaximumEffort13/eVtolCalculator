@@ -3,4 +3,4 @@ using Application.DTO;
 
 namespace Application.Queries.Motors;
 
-public sealed record GetAllMotorsQuery() : IQuery<IEnumerable<MotorDto>>;
+public sealed record GetAllMotorsQuery() : IQuery<List<MotorDto>>;

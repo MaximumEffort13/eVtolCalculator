@@ -9,7 +9,7 @@ public static class FuselageDtoMapper
     {
         return new FuselageDto
         {
-            Id = fuselage.Id,
+            Id = fuselage.Id.ToString(),
             Weight = $"{fuselage.Weight.Value} {fuselage.Weight.Unit}"
         };
     }

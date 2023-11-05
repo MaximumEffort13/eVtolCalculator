@@ -9,7 +9,7 @@ public static class InverterDtoMapper
     {
         return new InverterDto
         {
-            Id = inverter.Id,
+            Id = inverter.Id.ToString(),
             Name = inverter.Name,
             VoltageRating = $"{inverter.VoltageRating.Value} {inverter.VoltageRating.Unit}",
             CurrentRating = $"{inverter.CurrentRating.Value} {inverter.CurrentRating.Unit}",

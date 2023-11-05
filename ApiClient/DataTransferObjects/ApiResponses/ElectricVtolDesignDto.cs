@@ -2,11 +2,12 @@
 
 public sealed class ElectricVtolDesignDto
 {
-    public Guid Id { get; set; }
+    public string Id { get; set; }
     public string Name { get; set; }
     public BatteryPackDto Battery { get; set; }
     public MotorDto Motor { get; set; }
-    public InverterDto Invert { get; set; }
+    public BladeDto Blade { get; set; }
+    public InverterDto Inverter { get; set; }
     public FuselageDto Fuselage { get; set; }
     public MissionParameterDto MissionEstimates { get; set; }
 
