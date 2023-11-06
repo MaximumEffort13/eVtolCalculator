@@ -18,7 +18,7 @@ internal sealed class GetAllInvertersQueryHandler : IQueryHandler<GetAllInverter
 
     public async Task<Result<List<InverterDto>>> Handle(GetAllInvertersQuery request, CancellationToken cancellationToken)
     {
-        var inverters = await _inverterRepository.GetAllAsync(cancellationToken);
+        var inverters = await _inverterRepository.GetAllAsync(request.UserId, cancellationToken);
 
         List<InverterDto> inverterDtos = new ();
 

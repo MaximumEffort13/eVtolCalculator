@@ -1,14 +1,22 @@
-﻿using Application.Commands.DetailDesign;
+﻿using Application.Commands.Battery;
+using Application.Commands.Blade;
+using Application.Commands.DetailDesign;
+using Application.Commands.Fuselage;
+using Application.Commands.Inverter;
+using Application.Commands.Mission;
+using Application.Commands.Motors;
 using Application.Queries.DetailDesign;
+using eVtolCalculatorApi.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace eVtolCalculatorApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-//[Authorize]
+[Authorize(Policy = "user")]
 public class DetailDesignController : ControllerBase
 {
     private readonly ISender _sender;
@@ -20,9 +28,16 @@ public class DetailDesignController : ControllerBase
 
     [HttpGet]
     [Route("GetAll")]
-    public async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
     {
-        var query = new GetAllDetailDesignsQuery();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId is null)
+        {
+            return BadRequest();
+        }
+
+        var query = new GetAllDetailDesignsQuery(Guid.Parse(userId));
         var response = await _sender.Send(query, cancellationToken);
 
         return response.IsSuccess ? Ok(response.Value) : NotFound(response.Errors);
@@ -31,9 +46,16 @@ public class DetailDesignController : ControllerBase
     // GET api/<DetailDesignController>/5
     [HttpGet]
     [Route("GetDetailDesignById/{id}")]
-    public async Task<IActionResult> GetByIdAsync(string id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var query = new GetDetailDesignByIdQuery(Guid.Parse(id));
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId is null)
+        {
+            return BadRequest();
+        }
+
+        var query = new GetDetailDesignByIdQuery(id, Guid.Parse(userId));
         var response = await _sender.Send(query, cancellationToken);
 
         return response.IsSuccess ? Ok(response.Value) : NotFound(response.Errors);
@@ -44,7 +66,14 @@ public class DetailDesignController : ControllerBase
     [Route("GetDetailDesignByName/{name}")]
     public async Task<IActionResult> GetByNameAsync(string name, CancellationToken cancellationToken)
     {
-        var query = new GetDetailDesignByNameQuery(name);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId is null)
+        {
+            return BadRequest();
+        }
+
+        var query = new GetDetailDesignByNameQuery(name, Guid.Parse(userId));
         var response = await _sender.Send(query, cancellationToken);
 
         return response.IsSuccess ? Ok(response.Value) : NotFound(response.Errors);
@@ -60,14 +89,31 @@ public class DetailDesignController : ControllerBase
             return BadRequest();
         }
 
-        var battery = await _sender.Send(inputCommands.Battery, cancellationToken);
-        var motor = await _sender.Send(inputCommands.Motor, cancellationToken);
-        var inverter = await _sender.Send(inputCommands.Inverter, cancellationToken);
-        var fuselage = await _sender.Send(inputCommands.Fuselage, cancellationToken);
-        var blade = await _sender.Send(inputCommands.Blade, cancellationToken);
-        var mission = await _sender.Send(inputCommands.Mission, cancellationToken);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId is null)
+        {
+            return BadRequest();
+        }
+
+        Guid parsedUserId = Guid.Parse(userId);
+
+        CreateBatteryPackCommand batteryCommand = new(parsedUserId, inputCommands.Battery);
+        CreateMotorCommand motorCommand = new(parsedUserId, inputCommands.Motor);
+        CreateInverterCommand inverterCommand = new(parsedUserId, inputCommands.Inverter);
+        CreateFuselageCommand fuselageCommand = new(parsedUserId, inputCommands.Fuselage);
+        CreateBladeCommand bladeCommand = new(parsedUserId, inputCommands.Blade);
+        CreateMissionParameterCommand missionCommand = new(parsedUserId, inputCommands.Mission);
+
+        var battery = await _sender.Send(batteryCommand, cancellationToken);
+        var motor = await _sender.Send(motorCommand, cancellationToken);
+        var inverter = await _sender.Send(inverterCommand, cancellationToken);
+        var fuselage = await _sender.Send(fuselageCommand, cancellationToken);
+        var blade = await _sender.Send(bladeCommand, cancellationToken);
+        var mission = await _sender.Send(missionCommand, cancellationToken);
 
         var electricVtolCommand = new CreateDetailedDesignCommand(
+            parsedUserId,
             inputCommands.Name,
             battery.Value,
             inverter.Value,
@@ -88,25 +134,37 @@ public class DetailDesignController : ControllerBase
     // POST api/<DetailDesignController>
     [HttpPost]
     [Route("CreateFullNewDetailDesignWithGuidLinks")]
-    public async Task<IActionResult> Post(CreateDetailDesignGuidLinkInput inputCommands, CancellationToken cancellationToken)
+    public async Task<IActionResult> Post(CreateDetailDesignGuidLinkInput input, CancellationToken cancellationToken)
     {
         if (ModelState.IsValid == false)
         {
             return BadRequest();
         }
-        var fuselage = await _sender.Send(inputCommands.Fuselage, cancellationToken);
-        var mission = await _sender.Send(inputCommands.MissionParameters, cancellationToken);
+
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId is null)
+        {
+            return BadRequest();
+        }
+
+        CreateFuselageCommand fuselageCommand = new(Guid.Parse(userId), input.Fuselage);
+        CreateMissionParameterCommand missionCommand = new(Guid.Parse(userId), input.MissionParameters);
+
+        var fuselage = await _sender.Send(fuselageCommand, cancellationToken);
+        var mission = await _sender.Send(missionCommand, cancellationToken);
 
         var electricVtolCommand = new CreateDetailDesignWithGuidLinksCommand(
-            inputCommands.Name,
-            Guid.Parse(inputCommands.BatteryPackId),
-            Guid.Parse(inputCommands.MotorId),
-            Guid.Parse(inputCommands.InverterId),
-            Guid.Parse(inputCommands.BladeId),
+            Guid.Parse(userId),
+            input.Name,
+            Guid.Parse(input.BatteryPackId),
+            Guid.Parse(input.MotorId),
+            Guid.Parse(input.InverterId),
+            Guid.Parse(input.BladeId),
             Guid.Parse(mission.Value.Id),
             Guid.Parse(fuselage.Value.Id),
-            inputCommands.MotorQuantity,
-            inputCommands.BladePerMotorQuantity);
+            input.MotorQuantity,
+            input.BladePerMotorQuantity);
 
         var response = await _sender.Send(electricVtolCommand, cancellationToken);
 

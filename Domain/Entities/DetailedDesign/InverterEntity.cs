@@ -5,15 +5,17 @@ namespace Domain.Entities.DetailedDesign;
 
 public sealed class InverterEntity : Entity
 {
-    public InverterEntity(Guid id, string name, MeasureandQuantity weight, MeasureandQuantity voltageRating, MeasureandQuantity currentRating) : base(id)
+    public InverterEntity(Guid id, Guid userId, string name, MeasureandQuantity weight, MeasureandQuantity voltageRating, MeasureandQuantity currentRating) : base(id)
     {
         Name = name;
         Weight = weight;
         VoltageRating = voltageRating;
         CurrentRating = currentRating;
         PowerToWeightRatio = ElectricCalculations.CalculatePowerToWeightRatio(voltageRating, currentRating, weight);
+        UserId = userId;
     }
 
+    public Guid UserId { get; private set; }
     public string Name { get; private set; }
     public MeasureandQuantity VoltageRating { get; private set; }
     public MeasureandQuantity CurrentRating { get; private set; }

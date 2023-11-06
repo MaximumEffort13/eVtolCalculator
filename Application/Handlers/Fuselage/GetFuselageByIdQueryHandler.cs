@@ -17,7 +17,7 @@ internal class GetFuselageByIdQueryHandler : IQueryHandler<GetFuselageByIdQuery,
 
     public async Task<Result<FuselageDto>> Handle(GetFuselageByIdQuery request, CancellationToken cancellationToken)
     {
-        var fuselage = await _fuselageRepository.GetByIdAsync(request.Id, cancellationToken);
+        var fuselage = await _fuselageRepository.GetByIdAsync(request.Id, request.UserId, cancellationToken);
 
         var response = FuselageDtoMapper.Map(fuselage);
 

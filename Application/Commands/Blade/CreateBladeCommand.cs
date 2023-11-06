@@ -3,10 +3,15 @@ using Application.DTO;
 
 namespace Application.Commands.Blade;
 
-public sealed record CreateBladeCommand(
-    string Name,
-    double Length_mm,
-    double Width_mm,
-    double Thickness_mm,
-    double Weight_g,
-    double AngleOfAttack) : ICommand<BladeDto>;
+public sealed record CreateBladeCommand(Guid UserId, BladeInsert Blade) : ICommand<BladeDto>;
+
+
+public class BladeInsert
+{
+    public string Name { get; set; }
+    public double Length_mm { get; set; }
+    public double Width_mm { get; set; }
+    public double Thickness_mm { get; set; }
+    public double Weight_g { get; set; }
+    public double AngleOfAttack { get; set; }
+}

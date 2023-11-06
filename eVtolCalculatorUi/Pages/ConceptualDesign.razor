@@ -6,18 +6,35 @@
     <DataAnnotationsValidator />
     <div class="container-fluid">
         <h4>ConceptualDesign:</h4>
-        <div class="row row-cols-3">
+        <div class="row row-cols-4">
             <div class="col g-3">
                 <div class="form-floating mb-3">
-                    <InputNumber id="totalWeight" class="form-control" @bind-Value="model.TotalWeightOfeVtol" placeholder="500" />
-                    <ValidationMessage For=@(() => model.TotalWeightOfeVtol) />
+                    <InputText id="name" class="form-control" @bind-Value="model.Name" placeholder="First Concept" />
+                    <ValidationMessage For=@(() => model.Name) />
+                    <label for="name">Name:</label>
+                </div>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputNumber id="totalWeight" class="form-control" @bind-Value="model.TotalMassOfeVtol_kg" placeholder="500" />
+                    <ValidationMessage For=@(() => model.TotalMassOfeVtol_kg) />
                     <label for="totalWeight">Total Weight (kg):</label>
                 </div>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col g-3">
                 <div class="form-floating mb-3">
-                    <InputNumber id="payloadWeight" class="form-control" @bind-Value="model.PayloadMass" placeholder="100" />
-                    <ValidationMessage For=@(() => model.PayloadMass) />
+                    <InputNumber id="payloadWeight" class="form-control" @bind-Value="model.PayloadMass_kg" placeholder="100" />
+                    <ValidationMessage For=@(() => model.PayloadMass_kg) />
                     <label for="payloadWeight">Payload Weight (kg):</label>
                 </div>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col g-3">
                 <div class="form-floating mb-3">
                     <InputNumber id="flighTime" class="form-control" @bind-Value="model.FlightTimeInMinutes" placeholder="15" />
                     <ValidationMessage For=@(() => model.FlightTimeInMinutes) />
@@ -26,6 +43,7 @@
             </div>
         </div>
     </div>
+
     <div class="row row-cols-6">
         <div class="col"></div>
         <div class="col"></div>
@@ -47,10 +65,39 @@
     }
 </EditForm>
 
+<section class="row row-cols-5">
+    <div class="col"></div>
+    <div class="col"></div>
+    <div class="col">
+        <div class="form-floating mb-3">
+            <select id="conceptsSelect" class="form-select form-select-sm" @onchange="@OnConceptSelectChange">
+                <option value="" selected>Select</option>
+                @foreach (var concepts in ConceptualDesigns)
+                {
+                    <option value="@concepts.Id">@concepts.Name</option>
+                }
+            </select>
+            <label for="conceptsSelect" class="col-md-2 col-form-label">Concepts</label>
+        </div>
+    </div>
+</section>
+
 @if (designResults is not null && displayOutput)
 {
     <section class="container-fluid">
         <h4>Design Outputs:</h4>
+        <div class="row row-cols-4">
+            <div class="col">
+                <p>
+                    Name =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Name
+                </p>
+            </div>
+        </div>
         <div class="row row-cols-4">
             <div class="col">
                 <p>
@@ -119,15 +166,49 @@
     bool displayOutput = false;
     CreateConceptualDesignModel model = new();
     string errorMessage = string.Empty;
-    ConceptualDesignDto designResults = new();
+
+    ConceptualDesignDto designResults { get; set; }
+    List<ConceptualDesignDto> ConceptualDesigns { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
+        var conceptualDesigns = await ConceptualDesignEndpoints.GetConceptualDesigns();
+
+        if (conceptualDesigns.IsFailed)
+        {
+            errorMessage = conceptualDesigns.Reasons.Last().Message;
+        }
+        else
+        {
+            ConceptualDesigns = conceptualDesigns.Value;
+        }
+
+        StateHasChanged();
+    }
+
+    protected async Task OnConceptSelectChange(ChangeEventArgs args)
+    {
+        var value = args.Value.ToString();
+
+        if (string.IsNullOrEmpty(value) || value.Equals("Select"))
+        {
+            designResults = new();
+            displayOutput = false;
+            return;
+        }
+
+        var result = await ConceptualDesignEndpoints.GetConceptualDesignByIdAsync(value);
+        designResults = result.Value;
+        displayOutput = true;
+
+        return;
     }
 
     private async Task OnValidSubmit()
     {
         errorMessage = string.Empty;
+        designResults = new();
+        displayOutput = false;
 
         try
         {

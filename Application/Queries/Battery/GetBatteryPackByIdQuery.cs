@@ -2,4 +2,4 @@
 using Application.DTO;
 
 namespace Application.Queries.Battery;
-public sealed record GetBatteryPackByIdQuery(Guid Id) : IQuery<BatteryPackDto>;
+public sealed record GetBatteryPackByIdQuery(Guid Id, Guid UserId) : IQuery<BatteryPackDto>;

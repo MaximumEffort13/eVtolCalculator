@@ -8,4 +8,5 @@ public interface IMotorEndpoints
 {
     Task<Result<MotorDto>> CreateMotorAsync(CreateMotorModel blade);
     Task<Result<List<MotorDto>>> GetMotors();
+    Task<Result<MotorDto>> GetMotorById(string id);
 }

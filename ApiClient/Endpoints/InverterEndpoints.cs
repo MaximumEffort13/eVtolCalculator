@@ -11,16 +11,18 @@ public class InverterEndpoints : IInverterEndpoints
 {
     private readonly Utilities _utilities;
     private readonly ILogger<InverterEndpoints> _logger;
+    private readonly ILoggedInUserModel _loggedInUserModel;
 
-    public InverterEndpoints(Utilities utilities, ILogger<InverterEndpoints> logger)
+    public InverterEndpoints(Utilities utilities, ILogger<InverterEndpoints> logger, ILoggedInUserModel loggedInUserModel)
     {
         _utilities = utilities;
         _logger = logger;
+        _loggedInUserModel = loggedInUserModel;
     }
 
-    public async Task<Result<InverterDto>> CreateInverterAsync(CreateInverterModel blade)
+    public async Task<Result<InverterDto>> CreateInverterAsync(CreateInverterModel inverter)
     {
-        var result = await _utilities.PostCommandAsync<CreateInverterModel, InverterDto>(blade, InverterRoutes.Create.Name);
+        var result = await _utilities.PostCommandAsync<CreateInverterModel, InverterDto>(inverter, InverterRoutes.Create.Name);
 
         if (result is null)
         {
@@ -37,6 +39,18 @@ public class InverterEndpoints : IInverterEndpoints
         if (results is null || results.IsFailed)
         {
             return Result.Fail(results!.Reasons.Last().ToString());
+        }
+
+        return results;
+    }
+
+    public async Task<Result<InverterDto>> GetInverterById(string id)
+    {
+        var results = await _utilities.GetRequestAsync<InverterDto>($"{InverterRoutes.GetById.Name}/{id}");
+
+        if (results is null || results.IsFailed)
+        {
+            return Result.Fail("We could not retrieve the requested data.");
         }
 
         return results;

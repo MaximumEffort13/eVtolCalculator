@@ -11,6 +11,7 @@ internal class BatteryPackConfiguration : IEntityTypeConfiguration<BatteryPack>
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).IsRequired();
+        builder.Property(p => p.UserId).IsRequired();
         builder.Property(x => x.Name).IsRequired().HasMaxLength(128);
 
         builder.Property(x => x.NumberOfModulesConnectedInSeries).IsRequired().HasColumnType("integer").HasColumnName("modules_connected_series");

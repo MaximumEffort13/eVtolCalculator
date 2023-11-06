@@ -19,18 +19,18 @@ public sealed class BladeRepository : IBladeRepository
         _appDbContext.Blades.Add(blade);
     }
 
-    public async Task<BladeEntity> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<BladeEntity> GetByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken)
     {
-        return await _appDbContext.Blades.SingleAsync(b => b.Id == id, cancellationToken);
+        return await _appDbContext.Blades.SingleAsync(b => b.Id == id && b.UserId == userId, cancellationToken);
     }
 
-    public async Task<List<BladeEntity>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<List<BladeEntity>> GetAllAsync(Guid userId, CancellationToken cancellationToken)
     {
-        return await _appDbContext.Blades.ToListAsync(cancellationToken);
+        return await _appDbContext.Blades.Where(b => b.UserId == userId).ToListAsync(cancellationToken);
     }
 
-    public async Task<BladeEntity> GetByNameAsync(string name, CancellationToken cancellationToken)
+    public async Task<BladeEntity> GetByNameAsync(string name, Guid userId, CancellationToken cancellationToken)
     {
-        return await _appDbContext.Blades.SingleAsync(b => b.Name == name, cancellationToken);
+        return await _appDbContext.Blades.SingleAsync(b => b.Name == name && b.UserId == userId, cancellationToken);
     }
 }

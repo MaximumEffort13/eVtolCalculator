@@ -13,7 +13,7 @@ namespace Infrastructure.Persistence.Configurations
         {
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).IsRequired();
-
+            builder.Property(p => p.UserId).IsRequired();
             builder.Property(e => e.Name).HasMaxLength(50).IsRequired();
             builder.Property(e => e.MotorQuantity).IsRequired().HasColumnType("integer");
             builder.Property(e => e.BladePerMotorQuantity).IsRequired().HasColumnType("integer");

@@ -2,8 +2,8 @@
 using Application.DTO;
 using Application.Mappers;
 using Application.Queries.DetailDesign;
+using Domain.Abstractions;
 using FluentResults;
-using Infrastructure.Repositories;
 
 namespace Application.Handlers.DetailDesign;
 internal class GetDetailDesignByNameQueryHandler : IQueryHandler<GetDetailDesignByNameQuery, ElectricVtolDesignDto>
@@ -17,7 +17,7 @@ internal class GetDetailDesignByNameQueryHandler : IQueryHandler<GetDetailDesign
 
     public async Task<Result<ElectricVtolDesignDto>> Handle(GetDetailDesignByNameQuery request, CancellationToken cancellationToken)
     {
-        var electricVtolDesign = await _electricVtolRepository.GetByNameAsync(request.Name, cancellationToken);
+        var electricVtolDesign = await _electricVtolRepository.GetByNameAsync(request.Name, request.UserId, cancellationToken);
 
         var response = ElectricVtolDesignDtoMapper.Map(electricVtolDesign);
 

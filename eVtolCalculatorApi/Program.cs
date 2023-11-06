@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
+
 var MyAllowedSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
@@ -80,7 +81,20 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddAuthorizationBuilder();
+builder.Services.AddAuthorizationBuilder().AddPolicy("admin", policy =>
+{
+    policy.RequireRole("admin");
+}).AddPolicy("management", policy =>
+{
+    policy.RequireRole("management");
+}).AddPolicy("user", policy =>
+{
+    policy.RequireAuthenticatedUser();
+}).AddPolicy("create_user", policy =>
+{
+    policy.RequireRole("admin");
+    policy.RequireRole("management");
+});
 
 builder.Services.AddIdentityCore<IdentityUserExtender>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()

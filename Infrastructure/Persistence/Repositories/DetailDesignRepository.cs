@@ -1,37 +1,36 @@
 ﻿using Domain.Entities.DetailedDesign;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Persistence.DataAccess;
-using Infrastructure.Repositories;
+using Domain.Abstractions;
 
-namespace Infrastructure.Persistence.Repositories
+namespace Infrastructure.Persistence.Repositories;
+
+public sealed class ElectricVtolRepository : IElectricVtolRepository
 {
-    public sealed class ElectricVtolRepository : IElectricVtolRepository
+    private readonly ApplicationDbContext _appDbContext;
+
+    public ElectricVtolRepository(ApplicationDbContext appDbContext)
     {
-        private readonly ApplicationDbContext _appDbContext;
+        _appDbContext = appDbContext;
+    }
 
-        public ElectricVtolRepository(ApplicationDbContext appDbContext)
-        {
-            _appDbContext = appDbContext;
-        }
+    public void Create(ElectricVtolDesign electricVtolDesign)
+    {
+        _appDbContext.ElectricVtolDesigns.Add(electricVtolDesign);
+    }
 
-        public void Create(ElectricVtolDesign electricVtolDesign)
-        {
-            _appDbContext.ElectricVtolDesigns.Add(electricVtolDesign);
-        }
+    public async Task<ElectricVtolDesign> GetByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken)
+    {
+        return await _appDbContext.ElectricVtolDesigns.SingleAsync(eVtol => eVtol.Id == id && eVtol.UserId == userId, cancellationToken);
+    }
 
-        public async Task<ElectricVtolDesign> GetByIdAsync(Guid id, CancellationToken cancellationToken)
-        {
-            return await _appDbContext.ElectricVtolDesigns.SingleAsync(eVtol => eVtol.Id == id, cancellationToken);
-        }
+    public async Task<List<ElectricVtolDesign>> GetAllAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        return await _appDbContext.ElectricVtolDesigns.Where(eVtol => eVtol.UserId == userId).ToListAsync(cancellationToken);
+    }
 
-        public async Task<List<ElectricVtolDesign>> GetAllAsync(CancellationToken cancellationToken)
-        {
-            return await _appDbContext.ElectricVtolDesigns.ToListAsync(cancellationToken);
-        }
-
-        public async Task<ElectricVtolDesign> GetByNameAsync(string name, CancellationToken cancellationToken)
-        {
-            return await _appDbContext.ElectricVtolDesigns.SingleAsync(eVtol => eVtol.Name == name, cancellationToken);
-        }
+    public async Task<ElectricVtolDesign> GetByNameAsync(string name, Guid userId, CancellationToken cancellationToken)
+    {
+        return await _appDbContext.ElectricVtolDesigns.SingleAsync(eVtol => eVtol.Name == name && eVtol.UserId == userId, cancellationToken);
     }
 }

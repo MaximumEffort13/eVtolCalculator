@@ -19,18 +19,18 @@ public sealed class InvererRepository : IInvererRepository
         _appDbContext.Inverters.Add(inverter);
     }
 
-    public async Task<InverterEntity> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<InverterEntity> GetByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken)
     {
-        return await _appDbContext.Inverters.SingleAsync(i => i.Id == id, cancellationToken);
+        return await _appDbContext.Inverters.SingleAsync(i => i.Id == id && i.UserId == userId, cancellationToken);
     }
 
-    public async Task<List<InverterEntity>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<List<InverterEntity>> GetAllAsync(Guid userId, CancellationToken cancellationToken)
     {
-        return await _appDbContext.Inverters.ToListAsync(cancellationToken);
+        return await _appDbContext.Inverters.Where(i => i.UserId == userId).ToListAsync(cancellationToken);
     }
 
-    public async Task<InverterEntity> GetByNameAsync(string name, CancellationToken cancellationToken)
+    public async Task<InverterEntity> GetByNameAsync(string name, Guid userId, CancellationToken cancellationToken)
     {
-        return await _appDbContext.Inverters.SingleAsync(i => i.Name == name, cancellationToken);
+        return await _appDbContext.Inverters.SingleAsync(i => i.Name == name && i.UserId == userId, cancellationToken);
     }
 }

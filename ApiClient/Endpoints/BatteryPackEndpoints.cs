@@ -11,11 +11,13 @@ public class BatteryPackEndpoints : IBatteryPackEndpoints
 {
     private readonly Utilities _utilities;
     private readonly ILogger<BatteryPackEndpoints> _logger;
+    private readonly ILoggedInUserModel _loggedInUser;
 
-    public BatteryPackEndpoints(Utilities utilities, ILogger<BatteryPackEndpoints> logger)
+    public BatteryPackEndpoints(Utilities utilities, ILogger<BatteryPackEndpoints> logger, ILoggedInUserModel loggedInUser)
     {
         _utilities = utilities;
         _logger = logger;
+        _loggedInUser = loggedInUser;
     }
 
     public async Task<Result<BatteryPackDto>> CreateBatteryPack(CreateBatteryModel battery)
@@ -42,8 +44,15 @@ public class BatteryPackEndpoints : IBatteryPackEndpoints
         return results;
     }
 
-    public async Task<Result<BatteryPackDto>> GetBatteryById(Guid id)
+    public async Task<Result<BatteryPackDto>> GetBatteryByIdAsync(string id)
     {
-        throw new NotImplementedException();
+        var results = await _utilities.GetRequestAsync<BatteryPackDto>($"{BatteryPackRoutes.GetById.Name}/{id}");
+
+        if (results is null || results.IsFailed)
+        {
+            return Result.Fail("We could not retrieve the requested data.");
+        }
+
+        return results;
     }
 }

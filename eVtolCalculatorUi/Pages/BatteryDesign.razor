@@ -1,6 +1,7 @@
 ﻿@page "/batterypackdesign"
 @inject IAuthenticationService AuthService
 @inject IBatteryPackEndpoints BatteryPackEndpoints
+@attribute [Authorize]
 
 <EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
     <DataAnnotationsValidator />
@@ -21,6 +22,8 @@
                     <label for="cellVoltage">Cell Voltage (V)</label>
                 </div>
             </div>
+        </div>
+        <div class="row row-cols-4">
             <div class="col g-3">
                 <div class="form-floating mb-3">
                     <InputNumber id="cellCurrent" class="form-control" @bind-Value="model.CellCurrent_mA" placeholder="1400" />
@@ -51,6 +54,8 @@
                     <label for="parallelCells">Cells connected in parallel per module: </label>
                 </div>
             </div>
+        </div>
+        <div class="row row-cols-4">
             <div class="col g-3">
                 <div class="form-floating mb-3">
                     <InputNumber id="seriesCells" class="form-control" @bind-Value="model.NumberOfCellsConnectedInSeries" placeholder="5" />
@@ -66,7 +71,7 @@
                 </div>
             </div>
         </div>
-        <div class="row row-cols-3">
+        <div class="row row-cols-4">
             <div class="col g-3">
                 <div class="form-floating mb-3">
                     <InputNumber id="seriesModules" class="form-control" @bind-Value="model.NumberOfModulesConnectedInSeries" placeholder="5" />
@@ -81,6 +86,8 @@
                     <label for="packName">Name of completed Battery Pack: </label>
                 </div>
             </div>
+        </div>
+        <div class="row row-cols-4">
             <div class="col g-3">
                 <div class="form-floating mb-3">
                     <InputNumber id="packMiscellaneousWeight" class="form-control" @bind-Value="model.MiscellaneousPackWeight_kg" placeholder="50" />
@@ -110,6 +117,23 @@
         </div>
     }
 </EditForm>
+
+<section class="row row-cols-5">
+    <div class="col"></div>
+    <div class="col"></div>
+    <div class="col">
+        <div class="form-floating mb-3">
+            <select id="batteryPackSelect" class="form-select form-select-sm" @onchange="@OnBatteryPackChange">
+                <option value="" selected>Select</option>
+                @foreach (var battery in BatteryPacks)
+                {
+                    <option value="@battery.Id">@battery.Name</option>
+                }
+            </select>
+            <label for="batteryPackSelect" class="col-md-2 col-form-label">Battery Packs</label>
+        </div>
+    </div>
+</section>
 
 @if (designResults is not null && displayOutput)
 {
@@ -194,14 +218,49 @@
     bool displayOutput = true;
     CreateBatteryModel model = new ();
     string errorMessage = string.Empty;
-    BatteryPackDto designResults = new();
+    BatteryPackDto designResults { get; set; }
+    List<BatteryPackDto> BatteryPacks { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
+        var batteryPacks = await BatteryPackEndpoints.GetBatteries();
+
+        if (batteryPacks.IsFailed)
+        {
+            errorMessage = batteryPacks.Reasons.Last().Message;
+        }
+        else
+        {
+            BatteryPacks = batteryPacks.Value;
+        }
+
+        StateHasChanged();
+    }
+
+    protected async Task OnBatteryPackChange(ChangeEventArgs args)
+    {
+        var value = args.Value.ToString();
+
+        if (string.IsNullOrEmpty(value) || value.Equals("Select"))
+        {
+            designResults = new();
+            displayOutput = false;
+
+            return;
+        }
+
+        var result = await BatteryPackEndpoints.GetBatteryByIdAsync(value);
+        designResults = result.Value;
+        displayOutput = true;
+
+        return;
     }
 
     private async Task OnValidSubmit()
     {
+        displayOutput = false;
+        designResults = new();
+
         try
         {
             var result = await BatteryPackEndpoints.CreateBatteryPack(model);
@@ -224,6 +283,4 @@
             errorMessage = ex.Message;
         }
     }
-
-
 }

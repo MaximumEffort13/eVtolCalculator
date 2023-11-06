@@ -19,13 +19,13 @@ public sealed class MissionParameterRepository : IMissionParameterRepository
         _appDbContext.MissionParameters.Add(mission);
     }
 
-    public async Task<MissionParameterEstimates> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<MissionParameterEstimates> GetByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken)
     {
-        return await _appDbContext.MissionParameters.SingleAsync(m => m.Id == id, cancellationToken);
+        return await _appDbContext.MissionParameters.SingleAsync(m => m.Id == id && m.UserId == userId, cancellationToken);
     }
 
-    public async Task<List<MissionParameterEstimates>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<List<MissionParameterEstimates>> GetAllAsync(Guid userId, CancellationToken cancellationToken)
     {
-        return await _appDbContext.MissionParameters.ToListAsync(cancellationToken);
+        return await _appDbContext.MissionParameters.Where(m => m.UserId == userId).ToListAsync(cancellationToken);
     }
 }

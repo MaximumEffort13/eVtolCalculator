@@ -11,11 +11,13 @@ public class ConceptualDesignEndpoints : IConceptualDesignEndpoints
 {
     private readonly Utilities _utilities;
     private readonly ILogger<ConceptualDesignEndpoints> _logger;
+    private readonly ILoggedInUserModel _loggedInUserModel;
 
-    public ConceptualDesignEndpoints(Utilities utilities, ILogger<ConceptualDesignEndpoints> logger)
+    public ConceptualDesignEndpoints(Utilities utilities, ILogger<ConceptualDesignEndpoints> logger, ILoggedInUserModel loggedInUserModel)
     {
         _utilities = utilities;
         _logger = logger;
+        _loggedInUserModel = loggedInUserModel;
     }
 
     public async Task<Result<ConceptualDesignDto>> CreateConceptualDesign(CreateConceptualDesignModel conceptualDesign)
@@ -42,4 +44,15 @@ public class ConceptualDesignEndpoints : IConceptualDesignEndpoints
         return results;
     }
 
+    public async Task<Result<ConceptualDesignDto>> GetConceptualDesignByIdAsync(string id)
+    {
+        var results = await _utilities.GetRequestAsync<ConceptualDesignDto>($"{ConceptualDesignRoutes.GetById.Name}/{id}");
+
+        if (results is null || results.IsFailed)
+        {
+            return Result.Fail(results!.Reasons.Last().ToString());
+        }
+
+        return results;
+    }
 }

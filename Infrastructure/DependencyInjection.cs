@@ -3,7 +3,6 @@ using Domain.Abstractions;
 using Infrastructure.InfrastructureLayer.EmailService;
 using Infrastructure.Persistence.DataAccess;
 using Infrastructure.Persistence.Repositories;
-using Infrastructure.Repositories;
 using MecalcEmailService;
 using MecalcEmailService.Models;
 using Microsoft.AspNetCore.Identity;

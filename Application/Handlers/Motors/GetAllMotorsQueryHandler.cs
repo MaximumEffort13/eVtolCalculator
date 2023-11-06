@@ -17,7 +17,7 @@ internal sealed class GetAllMotorsQueryHandler : IQueryHandler<GetAllMotorsQuery
     }
     public async Task<Result<List<MotorDto>>> Handle(GetAllMotorsQuery request, CancellationToken cancellationToken)
     {
-        var motors = await _motorRepository.GetAllAsync(cancellationToken);
+        var motors = await _motorRepository.GetAllAsync(request.UserId, cancellationToken);
 
         List<MotorDto> motorDtos = new ();
 

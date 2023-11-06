@@ -2,4 +2,4 @@
 using Application.DTO;
 
 namespace Application.Queries.Motors;
-public sealed record GetMotorByNameQuery(string Name) : IQuery<MotorDto>;
+public sealed record GetMotorByNameQuery(string Name, Guid UserId) : IQuery<MotorDto>;

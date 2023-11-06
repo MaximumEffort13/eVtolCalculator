@@ -12,7 +12,7 @@ using System.Security.Claims;
 
 namespace eVtolCalculatorApi.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/[controller]/[action]")]
 [ApiController]
 [Authorize]
 public class UserController : ControllerBase
@@ -63,7 +63,6 @@ public class UserController : ControllerBase
                                         string PostalCode);
 
     [AllowAnonymous]
-    [Route("Register")]
     [HttpPost]
     public async Task<IActionResult> Register(UserRegistrationModel user, CancellationToken cancellationToken)
     {
@@ -127,7 +126,7 @@ public class UserController : ControllerBase
         return Ok();
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "admin")]
     [Route("Admin/GetAllUsers")]
     [HttpGet]
     public async Task<List<ApplicationUserModel>> GetAllUsers()
@@ -163,7 +162,7 @@ public class UserController : ControllerBase
         return output;
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "admin")]
     [HttpGet]
     [Route("Admin/GetAllRoles")]
     public Dictionary<string, string> GetAllRoles()
@@ -173,7 +172,7 @@ public class UserController : ControllerBase
         return roles;
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "admin")]
     [HttpPost]
     [Route("Admin/AddRole")]
     public async Task AddRole(UserRolePairModel pairing)
@@ -198,7 +197,7 @@ public class UserController : ControllerBase
         await _userManager.AddToRoleAsync(user, "Everyone");
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "admin")]
     [HttpPost]
     [Route("Admin/RemoveRole")]
     public async Task RemoveRole(UserRolePairModel pairing)

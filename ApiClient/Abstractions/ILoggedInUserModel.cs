@@ -3,6 +3,7 @@
 public interface ILoggedInUserModel
 {
     Guid Id { get; set; }
+    Guid UserId { get; set; }
     string AccessToken { get; set; }
     string RefreshToken { get; set; }
     string EmailAddress { get; set; }

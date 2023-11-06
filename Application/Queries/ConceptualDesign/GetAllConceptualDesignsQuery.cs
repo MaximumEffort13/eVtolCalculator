@@ -3,4 +3,4 @@ using Application.DTO;
 
 namespace Application.Queries.ConceptualDesign;
 
-public sealed record GetAllConceptualDesignsQuery : IQuery<List<ConceptualDesignDto>>;
+public sealed record GetAllConceptualDesignsQuery(Guid UserId) : IQuery<List<ConceptualDesignDto>>;

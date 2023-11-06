@@ -6,7 +6,6 @@ using Domain.Abstractions;
 using Domain.Entities.DetailedDesign;
 using Domain.EntityCalculations;
 using FluentResults;
-using Infrastructure.Repositories;
 
 namespace Application.Handlers.DetailDesign;
 
@@ -45,6 +44,7 @@ internal class CreateDetailDesignWithGuidLinksCommandHandler : ICommandHandler<C
     {
         var electricVtol = new ElectricVtolDesign(
             Guid.NewGuid(),
+            request.UserId,
             request.Name,
             request.BatteryId,
             request.InverterId,
@@ -55,12 +55,12 @@ internal class CreateDetailDesignWithGuidLinksCommandHandler : ICommandHandler<C
             request.MotorQuantity,
             request.BladePerMotorQuantity);
 
-        var battery = await _batteryPackRepository.GetByIdAsync(request.BatteryId, cancellationToken);
-        var motor = await _motorRepository.GetByIdAsync(request.MotorId, cancellationToken);
-        var inverter = await _invererRepository.GetByIdAsync(request.InverterId, cancellationToken);
-        var blade = await _bladeRepository.GetByIdAsync(request.BladeId, cancellationToken);
-        var fuselage = await _fuselageRepository.GetByIdAsync(request.FuselageId, cancellationToken);
-        var mission = await _missionParameterRepository.GetByIdAsync(request.MissionId, cancellationToken);
+        var battery = await _batteryPackRepository.GetByIdAsync(request.BatteryId, request.UserId, cancellationToken);
+        var motor = await _motorRepository.GetByIdAsync(request.MotorId, request.UserId, cancellationToken);
+        var inverter = await _invererRepository.GetByIdAsync(request.InverterId, request.UserId, cancellationToken);
+        var blade = await _bladeRepository.GetByIdAsync(request.BladeId, request.UserId, cancellationToken);
+        var fuselage = await _fuselageRepository.GetByIdAsync(request.FuselageId, request.UserId, cancellationToken);
+        var mission = await _missionParameterRepository.GetByIdAsync(request.MissionId, request.UserId, cancellationToken);
 
         electricVtol.ThrustArea = AerodynamicCalculations.CalculateThrustArea(blade.Length, request.MotorQuantity, request.BladePerMotorQuantity);
         electricVtol.Thrust = AerodynamicCalculations.CalculateThrustRequirement(mission.EstimatedPowerRequirement, electricVtol.ThrustArea);

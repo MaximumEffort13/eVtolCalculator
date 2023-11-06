@@ -18,7 +18,7 @@ internal sealed class GetUserByIdQueryHandler : IQueryHandler<GetConceptualDesig
 
     public async Task<Result<ConceptualDesignDto>> Handle(GetConceptualDesignByIdQuery request, CancellationToken cancellationToken)
     {
-        var design = await _overallDesignRepository.GetByIdAsync(request.designId, cancellationToken);
+        var design = await _overallDesignRepository.GetByIdAsync(request.designId, request.UserId, cancellationToken);
 
         if (design is null)
         {

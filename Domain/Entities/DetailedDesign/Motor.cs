@@ -5,7 +5,7 @@ namespace Domain.Entities.DetailedDesign;
 
 public sealed class Motor : Entity
 {
-    public Motor(Guid id, string name, MeasureandQuantity voltageRating, MeasureandQuantity currentRating, MeasureandQuantity weight, MeasureandQuantity kv) : base(id)
+    public Motor(Guid id, Guid userId, string name, MeasureandQuantity voltageRating, MeasureandQuantity currentRating, MeasureandQuantity weight, MeasureandQuantity kv) : base(id)
     {
         Name = name;
         VoltageRating = voltageRating;
@@ -14,7 +14,10 @@ public sealed class Motor : Entity
         Kv = kv;
         Rpm = MechanicalCalculations.CalculateRpm(kv.Value, voltageRating);
         PowerToWeightRatio = ElectricCalculations.CalculatePowerToWeightRatio(voltageRating, currentRating, weight);
+        UserId = userId;
     }
+
+    public Guid UserId { get; private set; }
 
 
     public string Name { get; private set; }

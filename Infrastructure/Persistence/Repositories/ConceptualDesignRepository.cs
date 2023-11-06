@@ -14,14 +14,14 @@ public sealed class ConceptualDesignRepository : IConceptualDesignRepository
         _appContext = appContext;
     }
 
-    public async Task<ConceptualVtolDesign> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<ConceptualVtolDesign> GetByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken)
     {
-        return await _appContext.ConceptualDesign.SingleAsync(a => a.Id == id, cancellationToken = default);
+        return await _appContext.ConceptualDesign.SingleAsync(a => a.Id == id && a.UserId == userId, cancellationToken = default);
     }
 
-    public async Task<List<ConceptualVtolDesign>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<List<ConceptualVtolDesign>> GetAllAsync(Guid userId, CancellationToken cancellationToken)
     {
-        return await _appContext.ConceptualDesign.ToListAsync(cancellationToken);
+        return await _appContext.ConceptualDesign.Where(c => c.UserId == userId).ToListAsync(cancellationToken);
     }
 
     public void Insert(ConceptualVtolDesign parameters)

@@ -64,6 +64,23 @@
     }
 </EditForm>
 
+<section class="row row-cols-5">
+    <div class="col"></div>
+    <div class="col"></div>
+    <div class="col">
+        <div class="form-floating mb-3">
+            <select id="bladeSelect" class="form-select form-select-sm" @onchange="@OnBladeSelectChange">
+                <option value="" selected>Select</option>
+                @foreach (var blade in Blades)
+                {
+                    <option value="@blade.Id">@blade.Name</option>
+                }
+            </select>
+            <label for="bladeSelect" class="col-md-2 col-form-label">Blades</label>
+        </div>
+    </div>
+</section>
+
 @if (designResults is not null && displayOutput)
 {
     <section class="container-fluid">
@@ -147,14 +164,48 @@
     bool displayOutput = false;
     CreateBladeModel model = new();
     string errorMessage = string.Empty;
-    BladeDto designResults = new();
+    BladeDto designResults { get; set; }
+    List<BladeDto> Blades { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
+        var blades = await BladeEndpoints.GetBlades();
+
+        if (blades.IsFailed)
+        {
+            errorMessage = blades.Reasons.Last().Message;
+        }
+        else
+        {
+            Blades = blades.Value;
+        }
+
+        StateHasChanged();        
+    }
+
+    protected async Task OnBladeSelectChange(ChangeEventArgs args)
+    {
+        var value = args.Value.ToString();
+
+        if (string.IsNullOrEmpty(value) || value.Equals("Select"))
+        {
+            designResults = new();
+            displayOutput = false;
+            return;
+        }
+
+        var result = await BladeEndpoints.GetBladeById(value);
+        designResults = result.Value;
+        displayOutput = true;
+
+        return;
     }
 
     private async Task OnValidSubmit()
     {
+        designResults = new();
+        displayOutput = false;
+
         try
         {
             var result = await BladeEndpoints.CreateBladeAsync(model);

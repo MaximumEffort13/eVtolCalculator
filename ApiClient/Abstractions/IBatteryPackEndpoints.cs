@@ -8,4 +8,5 @@ public interface IBatteryPackEndpoints
 {
     Task<Result<BatteryPackDto>> CreateBatteryPack(CreateBatteryModel battery);
     Task<Result<List<BatteryPackDto>>> GetBatteries();
+    Task<Result<BatteryPackDto>> GetBatteryByIdAsync(string id);
 }

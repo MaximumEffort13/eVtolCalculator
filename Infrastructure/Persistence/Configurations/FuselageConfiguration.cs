@@ -11,7 +11,7 @@ namespace Infrastructure.Persistence.Configurations
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).IsRequired();
-
+            builder.Property(p => p.UserId).IsRequired();
             builder.Property(x => x.Weight).HasConversion<MeasureandQuantityConverter>().HasMaxLength(50).HasColumnName("weight");
         }
     }

@@ -1,12 +1,11 @@
 ﻿using Domain.Entities.DetailedDesign;
 
-namespace Infrastructure.Repositories
+namespace Domain.Abstractions;
+
+public interface IElectricVtolRepository
 {
-    public interface IElectricVtolRepository
-    {
-        void Create(ElectricVtolDesign electricVtolDesign);
-        Task<List<ElectricVtolDesign>> GetAllAsync(CancellationToken cancellationToken);
-        Task<ElectricVtolDesign> GetByIdAsync(Guid id, CancellationToken cancellationToken);
-        Task<ElectricVtolDesign> GetByNameAsync(string name, CancellationToken cancellationToken);
-    }
+    void Create(ElectricVtolDesign electricVtolDesign);
+    Task<List<ElectricVtolDesign>> GetAllAsync(Guid userId, CancellationToken cancellationToken);
+    Task<ElectricVtolDesign> GetByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken);
+    Task<ElectricVtolDesign> GetByNameAsync(string name, Guid userId, CancellationToken cancellationToken);
 }

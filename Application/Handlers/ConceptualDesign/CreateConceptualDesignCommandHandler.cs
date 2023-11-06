@@ -23,11 +23,11 @@ internal sealed class CreateConceptualDesignCommandHandler : ICommandHandler<Cre
 
     public async Task<Result<ConceptualDesignDto>> Handle(CreateConceptualDesignCommand request, CancellationToken cancellationToken)
     {
-        MeasureandQuantity designWeight = new(request.TotalMassOfeVtol_kg, SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
-        MeasureandQuantity payloadWeight = new(request.PayloadMass_kg, SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
-        TimeSpan flightTime = TimeSpan.FromMinutes(request.FlightTimeInMinutes);
+        MeasureandQuantity designWeight = new(request.ConceptualDesignInsert.TotalMassOfeVtol_kg, SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
+        MeasureandQuantity payloadWeight = new(request.ConceptualDesignInsert.PayloadMass_kg, SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
+        TimeSpan flightTime = TimeSpan.FromMinutes(request.ConceptualDesignInsert.FlightTimeInMinutes);
 
-        var design = new ConceptualVtolDesign(Guid.NewGuid(), designWeight, payloadWeight, flightTime);
+        var design = new ConceptualVtolDesign(Guid.NewGuid(), request.UserId, request.ConceptualDesignInsert.Name, designWeight, payloadWeight, flightTime);
 
         _designRepository.Insert(design);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

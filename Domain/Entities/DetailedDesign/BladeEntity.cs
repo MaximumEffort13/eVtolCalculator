@@ -6,6 +6,7 @@ public sealed class BladeEntity : Entity
 {
     public BladeEntity(
         Guid id,
+        Guid userId,
         string name,
         MeasureandQuantity length,
         MeasureandQuantity width,
@@ -13,6 +14,7 @@ public sealed class BladeEntity : Entity
         MeasureandQuantity weight,
         MeasureandQuantity angleOfAttack) : base(id)
     {
+        UserId = userId;
         Name = name;
         Length = length;
         Width = width;
@@ -21,6 +23,7 @@ public sealed class BladeEntity : Entity
         AngleOfAttack = angleOfAttack;
     }
 
+    public Guid UserId { get; private set; }
     public string Name { get; private set; }
     public MeasureandQuantity Length { get; private set; }
     public MeasureandQuantity Width { get; private set; }

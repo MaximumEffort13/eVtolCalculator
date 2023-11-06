@@ -17,7 +17,7 @@ internal sealed class GetBladeByIdQueryHandler : IQueryHandler<GetBladeByIdQuery
 
     public async Task<Result<BladeDto>> Handle(GetBladeByIdQuery request, CancellationToken cancellationToken)
     {
-        var blade = await _bladeRepository.GetByIdAsync(request.Id, cancellationToken);
+        var blade = await _bladeRepository.GetByIdAsync(request.Id, request.UserId, cancellationToken);
 
         var response = BladeDtoMapper.Map(blade);
 

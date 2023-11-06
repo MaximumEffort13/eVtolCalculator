@@ -4,6 +4,7 @@ namespace Domain.Entities.DetailedDesign.Battery;
 
 public sealed class BatteryPack : Entity
 {
+    public Guid UserId { get; private set; }
     public Guid ModuleId { get; private set; }
     public MeasureandQuantity Capacity { get; set; }
     public MeasureandQuantity Voltage { get; set; }
@@ -19,12 +20,14 @@ public sealed class BatteryPack : Entity
 
     public BatteryPack(
         Guid id,
+        Guid userId,
         string name,
         Guid moduleId,
         int numberOfModulesConnectedInSeries,
         int numberOfModulesConnectedInParallel,
         MeasureandQuantity miscellaneousWeight) : base(id)
     {
+        UserId = userId;
         Name = name;
         ModuleId = moduleId;
         NumberOfModulesConnectedInSeries = numberOfModulesConnectedInSeries;

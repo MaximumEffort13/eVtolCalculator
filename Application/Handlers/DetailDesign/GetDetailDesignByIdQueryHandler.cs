@@ -4,7 +4,6 @@ using Application.Mappers;
 using Application.Queries.DetailDesign;
 using Domain.Abstractions;
 using FluentResults;
-using Infrastructure.Repositories;
 
 namespace Application.Handlers.DetailDesign;
 internal class GetDetailDesignByIdQueryHandler : IQueryHandler<GetDetailDesignByIdQuery, ElectricVtolDesignDto>
@@ -36,16 +35,16 @@ internal class GetDetailDesignByIdQueryHandler : IQueryHandler<GetDetailDesignBy
 
     public async Task<Result<ElectricVtolDesignDto>> Handle(GetDetailDesignByIdQuery request, CancellationToken cancellationToken)
     {
-        var electricVtolDesign = await _electricVtolRepository.GetByIdAsync(request.Id, cancellationToken);
+        var electricVtolDesign = await _electricVtolRepository.GetByIdAsync(request.Id, request.UserId, cancellationToken);
 
         var response = ElectricVtolDesignDtoMapper.Map(electricVtolDesign);
 
-        var battery = await _batteryPackRepository.GetByIdAsync(electricVtolDesign.BatteryPackId, cancellationToken);
-        var motor = await _motorRepository.GetByIdAsync(electricVtolDesign.MotorId, cancellationToken);
-        var inverter = await _invererRepository.GetByIdAsync(electricVtolDesign.InverterId, cancellationToken);
-        var blade = await _bladeRepository.GetByIdAsync(electricVtolDesign.BladeId, cancellationToken);
-        var fuselage = await _fuselageRepository.GetByIdAsync(electricVtolDesign.FuselageId, cancellationToken);
-        var mission = await _missionParameterRepository.GetByIdAsync(electricVtolDesign.MissionParameterId, cancellationToken);
+        var battery = await _batteryPackRepository.GetByIdAsync(electricVtolDesign.BatteryPackId, request.UserId, cancellationToken);
+        var motor = await _motorRepository.GetByIdAsync(electricVtolDesign.MotorId, request.UserId, cancellationToken);
+        var inverter = await _invererRepository.GetByIdAsync(electricVtolDesign.InverterId, request.UserId, cancellationToken);
+        var blade = await _bladeRepository.GetByIdAsync(electricVtolDesign.BladeId, request.UserId, cancellationToken);
+        var fuselage = await _fuselageRepository.GetByIdAsync(electricVtolDesign.FuselageId, request.UserId, cancellationToken);
+        var mission = await _missionParameterRepository.GetByIdAsync(electricVtolDesign.MissionParameterId, request.UserId, cancellationToken);
 
         response.Battery = BatteryPackDtoMapper.Map(battery);
         response.Motor = MotorDtoMapper.Map(motor);

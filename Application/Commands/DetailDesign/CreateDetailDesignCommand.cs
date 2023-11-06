@@ -9,7 +9,7 @@ using Application.DTO;
 
 namespace Application.Commands.DetailDesign;
 
-public sealed record CreateDetailedDesignCommand(
+public sealed record CreateDetailedDesignCommand(Guid UserId,
         string Name,
         BatteryPackDto Battery,
         InverterDto Inverter,
@@ -24,11 +24,11 @@ public sealed record CreateDetailedDesignCommand(
 
 public sealed record InsertDetailDesignDto(
     string Name,
-    CreateBatteryPackCommand Battery,
-    CreateMotorCommand Motor,
-    CreateInverterCommand Inverter,
-    CreateFuselageCommand Fuselage,
-    CreateBladeCommand Blade,
-    CreateMissionParameterCommand Mission,
+    BatteryPackInsert Battery,
+    MotorInsert Motor,
+    InverterInsert Inverter,
+    FuselageInsert Fuselage,
+    BladeInsert Blade,
+    MissionParameterInsert Mission,
     int MotorQuantity,
     int BladePerMotorCount);

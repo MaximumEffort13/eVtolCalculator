@@ -18,7 +18,7 @@ internal sealed class GetAllBladesQueryHandler : IQueryHandler<GetAllBladesQuery
 
     public async Task<Result<List<BladeDto>>> Handle(GetAllBladesQuery request, CancellationToken cancellationToken)
     {
-        var blades = await _bladeRepository.GetAllAsync(cancellationToken);
+        var blades = await _bladeRepository.GetAllAsync(request.UserId, cancellationToken);
 
         List<BladeDto> dtoBlades = new ();
 

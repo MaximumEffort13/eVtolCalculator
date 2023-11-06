@@ -17,7 +17,7 @@ internal class GetMissionParametersByIdQueryHandler : IQueryHandler<GetMissionPa
 
     public async Task<Result<MissionParameterDto>> Handle(GetMissionParametersByIdQuery request, CancellationToken cancellationToken)
     {
-        var missionParameter = await _missionParameterRepository.GetByIdAsync(request.Id, cancellationToken);
+        var missionParameter = await _missionParameterRepository.GetByIdAsync(request.Id, request.UserId, cancellationToken);
 
         var response = MissionParameterDtoMapper.Map(missionParameter);
 

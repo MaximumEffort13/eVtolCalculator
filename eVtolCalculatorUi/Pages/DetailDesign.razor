@@ -150,20 +150,17 @@
     <div class="col"></div>
     <div class="col"></div>
     <div class="col">
-        <div class="col">
-            <div class="form-floating mb-3">
-                <select id="detailDesign" class="form-select form-select-sm" @onchange="@OnDetailDesignChange">
-                    <option value="" selected>Select</option>
-                    @foreach (var design in DetailDesigns)
-                    {
-                        <option value="@design.Id">@design.Name</option>
-                    }
-                </select>
-                <label for="blade" class="col-md-2 col-form-label">Detail Designs</label>
-            </div>
+        <div class="form-floating mb-3">
+            <select id="detailDesign" class="form-select form-select-sm" @onchange="@OnDetailDesignChange">
+                <option value="" selected>Select</option>
+                @foreach (var design in DetailDesigns)
+                {
+                    <option value="@design.Id">@design.Name</option>
+                }
+            </select>
+            <label for="detailDesign" class="col-md-2 col-form-label">Detail Designs</label>
         </div>
     </div>
-
 </section>
 
 @if (designResults is not null && displayOutput)
@@ -734,7 +731,8 @@
 
         if (string.IsNullOrEmpty(value) || value.Equals("Select"))
         {
-            errorMessage = "Please select a valid battery pack.";
+            designResults = new();
+            displayOutput = false;
             return;
         }
         var result = await DetailDesignEndpoints.GetDetailDesignByIdAsync(value);

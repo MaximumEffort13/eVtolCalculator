@@ -23,12 +23,12 @@ internal class CreateMotorCommandHandler : ICommandHandler<CreateMotorCommand, M
 
     public async Task<Result<MotorDto>> Handle(CreateMotorCommand request, CancellationToken cancellationToken)
     {
-        MeasureandQuantity weight = new(request.Weight_kg, $"{SiPrefixes.Kilo.Name}{SiUnits.Mass.Name}");
-        MeasureandQuantity kv = new(request.Kv, $"{SiUnits.Rpm.Name}/{SiUnits.Voltage.Name}");
-        MeasureandQuantity currentRating = new(request.CurrentRating_A, SiUnits.Current.Name);
-        MeasureandQuantity voltageRating = new(request.VoltageRating_V, SiUnits.Voltage.Name);
+        MeasureandQuantity weight = new(request.Motor.Weight_kg, $"{SiPrefixes.Kilo.Name}{SiUnits.Mass.Name}");
+        MeasureandQuantity kv = new(request.Motor.Kv, $"{SiUnits.Rpm.Name}/{SiUnits.Voltage.Name}");
+        MeasureandQuantity currentRating = new(request.Motor.CurrentRating_A, SiUnits.Current.Name);
+        MeasureandQuantity voltageRating = new(request.Motor.VoltageRating_V, SiUnits.Voltage.Name);
 
-        var motor = new Motor(Guid.NewGuid(), request.Name, voltageRating, currentRating, weight, kv);
+        var motor = new Motor(Guid.NewGuid(), request.UserId, request.Motor.Name, voltageRating, currentRating, weight, kv);
 
         _motorRepo.Create(motor);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

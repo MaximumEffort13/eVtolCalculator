@@ -5,7 +5,7 @@ using Application.DTO;
 
 namespace Application.Commands.DetailDesign;
 
-public sealed record CreateDetailDesignWithGuidLinksCommand(
+public sealed record CreateDetailDesignWithGuidLinksCommand(Guid UserId,
     string Name,
     Guid BatteryId,
     Guid MotorId,
@@ -23,8 +23,8 @@ public sealed record CreateDetailDesignGuidLinkInput(
     string MotorId,
     string InverterId,
     string BladeId,
-    CreateMissionParameterCommand MissionParameters,
-    CreateFuselageCommand Fuselage,
+    MissionParameterInsert MissionParameters,
+    FuselageInsert Fuselage,
     int MotorQuantity,
     int BladePerMotorQuantity
     );

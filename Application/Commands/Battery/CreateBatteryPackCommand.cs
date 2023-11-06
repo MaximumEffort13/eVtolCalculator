@@ -3,7 +3,9 @@ using Application.DTO;
 
 namespace Application.Commands.Battery;
 
-public sealed record CreateBatteryPackCommand(
+public sealed record CreateBatteryPackCommand(Guid UserId, BatteryPackInsert Battery) : ICommand<BatteryPackDto>;
+
+public sealed record BatteryPackInsert(
     string CellName,
     double CellVoltage_V,
     double CellCurrent_mA,
@@ -14,4 +16,4 @@ public sealed record CreateBatteryPackCommand(
     int NumberOfModulesConnectedInSeries,
     int NumberOfModulesConnectedInParallel,
     double MiscellaneousPackWeight_kg,
-    string PackName) : ICommand<BatteryPackDto>;
+    string PackName);

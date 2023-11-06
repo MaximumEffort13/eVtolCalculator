@@ -19,13 +19,13 @@ public sealed class FuselageRepository : IFuselageRepository
         _appDbContext.Fuselages.Add(fuselage);
     }
 
-    public async Task<FuselageEntity> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<FuselageEntity> GetByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken)
     {
-        return await _appDbContext.Fuselages.SingleAsync(mod => mod.Id == id, cancellationToken);
+        return await _appDbContext.Fuselages.SingleAsync(mod => mod.Id == id && mod.UserId == userId, cancellationToken);
     }
 
-    public async Task<List<FuselageEntity>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<List<FuselageEntity>> GetAllAsync(Guid userId, CancellationToken cancellationToken)
     {
-        return await _appDbContext.Fuselages.ToListAsync(cancellationToken);
+        return await _appDbContext.Fuselages.Where(mod => mod.UserId == userId).ToListAsync(cancellationToken);
     }
 }

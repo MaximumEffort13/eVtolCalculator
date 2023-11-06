@@ -8,5 +8,6 @@ namespace ApiClient.Abstractions
     {
         Task<Result<InverterDto>> CreateInverterAsync(CreateInverterModel blade);
         Task<Result<List<InverterDto>>> GetInverters();
+        Task<Result<InverterDto>> GetInverterById(string id);
     }
 }

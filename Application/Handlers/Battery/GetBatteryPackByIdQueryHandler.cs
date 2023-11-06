@@ -17,7 +17,7 @@ internal class GetBatteryPackByIdQueryHandler : IQueryHandler<GetBatteryPackById
 
     public async Task<Result<BatteryPackDto>> Handle(GetBatteryPackByIdQuery request, CancellationToken cancellationToken)
     {
-        var battery = await _batteryPackRepository.GetByIdAsync(request.Id, cancellationToken);
+        var battery = await _batteryPackRepository.GetByIdAsync(request.Id, request.UserId, cancellationToken);
 
         var response = BatteryPackDtoMapper.Map(battery);
 

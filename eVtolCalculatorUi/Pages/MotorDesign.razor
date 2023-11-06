@@ -58,6 +58,23 @@
     }
 </EditForm>
 
+<section class="row row-cols-5">
+    <div class="col"></div>
+    <div class="col"></div>
+    <div class="col">
+        <div class="form-floating mb-3">
+            <select id="motorSelect" class="form-select form-select-sm" @onchange="@OnMotorSelectChange">
+                <option value="" selected>Select</option>
+                @foreach (var motor in Motors)
+                {
+                    <option value="@motor.Id">@motor.Name</option>
+                }
+            </select>
+            <label for="motorSelect" class="col-md-2 col-form-label">Motors</label>
+        </div>
+    </div>
+</section>
+
 @if (designResults is not null && displayOutput)
 {
     <section class="container-fluid">
@@ -129,14 +146,48 @@
     bool displayOutput = false;
     CreateMotorModel model = new();
     string errorMessage = string.Empty;
-    MotorDto designResults = new();
+    MotorDto designResults { get; set; }
+    List<MotorDto> Motors { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
+        var motors = await MotorEndpoints.GetMotors();
+
+        if (motors.IsFailed)
+        {
+            errorMessage = motors.Reasons.Last().Message;
+        }
+        else
+        {
+            Motors = motors.Value;
+        }
+
+        StateHasChanged();
+    }
+
+    protected async Task OnMotorSelectChange(ChangeEventArgs args)
+    {
+        var value = args.Value.ToString();
+
+        if (string.IsNullOrEmpty(value) || value.Equals("Select"))
+        {
+            designResults = new();
+            displayOutput = false;
+            return;
+        }
+
+        var result = await MotorEndpoints.GetMotorById(value);
+        designResults = result.Value;
+        displayOutput = true;
+
+        return;
     }
 
     private async Task OnValidSubmit()
     {
+        designResults = new();
+        displayOutput = true;
+
         try
         {
             var result = await MotorEndpoints.CreateMotorAsync(model);

@@ -11,11 +11,13 @@ public class BladeEndpoints : IBladeEndpoints
 {
     private readonly Utilities _utilities;
     private readonly ILogger<BladeEndpoints> _logger;
+    private readonly ILoggedInUserModel _loggedInUserModel;
 
-    public BladeEndpoints(Utilities utilities, ILogger<BladeEndpoints> logger)
+    public BladeEndpoints(Utilities utilities, ILogger<BladeEndpoints> logger, ILoggedInUserModel loggedInUserModel)
     {
         _utilities = utilities;
         _logger = logger;
+        _loggedInUserModel = loggedInUserModel;
     }
 
     public async Task<Result<BladeDto>> CreateBladeAsync(CreateBladeModel blade)
@@ -38,6 +40,18 @@ public class BladeEndpoints : IBladeEndpoints
         if (results is null || results.IsFailed)
         {
             return Result.Fail(results!.Reasons.Last().ToString());
+        }
+
+        return results;
+    }
+
+    public async Task<Result<BladeDto>> GetBladeById(string id)
+    {
+        var results = await _utilities.GetRequestAsync<BladeDto>($"{BladeRoutes.GetById.Name}/{id}");
+
+        if (results is null || results.IsFailed)
+        {
+            return Result.Fail("We could not retrieve the requested data.");
         }
 
         return results;

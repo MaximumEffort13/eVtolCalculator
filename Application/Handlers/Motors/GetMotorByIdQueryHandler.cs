@@ -17,7 +17,7 @@ internal class GetMotorByIdQueryHandler : IQueryHandler<GetMotorByIdQuery, Motor
 
     public async Task<Result<MotorDto>> Handle(GetMotorByIdQuery request, CancellationToken cancellationToken)
     {
-        var motor = await _motorRepository.GetByIdAsync(request.Id, cancellationToken);
+        var motor = await _motorRepository.GetByIdAsync(request.Id, request.UserId, cancellationToken);
 
         var response = MotorDtoMapper.Map(motor);
 

@@ -46,7 +46,7 @@ public sealed class ApiHelper : IApiHelper
 
         AsyncRetryPolicy policy = Policy
             .Handle<Exception>()
-            .WaitAndRetryAsync(3, attemtps => TimeSpan.FromMilliseconds(50 * attemtps));
+            .WaitAndRetryAsync(3, attemtps => TimeSpan.FromMilliseconds(100 * attemtps));
 
         PolicyResult<HttpResponseMessage> result = await policy.ExecuteAndCaptureAsync(() => Client.PostAsJsonAsync(UserRoutes.Authenticate.Name, userForAuthentication, cancellationToken));
 
@@ -153,6 +153,7 @@ public sealed class ApiHelper : IApiHelper
         _loggedInUser.LastName = response.LastName;
         _loggedInUser.EmailAddress = response.Email;
         _loggedInUser.Id = response.Id;
+        _loggedInUser.UserId = response.UserId;
 
         return Result.Ok();
     }

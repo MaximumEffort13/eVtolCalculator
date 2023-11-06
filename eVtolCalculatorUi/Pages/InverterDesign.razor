@@ -53,6 +53,23 @@
     }
 </EditForm>
 
+<section class="row row-cols-5">
+    <div class="col"></div>
+    <div class="col"></div>
+    <div class="col">
+        <div class="form-floating mb-3">
+            <select id="inverterSelect" class="form-select form-select-sm" @onchange="@OnInverterSelectChange">
+                <option value="" selected>Select</option>
+                @foreach (var inverter in Inverters)
+                {
+                    <option value="@inverter.Id">@inverter.Name</option>
+                }
+            </select>
+            <label for="inverterSelect" class="col-md-2 col-form-label">Inverters</label>
+        </div>
+    </div>
+</section>
+
 @if (designResults is not null && displayOutput)
 {
     <section class="container-fluid">
@@ -124,14 +141,48 @@
     bool displayOutput = false;
     CreateInverterModel model = new();
     string errorMessage = string.Empty;
-    InverterDto designResults = new();
+    InverterDto designResults { get; set;}
+    List<InverterDto> Inverters { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
+        var inverers = await InverterEndpoints.GetInverters();
+
+        if (inverers.IsFailed)
+        {
+            errorMessage = inverers.Reasons.Last().Message;
+        }
+        else
+        {
+            Inverters = inverers.Value;
+        }
+
+        StateHasChanged();           
+    }
+
+    protected async Task OnInverterSelectChange(ChangeEventArgs args)
+    {
+        var value = args.Value.ToString();
+
+        if (string.IsNullOrEmpty(value) || value.Equals("Select"))
+        {
+            designResults = new();
+            displayOutput = false;
+            return;
+        }
+
+        var result = await InverterEndpoints.GetInverterById(value);
+        designResults = result.Value;
+        displayOutput = true;
+
+        return;
     }
 
     private async Task OnValidSubmit()
     {
+        designResults = new();
+        displayOutput = false;
+
         try
         {
             var result = await InverterEndpoints.CreateInverterAsync(model);

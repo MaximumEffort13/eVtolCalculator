@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Persistence.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231106084830_AddedNameToConceptualDesign")]
+    partial class AddedNameToConceptualDesign
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -217,9 +220,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(50)")
                         .HasColumnName("design_weight");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
                     b.ToTable("ConceptualDesign");
@@ -275,9 +275,6 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
                         .HasColumnName("calculated_weight");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -390,9 +387,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(50)")
                         .HasColumnName("specific_energy");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Voltage")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -481,9 +475,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(50)")
                         .HasColumnName("thickness");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Weight")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -569,9 +560,6 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
                     b.HasIndex("BatteryPackId");
@@ -593,9 +581,6 @@ namespace Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Weight")
@@ -631,9 +616,6 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
                         .HasColumnName("power_to_weight");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
 
                     b.Property<string>("VoltageRating")
                         .IsRequired()
@@ -686,9 +668,6 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("character varying(15)")
                         .HasColumnName("maximum_rpm");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
 
                     b.Property<string>("VoltageRating")
                         .IsRequired()

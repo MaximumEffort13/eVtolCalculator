@@ -25,9 +25,9 @@ public sealed class CreateFuselageCommandHandler : ICommandHandler<CreateFuselag
 
     public async Task<Result<FuselageDto>> Handle(CreateFuselageCommand request, CancellationToken cancellationToken)
     {
-        MeasureandQuantity weight = new(request.Weight_kg, SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
+        MeasureandQuantity weight = new(request.Fuselage.Weight_kg, SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
 
-        var fuselage = new FuselageEntity(Guid.NewGuid(), weight);
+        var fuselage = new FuselageEntity(Guid.NewGuid(), request.UserId, weight);
 
         _fuselageRepository.Create(fuselage);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

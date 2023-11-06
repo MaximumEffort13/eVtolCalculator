@@ -1,6 +1,7 @@
 ﻿namespace ApiClient.DataTransferObjects.ApiResponses;
 public sealed class ConceptualDesignDto
 {
+    public string Name { get; set; }
     public string Id { get; set; }
     public string ProwerRequirement { get; set; }
     public string BatteryCapacityRequirement { get; set; }

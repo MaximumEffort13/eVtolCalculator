@@ -2,12 +2,12 @@
 using Application.Commands.DetailDesign;
 using Application.DTO;
 using Application.Mappers;
+using Domain.Abstractions;
 using Domain.Entities.DetailedDesign;
 using Domain.EntityCalculations;
 using Domain.Enums;
 using Domain.Primitives;
 using FluentResults;
-using Infrastructure.Repositories;
 
 namespace Application.Handlers.DetailDesign;
 internal class CreateDetailDesignCommandHandler : ICommandHandler<CreateDetailedDesignCommand, ElectricVtolDesignDto>
@@ -33,8 +33,9 @@ internal class CreateDetailDesignCommandHandler : ICommandHandler<CreateDetailed
         var fuselageWeight = MeasureandQuantity.ConvertStringToMeasureandQuantity(request.Fuselage.Weight);
         var horsepowerRequired = MeasureandQuantity.ConvertStringToMeasureandQuantity(request.MissionParameter.EstimatedHorsepowerRequiredForHover);
 
-        var electricVtol = new ElectricVtolDesign(
+        ElectricVtolDesign electricVtol = new (
             Guid.NewGuid(),
+            request.UserId,
             request.Name,
             Guid.Parse(request.Battery.Id),
             Guid.Parse(request.Inverter.Id),

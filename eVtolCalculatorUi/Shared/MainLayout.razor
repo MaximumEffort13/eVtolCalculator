@@ -1,15 +1,39 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="bb-page">
-
-    <Sidebar @ref="sidebar"
-             IconName="IconName.Command"
-             Title="eVtol Calculations"
-             DataProvider="SidebarDataProvider" />
+    <CascadingAuthenticationState>
+        <AuthorizeView>
+            <Authorized>
+                <Sidebar @ref="sidebar"
+                         IconName="IconName.Command"
+                         Title="eVtol Calculations"
+                         DataProvider="AuthorizedSidebarDataProvider" />
+            </Authorized>
+            <NotAuthorized>
+                <Sidebar @ref="sidebar"
+                         IconName="IconName.Command"
+                         Title="eVtol Calculations"
+                         DataProvider="NotAuthSidebarDataProvider" />
+            </NotAuthorized>
+        </AuthorizeView>
+    </CascadingAuthenticationState>
 
     <main>
         <div class="bb-top-row px-4 d-flex justify-content-end">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            <CascadingAuthenticationState>
+                <AuthorizeView>
+                    <Authorized>
+                            Welcome @context.User.FindFirst(ClaimTypes.Name).Value   
+                        <NavLink class="nav-link" href="logout">
+                            <Button Type="ButtonType.Reset"><Icon Name="IconName.PersonFillLock" />Logout</Button>
+                        </NavLink>
+                    </Authorized>
+                    <NotAuthorized>
+                        <Login />
+                    </NotAuthorized>
+                </AuthorizeView>            
+            </CascadingAuthenticationState>
+
         </div>
 
         <article class="content px-4">
@@ -29,21 +53,45 @@
     private Sidebar sidebar = default!;
     private IEnumerable<NavItem> navItems = default!;
 
-    private async Task<SidebarDataProviderResult> SidebarDataProvider(SidebarDataProviderRequest request)
+
+    private async Task<SidebarDataProviderResult> AuthorizedSidebarDataProvider(SidebarDataProviderRequest request)
     {
+        navItems = default;
+
         if (navItems is null)
-            navItems = GetNavItems();
+            navItems = GetAuthorizedNavItems();
 
         return await Task.FromResult(request.ApplyTo(navItems));
     }
 
-    private IEnumerable<NavItem> GetNavItems()
+    private async Task<SidebarDataProviderResult> NotAuthSidebarDataProvider(SidebarDataProviderRequest request)
+    {
+        navItems = default;
+
+        if (navItems is null)
+            navItems = GetNotAuthorizedNavItems();
+
+        return await Task.FromResult(request.ApplyTo(navItems));
+    }
+
+    private IEnumerable<NavItem> GetNotAuthorizedNavItems()
     {
         navItems = new List<NavItem>
         {
             new NavItem { Id = "1", Href = "/", IconName = IconName.HouseDoorFill, Text = "Home", Match=NavLinkMatch.All},
             new NavItem { Id = "2", Href = "/login", IconName = IconName.Person, Text = "Login"},
             new NavItem { Id = "3", Href = "/register", IconName = IconName.PersonAdd, Text = "Register"},
+
+        };
+
+        return navItems;
+    }
+
+    private IEnumerable<NavItem> GetAuthorizedNavItems()
+    {
+        navItems = new List<NavItem>
+        {
+            new NavItem { Id = "1", Href = "/", IconName = IconName.HouseDoorFill, Text = "Home", Match=NavLinkMatch.All},
             new NavItem { Id = "4", Href = "/conceptualDesign", IconName = IconName.BoundingBox, Text = "Conceptual Design"},
             new NavItem { Id = "5", Href = "/batterypackdesign", IconName = IconName.BatteryCharging, Text = "Battery Pack Design"},
             new NavItem { Id = "6", Href = "/motordesign", IconName = IconName.GearWideConnected, Text = "Motor Design"},

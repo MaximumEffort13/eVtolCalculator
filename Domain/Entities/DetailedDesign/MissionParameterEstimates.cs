@@ -6,6 +6,7 @@ namespace Domain.Entities.ConceptDesign;
 public sealed class MissionParameterEstimates : Entity
 {
     public MissionParameterEstimates(Guid id,
+        Guid userId,
         MeasureandQuantity totalDesignWeight,
         MeasureandQuantity payloadWeight,
         TimeSpan flightTimeRequirementInMinutes) : base(id)
@@ -19,8 +20,10 @@ public sealed class MissionParameterEstimates : Entity
         EstimatedBatteryWeight = DesignConstraintsCalculations.CalculateEstimatedBatteryWeight(EstimatedBatteryCapacityRequirement);
         EstimatedMotorWeight = DesignConstraintsCalculations.CalculateEstimatedMotorWeight(EstimatedPowerRequirement);
         EstimatedHorsepowerRequiredForHover = DesignConstraintsCalculations.CalculateHorsepower(EstimatedPowerRequirement);
+        UserId = userId;
     }
 
+    public Guid UserId { get; private set; }
     public MeasureandQuantity TotalDesignWeight { get; private set; }
     public MeasureandQuantity PayloadWeight { get; private set; }
     public TimeSpan FlightTimeRequirementInMinutes { get; private set; }

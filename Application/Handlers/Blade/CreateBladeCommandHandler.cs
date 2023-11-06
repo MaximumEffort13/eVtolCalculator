@@ -23,13 +23,13 @@ internal sealed class CreateBladeCommandHandler : ICommandHandler<CreateBladeCom
 
     public async Task<Result<BladeDto>> Handle(CreateBladeCommand request, CancellationToken cancellationToken)
     {
-        MeasureandQuantity length = new(request.Length_mm, SiPrefixes.Milli.Name + SiUnits.Meter.Name);
-        MeasureandQuantity width = new(request.Width_mm, SiPrefixes.Milli.Name + SiUnits.Meter.Name);
-        MeasureandQuantity thickness = new(request.Thickness_mm, SiPrefixes.Milli.Name + SiUnits.Meter.Name);
-        MeasureandQuantity weight = new(request.Weight_g, SiUnits.Mass.Name);
-        MeasureandQuantity angleOfAttack = new(request.AngleOfAttack, SiUnits.Degress.Name);
+        MeasureandQuantity length = new(request.Blade.Length_mm, SiPrefixes.Milli.Name + SiUnits.Meter.Name);
+        MeasureandQuantity width = new(request.Blade.Width_mm, SiPrefixes.Milli.Name + SiUnits.Meter.Name);
+        MeasureandQuantity thickness = new(request.Blade.Thickness_mm, SiPrefixes.Milli.Name + SiUnits.Meter.Name);
+        MeasureandQuantity weight = new(request.Blade.Weight_g, SiUnits.Mass.Name);
+        MeasureandQuantity angleOfAttack = new(request.Blade.AngleOfAttack, SiUnits.Degress.Name);
 
-        var blade = new BladeEntity(Guid.NewGuid(), request.Name, length, width, thickness, weight, angleOfAttack);
+        var blade = new BladeEntity(Guid.NewGuid(), request.UserId, request.Blade.Name, length, width, thickness, weight, angleOfAttack);
 
         _bladeRepository.Create(blade);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

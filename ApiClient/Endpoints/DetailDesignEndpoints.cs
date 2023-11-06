@@ -11,11 +11,13 @@ public class DetailDesignEndpoints : IDetailDesignEndpoints
 {
     private readonly Utilities _utilities;
     private readonly ILogger<DetailDesignEndpoints> _logger;
+    private readonly ILoggedInUserModel _loggedInUserModel;
 
-    public DetailDesignEndpoints(Utilities utilities, ILogger<DetailDesignEndpoints> logger)
+    public DetailDesignEndpoints(Utilities utilities, ILogger<DetailDesignEndpoints> logger, ILoggedInUserModel loggedInUserModel)
     {
         _utilities = utilities;
         _logger = logger;
+        _loggedInUserModel = loggedInUserModel;
     }
 
     public async Task<Result<ElectricVtolDesignDto>> CreateElectricVtolDesign(CreateDetailedDesign detailedDesign)

@@ -10,7 +10,7 @@ internal class MissionParametersConfiguration : IEntityTypeConfiguration<Mission
     {
         builder.HasKey(d => d.Id);
         builder.Property(d => d.Id).IsRequired();
-
+        builder.Property(p => p.UserId).IsRequired();
         builder.Property(d => d.TotalDesignWeight).HasConversion<MeasureandQuantityConverter>().HasMaxLength(50).HasColumnName("calculated_weight");
 
         builder.Property(d => d.PayloadWeight).HasConversion<MeasureandQuantityConverter>().HasMaxLength(50).HasColumnName("payload_weight");

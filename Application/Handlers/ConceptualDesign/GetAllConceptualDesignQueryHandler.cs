@@ -18,7 +18,7 @@ internal sealed class GetAllConceptualDesignQueryHandler : IQueryHandler<GetAllC
 
     public async Task<Result<List<ConceptualDesignDto>>> Handle(GetAllConceptualDesignsQuery request, CancellationToken cancellationToken)
     {
-        var concepts = await _conceptualDesignRepository.GetAllAsync(cancellationToken);
+        var concepts = await _conceptualDesignRepository.GetAllAsync(request.UserId, cancellationToken);
 
         List<ConceptualDesignDto> dtoConcepts = new();
 

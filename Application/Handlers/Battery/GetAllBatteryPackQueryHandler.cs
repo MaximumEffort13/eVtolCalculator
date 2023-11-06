@@ -19,7 +19,7 @@ internal sealed class GetAllBatteryPackQueryHandler : IQueryHandler<GetAllBatter
 
     public async Task<Result<List<BatteryPackDto>>> Handle(GetAllBatteryPacksQuery request, CancellationToken cancellationToken)
     {
-        var batteries = await _batteryPackRepository.GetAllAsync(cancellationToken);
+        var batteries = await _batteryPackRepository.GetAllAsync(request.UserId, cancellationToken);
 
         List<BatteryPackDto> batteryDto = new ();
 

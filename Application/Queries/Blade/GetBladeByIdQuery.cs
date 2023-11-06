@@ -3,4 +3,4 @@ using Application.DTO;
 
 namespace Application.Queries.Blade;
 
-public sealed record GetBladeByIdQuery(Guid Id) : IQuery<BladeDto>;
+public sealed record GetBladeByIdQuery(Guid Id, Guid UserId) : IQuery<BladeDto>;

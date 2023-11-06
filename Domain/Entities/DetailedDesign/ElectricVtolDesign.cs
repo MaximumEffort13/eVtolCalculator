@@ -6,6 +6,7 @@ public sealed class ElectricVtolDesign : Entity
 {
     public ElectricVtolDesign(
         Guid id,
+        Guid userId,
         string name,
         Guid batteryPackId,
         Guid inverterId,
@@ -16,6 +17,7 @@ public sealed class ElectricVtolDesign : Entity
         int motorQuantity,
         int bladePerMotorQuantity) : base(id)
     {
+        UserId = userId;
         Name = name;
 
         BatteryPackId = batteryPackId;
@@ -30,6 +32,7 @@ public sealed class ElectricVtolDesign : Entity
         MissionParameterId = missionParameterId;
     }
 
+    public Guid UserId { get; private set; }
     public Guid BatteryPackId { get; private set; }
     public Guid MotorId { get; private set; }
     public Guid InverterId { get; private set; }

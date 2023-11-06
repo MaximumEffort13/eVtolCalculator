@@ -19,18 +19,18 @@ public sealed class BatteryPackRepository : IBatteryPackRepository
         _appContext.BatteryPacks.Add(battery);
     }
 
-    public async Task<BatteryPack> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<BatteryPack> GetByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken)
     {
-        return await _appContext.BatteryPacks.SingleAsync(b => b.Id == id, cancellationToken);
+        return await _appContext.BatteryPacks.SingleAsync(b => b.Id == id && b.UserId == userId, cancellationToken);
     }
 
-    public async Task<BatteryPack> GetByNameAsync(string name, CancellationToken cancellationToken)
+    public async Task<BatteryPack> GetByNameAsync(string name, Guid userId, CancellationToken cancellationToken)
     {
-        return await _appContext.BatteryPacks.SingleAsync(b => b.Name == name, cancellationToken);
+        return await _appContext.BatteryPacks.SingleAsync(b => b.Name == name && b.UserId == userId, cancellationToken);
     }
 
-    public async Task<List<BatteryPack>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<List<BatteryPack>> GetAllAsync(Guid userId, CancellationToken cancellationToken)
     {
-        return await _appContext.BatteryPacks.ToListAsync(cancellationToken);
+        return await _appContext.BatteryPacks.Where(b => b.UserId == userId).ToListAsync(cancellationToken);
     }
 }

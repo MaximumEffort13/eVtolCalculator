@@ -17,7 +17,7 @@ internal class GetInverterByNameQueryHandler : IQueryHandler<GetInverterByNameQu
 
     public async Task<Result<InverterDto>> Handle(GetInverterByNameQuery request, CancellationToken cancellationToken)
     {
-        var inverter = await _invererRepository.GetByNameAsync(request.Name, cancellationToken);
+        var inverter = await _invererRepository.GetByNameAsync(request.Name, request.UserId, cancellationToken);
 
         var response = InverterDtoMapper.Map(inverter);
 

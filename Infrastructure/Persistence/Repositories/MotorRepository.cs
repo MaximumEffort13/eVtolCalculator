@@ -19,18 +19,18 @@ public sealed class MotorRepository : IMotorRepository
         _appDbContext.Motors.Add(motor);
     }
 
-    public async Task<Motor> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<Motor> GetByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken)
     {
-        return await _appDbContext.Motors.SingleAsync(m => m.Id == id, cancellationToken);
+        return await _appDbContext.Motors.SingleAsync(m => m.Id == id && m.UserId == userId, cancellationToken);
     }
 
-    public async Task<List<Motor>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<List<Motor>> GetAllAsync(Guid userId, CancellationToken cancellationToken)
     {
-        return await _appDbContext.Motors.ToListAsync(cancellationToken);
+        return await _appDbContext.Motors.Where(m => m.UserId == userId).ToListAsync(cancellationToken);
     }
 
-    public async Task<Motor> GetByNameAsync(string name, CancellationToken cancellationToken)
+    public async Task<Motor> GetByNameAsync(string name, Guid userId, CancellationToken cancellationToken)
     {
-        return await _appDbContext.Motors.SingleAsync(m => m.Name == name, cancellationToken);
+        return await _appDbContext.Motors.SingleAsync(m => m.Name == name && m.UserId == userId, cancellationToken);
     }
 }
