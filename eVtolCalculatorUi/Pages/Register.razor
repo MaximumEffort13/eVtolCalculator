@@ -142,34 +142,13 @@
 </EditForm>
 
 @code {
+    [Inject] protected PreloadService PreloadService { get; set; }
+
     CreateUserModel model = new();
     string errorMessage = string.Empty;
 
     protected async override Task OnInitializedAsync()
     {
-    }
-
-    protected Task OnProvinceChange(string selectedProvince)
-    {
-        if(selectedProvince == null || selectedProvince.Equals(string.Empty))
-        {
-            errorMessage = "Please select a valid province.";
-            return Task.CompletedTask;
-        }
-        model.Province = selectedProvince;
-        return Task.CompletedTask;
-    }
-
-    protected Task OnCountryChange(string selectedCountry)
-    {
-        if(selectedCountry == null || selectedCountry.Equals("Select"))
-        {
-            errorMessage = "Please select a valid province.";
-            return Task.CompletedTask;
-        }
-        model.Country = selectedCountry;
-        return Task.CompletedTask;
-
     }
 
     private async Task OnValidSubmit()
@@ -178,6 +157,7 @@
 
         try
         {
+            PreloadService.Show(SpinnerColor.Warning);
             await UserEndpoint.RegisterUser(model);
 
             AuthenticatedUserModel result = await AuthService.Login(new (){ UserName = model.EmailAddress, Password = model.Password });
@@ -193,6 +173,10 @@
         catch(Exception ex)
         {
             errorMessage = ex.Message;
+        }
+        finally
+        {
+            PreloadService.Hide();
         }
     }
 }

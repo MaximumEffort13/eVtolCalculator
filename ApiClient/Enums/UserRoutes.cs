@@ -14,7 +14,7 @@ public sealed class UserRoutes : SmartEnum<UserRoutes>
     public static readonly UserRoutes GetAllRoles = new("/api/User/Admin/GetAllRoles", 4);
     public static readonly UserRoutes AddRole = new("/api/User/Admin/AddRole", 5);
     public static readonly UserRoutes RemoveRole = new("/api/User/Admin/RemoveRole", 6);
-    public static readonly UserRoutes User = new("/api/User", 7);
+    public static readonly UserRoutes User = new("/api/User/GetLoggedInUser", 7);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WebServerRequestEndpoint"/> class.

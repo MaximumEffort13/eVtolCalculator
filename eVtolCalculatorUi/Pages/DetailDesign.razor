@@ -6,11 +6,12 @@
 @inject IDetailDesignEndpoints DetailDesignEndpoints
 
 
-<h3>DetailDesign</h3>
+<PageTitle>Detail Design</PageTitle>
 
 <EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
     <DataAnnotationsValidator />
     <div class="container-fluid">
+        <h4>Detail Design</h4>
         <div class="row row-cols-4">
             <div class="col">
                 <div class="form-group row g-3">
@@ -126,13 +127,7 @@
         </div>
     </div>
     <div class="row row-cols-6">
-        <div class="col"></div>
-        <div class="col"></div>
-        <div class="col"></div>
-        <div class="col"></div>
-        <div class="col">
-            <Button Type="ButtonType.Submit" Color="ButtonColor.Success" Outline="true">Submit</Button>
-        </div>
+        <Button Type="ButtonType.Submit" Color="ButtonColor.Success" Outline="true">Submit</Button>
     </div>
     @if (errorMessage.Equals(string.Empty) == false)
     {
@@ -145,7 +140,9 @@
         </div>
     }
 </EditForm>
-
+<div class="row">
+    <br />
+</div>
 <section class="row row-cols-5">
     <div class="col"></div>
     <div class="col"></div>
@@ -606,6 +603,8 @@
 
 
 @code {
+    [Inject] protected PreloadService PreloadService { get; set; }
+
     bool displayOutput = true;
     CreateDetailedDesign model = new ();
     string errorMessage = string.Empty;
@@ -619,62 +618,76 @@
 
     protected async override Task OnInitializedAsync()
     {
-        model.MissionParameters = new();
-        model.Fuselage = new();
-
-        var motorResults = await MotorEndpoints.GetMotors();
-        if (motorResults.IsFailed)
+        try
         {
-            errorMessage = motorResults.Reasons.Last().Message;
+            PreloadService.Show(SpinnerColor.Warning);
+
+            model.MissionParameters = new();
+            model.Fuselage = new();
+
+            var motorResults = await MotorEndpoints.GetMotors();
+            if (motorResults.IsFailed)
+            {
+                errorMessage = motorResults.Reasons.Last().Message;
+            }
+            else
+            {
+                Motors = motorResults.Value;
+            }
+
+            var inverterResults = await InverterEndpoints.GetInverters();
+
+            if (inverterResults.IsFailed)
+            {
+                errorMessage = inverterResults.Reasons.Last().Message;
+            }
+            else
+            {
+                Inverters = inverterResults.Value;
+            }
+
+            var bladeResults = await BladeEndpoints.GetBlades();
+
+            if (bladeResults.IsFailed)
+            {
+                errorMessage = bladeResults.Reasons.Last().Message;
+            }
+            else
+            {
+                Blades = bladeResults.Value;
+            }
+
+            var batteryPackResults = await BatteryPackEndpoints.GetBatteries();
+
+            if (batteryPackResults.IsFailed)
+            {
+                errorMessage = batteryPackResults.Reasons.Last().Message;
+            }
+            else
+            {
+                BatteryPacks = batteryPackResults.Value;
+            }
+
+            var detailDesigns = await DetailDesignEndpoints.GetAllDetailDesigns();
+
+            if (detailDesigns.IsFailed)
+            {
+                errorMessage = detailDesigns.Reasons.Last().Message;
+            }
+            else
+            {
+                DetailDesigns = detailDesigns.Value;
+            }
         }
-        else
+        catch(Exception ex)
         {
-            Motors = motorResults.Value;
+            errorMessage = ex.Message;
         }
-
-        var inverterResults = await InverterEndpoints.GetInverters();
-
-        if (inverterResults.IsFailed)
+        finally
         {
-            errorMessage = inverterResults.Reasons.Last().Message;
-        }else
-        {
-            Inverters = inverterResults.Value;
+            StateHasChanged();
+            PreloadService.Hide();
         }
-
-        var bladeResults = await BladeEndpoints.GetBlades();
-
-        if (bladeResults.IsFailed)
-        {
-            errorMessage = bladeResults.Reasons.Last().Message;
-        }else
-        {
-            Blades = bladeResults.Value;
-        }
-
-        var batteryPackResults = await BatteryPackEndpoints.GetBatteries();
-
-        if (batteryPackResults.IsFailed)
-        {
-            errorMessage = batteryPackResults.Reasons.Last().Message;
-        }
-        else
-        {
-            BatteryPacks = batteryPackResults.Value;
-        }
-
-        var detailDesigns = await DetailDesignEndpoints.GetAllDetailDesigns();
-
-        if (detailDesigns.IsFailed)
-        {
-            errorMessage = detailDesigns.Reasons.Last().Message;
-        }
-        else
-        {
-            DetailDesigns = detailDesigns.Value;
-        }
-
-        StateHasChanged();
     }
 
     protected Task OnInverterChange(string selectedInverterId)
@@ -740,7 +753,6 @@
         displayOutput = true;
 
         return;
-
     }
 
     private async Task OnValidSubmit()
@@ -751,6 +763,8 @@
 
         try
         {
+            PreloadService.Show(SpinnerColor.Warning);
+
             var result = await DetailDesignEndpoints.CreateElectricVtolDesign(model);
 
             if (result is null)
@@ -764,12 +778,18 @@
             }
 
             designResults = result!.Value;
-            DetailDesigns.Add(designResults);
             displayOutput = true;
+            DetailDesigns.Add(designResults);
+
         }
         catch (Exception ex)
         {
             errorMessage = ex.Message;
+        }
+        finally
+        {
+            StateHasChanged();
+            PreloadService.Hide();
         }
     }
 }

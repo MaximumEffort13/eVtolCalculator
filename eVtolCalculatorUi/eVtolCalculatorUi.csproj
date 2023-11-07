@@ -34,4 +34,10 @@
     <None Include="C:\Users\Jacobus\Desktop\1_Projects\TUT - eVtolCalculator\eVtolCalculator\eVtolCalculatorUi\.editorconfig" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\Images\TaylorAerocar_029.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

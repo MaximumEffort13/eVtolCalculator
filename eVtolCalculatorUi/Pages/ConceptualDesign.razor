@@ -2,6 +2,8 @@
 @inject IAuthenticationService AuthService
 @inject IConceptualDesignEndpoints ConceptualDesignEndpoints
 
+<PageTitle>Conceptual</PageTitle>
+
 <EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
     <DataAnnotationsValidator />
     <div class="container-fluid">
@@ -45,13 +47,7 @@
     </div>
 
     <div class="row row-cols-6">
-        <div class="col"></div>
-        <div class="col"></div>
-        <div class="col"></div>
-        <div class="col"></div>
-        <div class="col">
-            <Button Type="ButtonType.Submit" Color="ButtonColor.Success" Outline="true">Submit</Button>
-        </div>
+        <Button Type="ButtonType.Submit" Color="ButtonColor.Dark" Outline="true">Submit</Button>
     </div>
     @if (errorMessage.Equals(string.Empty) == false)
     {
@@ -64,7 +60,9 @@
         </div>
     }
 </EditForm>
-
+<div class="row">
+    <br />
+</div>
 <section class="row row-cols-5">
     <div class="col"></div>
     <div class="col"></div>
@@ -163,6 +161,8 @@
 
 
 @code{
+    [Inject] protected PreloadService PreloadService { get; set; }
+
     bool displayOutput = false;
     CreateConceptualDesignModel model = new();
     string errorMessage = string.Empty;
@@ -172,18 +172,27 @@
 
     protected async override Task OnInitializedAsync()
     {
-        var conceptualDesigns = await ConceptualDesignEndpoints.GetConceptualDesigns();
-
-        if (conceptualDesigns.IsFailed)
+        try
         {
-            errorMessage = conceptualDesigns.Reasons.Last().Message;
+            PreloadService.Show(SpinnerColor.Warning);
+
+            var conceptualDesigns = await ConceptualDesignEndpoints.GetConceptualDesigns();
+
+            if (conceptualDesigns.IsFailed)
+            {
+                errorMessage = conceptualDesigns.Reasons.Last().Message;
+            }
+            else
+            {
+                ConceptualDesigns = conceptualDesigns.Value;
+            }
         }
-        else
+        finally
         {
-            ConceptualDesigns = conceptualDesigns.Value;
+            StateHasChanged();
+            PreloadService.Hide();
         }
 
-        StateHasChanged();
     }
 
     protected async Task OnConceptSelectChange(ChangeEventArgs args)
@@ -212,6 +221,7 @@
 
         try
         {
+            PreloadService.Show(SpinnerColor.Warning);
             var result = await ConceptualDesignEndpoints.CreateConceptualDesign(model);
 
             if (result is null)
@@ -225,11 +235,18 @@
             }
 
             designResults = result!.Value;
+            ConceptualDesigns.Add(designResults);
             displayOutput = true;
+
         }
         catch (Exception ex)
         {
             errorMessage = ex.Message;
+        }
+        finally
+        {
+            StateHasChanged();
+            PreloadService.Hide();
         }
     }
 }

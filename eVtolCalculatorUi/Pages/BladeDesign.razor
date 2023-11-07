@@ -2,6 +2,8 @@
 @inject IAuthenticationService AuthService
 @inject IBladeEndpoints BladeEndpoints
 
+<PageTitle>Blade</PageTitle>
+
 <EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
     <DataAnnotationsValidator />
     <div class="container-fluid">
@@ -42,14 +44,8 @@
         </div>
     </div>
     <div class="row">
-        <div class="row row-cols-6">
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col">
-                <Button Type="ButtonType.Submit" Color="ButtonColor.Success" Outline="true"><Icon Name="IconName.Check" /> Submit </Button>
-            </div>
+        <div class="row">
+            <Button Type="ButtonType.Submit" Color="ButtonColor.Success" Outline="true"> Submit </Button>
         </div>
     </div>
     @if (errorMessage.Equals(string.Empty) == false)
@@ -63,7 +59,9 @@
         </div>
     }
 </EditForm>
-
+<div class="row">
+    <br />
+</div>
 <section class="row row-cols-5">
     <div class="col"></div>
     <div class="col"></div>
@@ -161,26 +159,39 @@
 }
 
 @code {
-    bool displayOutput = false;
-    CreateBladeModel model = new();
+    [Inject] protected PreloadService PreloadService { get; set; }
+
     string errorMessage = string.Empty;
-    BladeDto designResults { get; set; }
+    CreateBladeModel model = new();
     List<BladeDto> Blades { get; set; }
+
+    BladeDto designResults { get; set; }
+    bool displayOutput = false;
 
     protected async override Task OnInitializedAsync()
     {
-        var blades = await BladeEndpoints.GetBlades();
-
-        if (blades.IsFailed)
+        try
         {
-            errorMessage = blades.Reasons.Last().Message;
+            PreloadService.Show(SpinnerColor.Warning);
+
+            var blades = await BladeEndpoints.GetBlades();
+
+            if (blades.IsFailed)
+            {
+                errorMessage = blades.Reasons.Last().Message;
+            }
+            else
+            {
+                Blades = blades.Value;
+            }
         }
-        else
+        finally
         {
-            Blades = blades.Value;
+            StateHasChanged();
+            PreloadService.Hide();
         }
 
-        StateHasChanged();        
+
     }
 
     protected async Task OnBladeSelectChange(ChangeEventArgs args)
@@ -208,6 +219,7 @@
 
         try
         {
+            PreloadService.Show(SpinnerColor.Warning);
             var result = await BladeEndpoints.CreateBladeAsync(model);
 
             if (result is null)
@@ -222,10 +234,16 @@
 
             designResults = result!.Value;
             displayOutput = true;
+            Blades.Add(designResults);
         }
         catch (Exception ex)
         {
             errorMessage = ex.Message;
+        }
+        finally
+        {
+            StateHasChanged();
+            PreloadService.Hide();
         }
     }
 }

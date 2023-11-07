@@ -3,10 +3,21 @@
 @inject IBatteryPackEndpoints BatteryPackEndpoints
 @attribute [Authorize]
 
+<PageTitle>Battery</PageTitle>
+
 <EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
     <DataAnnotationsValidator />
     <div class="container-fluid">
-        <h4>Battery Design:</h4>
+        <h4>Battery Design</h4>
+        <div class="row row-cols-4">
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputText id="packName" class="form-control" @bind-Value="model.PackName" placeholder="Lit-Ion PO4" />
+                    <ValidationMessage For=@(() => model.PackName) />
+                    <label for="packName">Name of completed Battery Pack: </label>
+                </div>
+            </div>
+        </div>
         <div class="row row-cols-4">
             <div class="col g-3">
                 <div class="form-floating mb-3">
@@ -81,15 +92,6 @@
             </div>
             <div class="col g-3">
                 <div class="form-floating mb-3">
-                    <InputText id="packName" class="form-control" @bind-Value="model.PackName" placeholder="Lit-Ion PO4" />
-                    <ValidationMessage For=@(() => model.PackName) />
-                    <label for="packName">Name of completed Battery Pack: </label>
-                </div>
-            </div>
-        </div>
-        <div class="row row-cols-4">
-            <div class="col g-3">
-                <div class="form-floating mb-3">
                     <InputNumber id="packMiscellaneousWeight" class="form-control" @bind-Value="model.MiscellaneousPackWeight_kg" placeholder="50" />
                     <ValidationMessage For=@(() => model.MiscellaneousPackWeight_kg) />
                     <label for="packMiscellaneousWeight">Pack Miscellaneous Weight (kg): </label>
@@ -97,14 +99,8 @@
             </div>
         </div>
     </div>
-    <div class="row row-cols-6">
-        <div class="col"></div>
-        <div class="col"></div>
-        <div class="col"></div>
-        <div class="col"></div>
-        <div class="col">
-            <Button Type="ButtonType.Submit" Color="ButtonColor.Success"><Icon Name="IconName.Check" />Submit</Button>
-        </div>
+    <div class="row">
+        <Button Type="ButtonType.Submit" Color="ButtonColor.Dark" Outline="true">Submit</Button>
     </div>
     @if (errorMessage.Equals(string.Empty) == false)
     {
@@ -117,7 +113,9 @@
         </div>
     }
 </EditForm>
-
+<div class="row">
+    <br />
+</div>
 <section class="row row-cols-5">
     <div class="col"></div>
     <div class="col"></div>
@@ -215,6 +213,10 @@
 }
 
 @code {
+
+    [Inject] protected PreloadService PreloadService { get; set; }
+
+
     bool displayOutput = true;
     CreateBatteryModel model = new ();
     string errorMessage = string.Empty;
@@ -223,18 +225,25 @@
 
     protected async override Task OnInitializedAsync()
     {
-        var batteryPacks = await BatteryPackEndpoints.GetBatteries();
-
-        if (batteryPacks.IsFailed)
+        try
         {
-            errorMessage = batteryPacks.Reasons.Last().Message;
-        }
-        else
-        {
-            BatteryPacks = batteryPacks.Value;
-        }
+            PreloadService.Show(SpinnerColor.Warning);
+            var batteryPacks = await BatteryPackEndpoints.GetBatteries();
 
-        StateHasChanged();
+            if (batteryPacks.IsFailed)
+            {
+                errorMessage = batteryPacks.Reasons.Last().Message;
+            }
+            else
+            {
+                BatteryPacks = batteryPacks.Value;
+            }
+        }
+        finally
+        {
+            PreloadService.Hide();
+            StateHasChanged();
+        }
     }
 
     protected async Task OnBatteryPackChange(ChangeEventArgs args)
@@ -263,6 +272,7 @@
 
         try
         {
+            PreloadService.Show(SpinnerColor.Warning);
             var result = await BatteryPackEndpoints.CreateBatteryPack(model);
 
             if (result is null)
@@ -277,10 +287,17 @@
 
             designResults = result!.Value;
             displayOutput = true;
+            BatteryPacks.Add(designResults);
+
         }
         catch (Exception ex)
         {
             errorMessage = ex.Message;
+        }
+        finally
+        {
+            PreloadService.Hide();
+            StateHasChanged();
         }
     }
 }

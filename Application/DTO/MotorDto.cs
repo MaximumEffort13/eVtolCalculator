@@ -27,8 +27,3 @@ public class MotorDto
     public string RpmValue { get; set; }
 }
 
-
-//public class MotorDtoListRoot
-//{
-//    public List<MotorDto> MotorDtos { get; set; } = new List<MotorDto>();
-//}

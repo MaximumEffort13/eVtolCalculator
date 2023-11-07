@@ -2,6 +2,8 @@
 @inject IAuthenticationService AuthService
 @inject IMotorEndpoints MotorEndpoints
 
+<PageTitle>Motor</PageTitle>
+
 <EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
     <DataAnnotationsValidator />
     <div class="container-fluid">
@@ -36,14 +38,8 @@
             </div>
         </div>
     </div>
-    <div class="row row-cols-6">
-        <div class="col"></div>
-        <div class="col"></div>
-        <div class="col"></div>
-        <div class="col"></div>
-        <div class="col">
-            <Button Type="ButtonType.Submit" Color="ButtonColor.Success" Outline="true"><Icon Name="IconName.Check" /> Submit </Button>
-        </div>
+    <div class="row">
+        <Button Type="ButtonType.Submit" Color="ButtonColor.Success" Outline="true"><Icon Name="IconName.Check" /> Submit </Button>
     </div>
 
     @if (errorMessage.Equals(string.Empty) == false)
@@ -57,6 +53,9 @@
         </div>
     }
 </EditForm>
+<div class="row">
+    <br/>
+</div>
 
 <section class="row row-cols-5">
     <div class="col"></div>
@@ -143,6 +142,8 @@
 }
 
 @code {
+
+    [Inject] protected PreloadService PreloadService { get; set; }
     bool displayOutput = false;
     CreateMotorModel model = new();
     string errorMessage = string.Empty;
@@ -151,18 +152,30 @@
 
     protected async override Task OnInitializedAsync()
     {
-        var motors = await MotorEndpoints.GetMotors();
 
-        if (motors.IsFailed)
+        try
         {
-            errorMessage = motors.Reasons.Last().Message;
+            PreloadService.Show(SpinnerColor.Warning);
+            var motors = await MotorEndpoints.GetMotors();
+
+            if (motors.IsFailed)
+            {
+                errorMessage = motors.Reasons.Last().Message;
+            }
+            else
+            {
+                Motors = motors.Value;
+            }
         }
-        else
+        catch
+        {  
+        }
+        finally
         {
-            Motors = motors.Value;
+            StateHasChanged();
+            PreloadService.Hide();
         }
 
-        StateHasChanged();
     }
 
     protected async Task OnMotorSelectChange(ChangeEventArgs args)
@@ -190,6 +203,7 @@
 
         try
         {
+            PreloadService.Show(SpinnerColor.Warning);
             var result = await MotorEndpoints.CreateMotorAsync(model);
 
             if (result is null)
@@ -204,10 +218,16 @@
 
             designResults = result!.Value;
             displayOutput = true;
+            Motors.Add(designResults);
         }
         catch (Exception ex)
         {
             errorMessage = ex.Message;
+        }
+        finally
+        {
+            StateHasChanged();
+            PreloadService.Hide();
         }
     }
 }

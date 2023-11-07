@@ -77,7 +77,7 @@ public class Utilities
 
         if (result.Result is null || result.Result.IsSuccessStatusCode == false)
         {
-            return Result.Fail(result.FinalException.ToString());
+            return Result.Fail("Error during the request to the server.");
         }
 
         return Result.Ok();

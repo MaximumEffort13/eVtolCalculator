@@ -50,10 +50,10 @@ public sealed class ApiHelper : IApiHelper
 
         PolicyResult<HttpResponseMessage> result = await policy.ExecuteAndCaptureAsync(() => Client.PostAsJsonAsync(UserRoutes.Authenticate.Name, userForAuthentication, cancellationToken));
 
-        if (result.Result.IsSuccessStatusCode == false)
+        if (result is null || result.Result.IsSuccessStatusCode == false)
         {
             _logger.LogWarning("Login failed.");
-            return Result.Fail<AuthenticatedUserModel>(result.FinalException.ToString());
+            return Result.Fail("Failed check login credentials.");
         }
 
         if (result.Result.Content is null)
