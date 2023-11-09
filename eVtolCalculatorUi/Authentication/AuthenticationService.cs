@@ -44,24 +44,28 @@ public class AuthenticationService : IAuthenticationService
         return authenticationSuccessful ? authResult.Value : null;
     }
 
-    public async Task<AuthenticatedUserModel?> Refresh()
+    public async Task<AuthenticatedUserModel?> RefreshAsync()
     {
-        await _localStorage.RemoveItemAsync(authTokenStorageKey);
-        await _localStorage.RemoveItemAsync(authRefreshTokenStorageKey);
+        var token = await _localStorage.GetItemAsync<string>(authTokenStorageKey);
+        var refreshToken = await _localStorage.GetItemAsync<string>(authRefreshTokenStorageKey);
 
-        var authResult = await _apiHelper.RefreshAuthentication();
+        var refreshResult = await _apiHelper.RefreshAuthentication(token, refreshToken);
 
-        if (authResult.IsSuccess == false)
+        if (refreshResult is null || refreshResult.IsFailed)
         {
-            return null;
+            await Logout();
+            await _localStorage.RemoveItemAsync(authTokenStorageKey);
+            await _localStorage.RemoveItemAsync(authRefreshTokenStorageKey);
+
+            return new AuthenticatedUserModel();
         }
 
-        await _localStorage.SetItemAsync(authTokenStorageKey, authResult.Value.AccessToken);
-        await _localStorage.SetItemAsync(authRefreshTokenStorageKey, authResult.Value.RefreshToken);
+        await _localStorage.SetItemAsync(authTokenStorageKey, refreshResult.Value.AccessToken);
+        await _localStorage.SetItemAsync(authRefreshTokenStorageKey, refreshResult.Value.RefreshToken);
 
-        var authenticationSuccessful = await ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(authResult.Value.AccessToken);
+        var authenticationSuccessful = await ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(refreshResult.Value.AccessToken);
 
-        return authenticationSuccessful ? authResult.Value : null;
+        return authenticationSuccessful ? refreshResult.Value : null;
     }
 
     public async Task Logout()

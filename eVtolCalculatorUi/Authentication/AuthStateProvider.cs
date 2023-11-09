@@ -61,7 +61,15 @@ public class AuthStateProvider : AuthenticationStateProvider
         try
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var claims = tokenHandler.ReadJwtToken(token).Payload.Claims;
+            var decodedToken = tokenHandler.ReadJwtToken(token);
+
+            var expiration = decodedToken.ValidTo;
+            var claims = decodedToken.Payload.Claims;
+
+            if (claims is null || expiration.ToUniversalTime().CompareTo(DateTime.UtcNow) < 0)
+            {
+                return false;
+            }
 
             await _apiHelper.GetLoggedInUserInfo(token);
             var authenticatedUser = new ClaimsPrincipal(
@@ -77,6 +85,7 @@ public class AuthStateProvider : AuthenticationStateProvider
             await NotifyUserLogout();
             isAuthenticatedoutput = false;
         }
+
         return isAuthenticatedoutput;
     }
 

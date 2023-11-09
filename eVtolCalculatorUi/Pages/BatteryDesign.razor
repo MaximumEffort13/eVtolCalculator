@@ -1,5 +1,6 @@
 ﻿@page "/batterypackdesign"
 @inject IAuthenticationService AuthService
+@inject AuthenticationStateProvider AuthState
 @inject IBatteryPackEndpoints BatteryPackEndpoints
 @attribute [Authorize]
 
@@ -213,21 +214,26 @@
 }
 
 @code {
-
     [Inject] protected PreloadService PreloadService { get; set; }
-
 
     bool displayOutput = true;
     CreateBatteryModel model = new ();
     string errorMessage = string.Empty;
     BatteryPackDto designResults { get; set; }
-    List<BatteryPackDto> BatteryPacks { get; set; }
+    List<BatteryPackDto> BatteryPacks = new();
 
     protected async override Task OnInitializedAsync()
     {
         try
         {
+            var state = await AuthState.GetAuthenticationStateAsync();
+            if (state is not null && state.User is not null && state.User.Identity.IsAuthenticated is false)
+            {
+                await AuthService.RefreshAsync();
+            }
+
             PreloadService.Show(SpinnerColor.Warning);
+
             var batteryPacks = await BatteryPackEndpoints.GetBatteries();
 
             if (batteryPacks.IsFailed)

@@ -4,7 +4,9 @@
 @inject IInverterEndpoints InverterEndpoints
 @inject IBatteryPackEndpoints BatteryPackEndpoints
 @inject IDetailDesignEndpoints DetailDesignEndpoints
-
+@inject AuthenticationStateProvider AuthState
+@inject IAuthenticationService AuthService
+@attribute [Authorize]
 
 <PageTitle>Detail Design</PageTitle>
 
@@ -126,8 +128,8 @@
             </div>
         </div>
     </div>
-    <div class="row row-cols-6">
-        <Button Type="ButtonType.Submit" Color="ButtonColor.Success" Outline="true">Submit</Button>
+    <div class="row">
+        <Button Type="ButtonType.Submit" Color="ButtonColor.Dark" Outline="true">Submit</Button>
     </div>
     @if (errorMessage.Equals(string.Empty) == false)
     {
@@ -610,16 +612,22 @@
     string errorMessage = string.Empty;
     ElectricVtolDesignDto designResults { get; set; }
 
-    List<MotorDto> Motors { get; set; }
-    List<BladeDto> Blades { get; set; }
-    List<InverterDto> Inverters { get; set; }
-    List<BatteryPackDto> BatteryPacks { get; set; }
-    List<ElectricVtolDesignDto> DetailDesigns { get; set; }
+    List<MotorDto> Motors = new();
+    List<BladeDto> Blades = new();
+    List<InverterDto> Inverters = new();
+    List<BatteryPackDto> BatteryPacks = new();
+    List<ElectricVtolDesignDto> DetailDesigns = new();
 
     protected async override Task OnInitializedAsync()
     {
         try
         {
+            var state = await AuthState.GetAuthenticationStateAsync();
+            if (state is not null && state.User is not null && state.User.Identity.IsAuthenticated is false)
+            {
+                await AuthService.RefreshAsync();
+            }
+
             PreloadService.Show(SpinnerColor.Warning);
 
             model.MissionParameters = new();

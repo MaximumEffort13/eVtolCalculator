@@ -8,7 +8,6 @@ using Polly;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using ApiClient.Enums;
-using System.Threading;
 
 namespace ApiClient;
 
@@ -77,9 +76,10 @@ public sealed class ApiHelper : IApiHelper
         return Result.Ok(response);
     }
 
-    public async Task<Result<AuthenticatedUserModel>> RefreshAuthentication()
+
+    public async Task<Result<AuthenticatedUserModel>> RefreshAuthentication(string accessToken, string refreshToken)
     {
-        if (_loggedInUser == null || string.IsNullOrEmpty(_loggedInUser.AccessToken) || string.IsNullOrEmpty(_loggedInUser.RefreshToken))
+        if (_loggedInUser == null || string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken))
         {
             Logout();
             return new AuthenticatedUserModel();
@@ -87,7 +87,7 @@ public sealed class ApiHelper : IApiHelper
 
         var cancellationToken = new CancellationToken();
 
-        RefreshAuthenticationModel refreshModel = new(_loggedInUser.AccessToken, _loggedInUser.RefreshToken);
+        RefreshAuthenticationModel refreshModel = new(accessToken, refreshToken);
 
         Client.DefaultRequestHeaders.Authorization = null;
 
@@ -99,8 +99,8 @@ public sealed class ApiHelper : IApiHelper
 
         if (result.Result.IsSuccessStatusCode == false)
         {
-            _logger.LogWarning("Login failed.");
-            return Result.Fail<AuthenticatedUserModel>(result.FinalException.ToString());
+            _logger.LogWarning("Refresh failed.");
+            return Result.Fail("Refresh Failed");
         }
 
         if (result.Result.Content is null)

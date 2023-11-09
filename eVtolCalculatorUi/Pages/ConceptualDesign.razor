@@ -1,6 +1,8 @@
 ﻿@page "/conceptualDesign"
 @inject IAuthenticationService AuthService
+@inject AuthenticationStateProvider AuthState
 @inject IConceptualDesignEndpoints ConceptualDesignEndpoints
+@attribute [Authorize]
 
 <PageTitle>Conceptual</PageTitle>
 
@@ -46,7 +48,7 @@
         </div>
     </div>
 
-    <div class="row row-cols-6">
+    <div class="row">
         <Button Type="ButtonType.Submit" Color="ButtonColor.Dark" Outline="true">Submit</Button>
     </div>
     @if (errorMessage.Equals(string.Empty) == false)
@@ -168,12 +170,18 @@
     string errorMessage = string.Empty;
 
     ConceptualDesignDto designResults { get; set; }
-    List<ConceptualDesignDto> ConceptualDesigns { get; set; }
+    List<ConceptualDesignDto> ConceptualDesigns = new();
 
     protected async override Task OnInitializedAsync()
     {
         try
         {
+            var state = await AuthState.GetAuthenticationStateAsync();
+            if (state is not null && state.User is not null && state.User.Identity.IsAuthenticated is false)
+            {
+                await AuthService.RefreshAsync();
+            }
+
             PreloadService.Show(SpinnerColor.Warning);
 
             var conceptualDesigns = await ConceptualDesignEndpoints.GetConceptualDesigns();

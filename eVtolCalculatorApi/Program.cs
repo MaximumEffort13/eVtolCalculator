@@ -77,7 +77,7 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidAudience = builder.Configuration.GetValue<string>("JwtSettings:ValidAudience"),
         ValidateLifetime = true,
-        ClockSkew = TimeSpan.FromMinutes(5),
+        //ClockSkew = TimeSpan.FromMinutes(5),
     };
 });
 

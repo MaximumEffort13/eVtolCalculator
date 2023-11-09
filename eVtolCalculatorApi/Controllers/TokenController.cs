@@ -10,7 +10,7 @@ using System.Text;
 
 namespace eVtolCalculatorApi.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/[controller]/[action]")]
 [ApiController]
 public class TokenController : Controller
 {
@@ -29,9 +29,8 @@ public class TokenController : Controller
 
     public sealed record LoginDetails(string Username, string Password);
 
-    [Route("Authenticate")]
     [HttpPost]
-    public async Task<IActionResult> Create(LoginDetails loginUser)
+    public async Task<IActionResult> Authenticate(LoginDetails loginUser)
     {
         if(await IsValidUsernameAndPassword(loginUser.Username, loginUser.Password) == false)
         {
@@ -57,7 +56,6 @@ public class TokenController : Controller
 
     public sealed record RefreshModel(string ExpiredAccessToken, string RefreshToken);
 
-    [Route("Refresh")]
     [HttpPost]
     public async Task<IActionResult> Refresh(RefreshModel refreshModel)
     {
@@ -70,7 +68,7 @@ public class TokenController : Controller
 
         if (user is null
         || refreshModel.RefreshToken != user.RefreshToken
-        || user.RefreshTokenExpirationDate.CompareTo(DateTime.UtcNow.AddDays(_config.GetValue<int>("JwtSettings:RefreshTokenExp"))) > 0)
+        || DateTime.UtcNow.CompareTo(user.RefreshTokenExpirationDate) > 0)
         {
             return BadRequest();
         }
@@ -111,7 +109,7 @@ public class TokenController : Controller
             new Claim(ClaimTypes.Name, username),
             new Claim(ClaimTypes.NameIdentifier, user.Id),
             new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString()),
-            new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now.AddHours(accessTokenExpInMin)).ToUnixTimeSeconds().ToString()),
+            new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now.AddMinutes(accessTokenExpInMin)).ToUnixTimeSeconds().ToString()),
             new Claim(JwtRegisteredClaimNames.Iss, validIssuer!),
             new Claim(JwtRegisteredClaimNames.Aud, validAudience!),
         };
@@ -148,7 +146,7 @@ public class TokenController : Controller
         var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString()),
-            new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now.AddMinutes(tokenValidityInDays)).ToUnixTimeSeconds().ToString()),
+            new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now.AddDays(tokenValidityInDays)).ToUnixTimeSeconds().ToString()),
         };
 
         var refreshToken = new JwtSecurityToken(

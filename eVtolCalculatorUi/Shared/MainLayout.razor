@@ -1,4 +1,7 @@
 ﻿@inherits LayoutComponentBase
+@inject IAuthenticationService AuthService
+@inject AuthenticationStateProvider AuthState
+@attribute [Authorize]
 
 <div class="bb-page">
     <CascadingAuthenticationState>
@@ -15,6 +18,9 @@
                          Title="eVtol Calculations"
                          DataProvider="NotAuthSidebarDataProvider" />
             </NotAuthorized>
+            <Authorizing>
+
+            </Authorizing>
         </AuthorizeView>
     </CascadingAuthenticationState>
 
@@ -52,6 +58,14 @@
     private Sidebar sidebar = default!;
     private IEnumerable<NavItem> navItems = default!;
 
+    protected async override Task OnInitializedAsync()
+    {
+        var state = await AuthState.GetAuthenticationStateAsync();
+        if (state is not null && state.User is not null && state.User.Identity.IsAuthenticated is false)
+        {
+            await AuthService.RefreshAsync();
+        }
+    }
 
     private async Task<SidebarDataProviderResult> AuthorizedSidebarDataProvider(SidebarDataProviderRequest request)
     {

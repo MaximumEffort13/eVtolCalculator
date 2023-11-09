@@ -1,6 +1,8 @@
 ﻿@page "/inverterdesign"
 @inject IAuthenticationService AuthService
+@inject AuthenticationStateProvider AuthState
 @inject IInverterEndpoints InverterEndpoints
+@attribute [Authorize]
 
 <PageTitle>Inverter</PageTitle>
 
@@ -141,12 +143,18 @@
     CreateInverterModel model = new();
     string errorMessage = string.Empty;
     InverterDto designResults { get; set;}
-    List<InverterDto> Inverters { get; set; }
+    List<InverterDto> Inverters = new();
 
     protected async override Task OnInitializedAsync()
     {
         try
         {
+            var state = await AuthState.GetAuthenticationStateAsync();
+            if (state is not null && state.User is not null && state.User.Identity!.IsAuthenticated is false)
+            {
+                await AuthService.RefreshAsync();
+            }
+
             PreloadService.Show(SpinnerColor.Warning);
 
             var inverers = await InverterEndpoints.GetInverters();

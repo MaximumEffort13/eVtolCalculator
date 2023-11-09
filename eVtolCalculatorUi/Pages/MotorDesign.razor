@@ -1,6 +1,8 @@
 ﻿@page "/motordesign"
 @inject IAuthenticationService AuthService
+@inject AuthenticationStateProvider AuthState
 @inject IMotorEndpoints MotorEndpoints
+@attribute [Authorize]
 
 <PageTitle>Motor</PageTitle>
 
@@ -39,7 +41,7 @@
         </div>
     </div>
     <div class="row">
-        <Button Type="ButtonType.Submit" Color="ButtonColor.Success" Outline="true"><Icon Name="IconName.Check" /> Submit </Button>
+        <Button Type="ButtonType.Submit" Color="ButtonColor.Dark" Outline="true"><Icon Name="IconName.Check" /> Submit </Button>
     </div>
 
     @if (errorMessage.Equals(string.Empty) == false)
@@ -148,13 +150,18 @@
     CreateMotorModel model = new();
     string errorMessage = string.Empty;
     MotorDto designResults { get; set; }
-    List<MotorDto> Motors { get; set; }
+    List<MotorDto> Motors = new();
 
     protected async override Task OnInitializedAsync()
     {
 
         try
         {
+            var state = await AuthState.GetAuthenticationStateAsync();
+            if (state is not null && state.User is not null && state.User.Identity!.IsAuthenticated is false)
+            {
+                await AuthService.RefreshAsync();
+            }
             PreloadService.Show(SpinnerColor.Warning);
             var motors = await MotorEndpoints.GetMotors();
 

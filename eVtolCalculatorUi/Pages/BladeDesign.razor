@@ -1,6 +1,8 @@
 ﻿@page "/bladedesign"
 @inject IAuthenticationService AuthService
+@inject AuthenticationStateProvider AuthState
 @inject IBladeEndpoints BladeEndpoints
+@attribute [Authorize]
 
 <PageTitle>Blade</PageTitle>
 
@@ -44,9 +46,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="row">
-            <Button Type="ButtonType.Submit" Color="ButtonColor.Success" Outline="true"> Submit </Button>
-        </div>
+        <Button Type="ButtonType.Submit" Color="ButtonColor.Dark" Outline="true"> Submit </Button>
     </div>
     @if (errorMessage.Equals(string.Empty) == false)
     {
@@ -163,7 +163,7 @@
 
     string errorMessage = string.Empty;
     CreateBladeModel model = new();
-    List<BladeDto> Blades { get; set; }
+    List<BladeDto> Blades = new();
 
     BladeDto designResults { get; set; }
     bool displayOutput = false;
@@ -172,6 +172,12 @@
     {
         try
         {
+            var state = await AuthState.GetAuthenticationStateAsync();
+            if (state is not null && state.User is not null && state.User.Identity!.IsAuthenticated is false)
+            {
+                await AuthService.RefreshAsync();
+            }
+
             PreloadService.Show(SpinnerColor.Warning);
 
             var blades = await BladeEndpoints.GetBlades();
