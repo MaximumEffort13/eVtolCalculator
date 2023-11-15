@@ -16,7 +16,7 @@ public class AerodynamicCalculations
     {
         var normalisedLength = SiPrefixes.NormaliseValue(lengthOfBlade, SiUnits.Meter);
         var thrustArea = Math.PI * Math.Pow(normalisedLength / 2, 2) * MotorQuantity * bladePerMotorQuantity;
-        return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(thrustArea, SiUnits.Meter);
+        return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(Math.Round(thrustArea, 4), SiUnits.Meter);
     }
 
     public static MeasureandQuantity CalculateThrustRequirement(MeasureandQuantity powerRequirement, MeasureandQuantity thrustArea)
@@ -30,7 +30,7 @@ public class AerodynamicCalculations
         double t3 = phase2 * normalisedThrustarea * freeStreamAirDensity;
         double thrust = Math.Cbrt(t3);
 
-        return new MeasureandQuantity(thrust, $"{SiPrefixes.Kilo.Name}{SiUnits.Mass.Name}");
+        return new MeasureandQuantity(Math.Round(thrust, 4), $"{SiPrefixes.Kilo.Name}{SiUnits.Mass.Name}");
     }
 
     public static MeasureandQuantity CalculateDiscLoading(MeasureandQuantity liftOffWeight, MeasureandQuantity thrustArea)
@@ -38,7 +38,7 @@ public class AerodynamicCalculations
         var normalisedWeight = SiPrefixes.NormaliseValue(liftOffWeight, SiUnits.Mass);
         var normalisedThrustArea = SiPrefixes.NormaliseValue(thrustArea, SiUnits.Meter);
 
-        return new MeasureandQuantity(normalisedWeight / SiPrefixes.Kilo.Value / normalisedThrustArea, $"{SiPrefixes.Kilo.Name}{SiUnits.Mass.Name}/{SiUnits.Meter}^2");
+        return new MeasureandQuantity(Math.Round(normalisedWeight / SiPrefixes.Kilo.Value / normalisedThrustArea, 4), $"{SiPrefixes.Kilo.Name}{SiUnits.Mass.Name}/{SiUnits.Meter}^2");
     }
 
     public static MeasureandQuantity CalculatePowerLoading(MeasureandQuantity liftOffWeight, MeasureandQuantity horsepower)
@@ -46,6 +46,6 @@ public class AerodynamicCalculations
         var normalisedWeight = SiPrefixes.NormaliseValue(liftOffWeight, SiUnits.Mass);
         var normalisedHorsepower = SiPrefixes.NormaliseValue(horsepower, SiUnits.Horsepower);
 
-        return new MeasureandQuantity(normalisedWeight / SiPrefixes.Kilo.Value / normalisedHorsepower, $"{SiPrefixes.Kilo.Name}{SiUnits.Mass.Name}/{SiUnits.Horsepower}");
+        return new MeasureandQuantity(Math.Round(normalisedWeight / SiPrefixes.Kilo.Value / normalisedHorsepower, 4), $"{SiPrefixes.Kilo.Name}{SiUnits.Mass.Name}/{SiUnits.Horsepower}");
     }
 }

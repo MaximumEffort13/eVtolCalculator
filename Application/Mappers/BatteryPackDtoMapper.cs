@@ -13,8 +13,8 @@ public static class BatteryPackDtoMapper
             Name = batteryPack.Name,
             Capacity = $"{batteryPack.Capacity.Value} {batteryPack.Capacity.Unit}",
             Voltage = $"{batteryPack.Voltage.Value} {batteryPack.Voltage.Unit}",
-            Current = $"{batteryPack.Current.Value} {batteryPack.Current.Unit}",
-            Weight = $"{batteryPack.Weight.Value} {batteryPack.Weight.Unit}",
+            Mass = $"{batteryPack.Mass.Value} {batteryPack.Mass.Unit}",
+            Energy = $"{batteryPack.Energy.Value} {batteryPack.Energy.Unit}",
             SpecificEnergy = $"{batteryPack.SpecificEnergy.Value} {batteryPack.SpecificEnergy.Unit}",
         };
     }

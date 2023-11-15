@@ -19,13 +19,10 @@ public class CreateBatteryModel
     public double CellVoltage_V { get; set; }
 
     [Required]
-    public double CellCurrent_mA { get; set; }
+    public double CellMass_g { get; set; }
 
     [Required]
-    public double CellWeight_g { get; set; }
-
-    [Required]
-    public double CellCapacity_mWh { get; set; }
+    public double CellCapacity_Ah { get; set; }
 
     [Required]
     public int NumberOfCellsConnectedInSeries { get; set; }

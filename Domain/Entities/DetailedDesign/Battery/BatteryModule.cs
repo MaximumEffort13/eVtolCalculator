@@ -20,8 +20,7 @@ public sealed class BatteryModule : Entity
     public int NumberOfCellsConnectedInParallel { get; private set; }
     public MeasureandQuantity Capacity { get; set; }
     public MeasureandQuantity Voltage { get; set; }
-    public MeasureandQuantity Current { get; set; }
-    public MeasureandQuantity Weight { get; set; }
-    public MeasureandQuantity Power { get; set; }
+    public MeasureandQuantity Energy { get; set; }
+    public MeasureandQuantity Mass { get; set; }
 
 }

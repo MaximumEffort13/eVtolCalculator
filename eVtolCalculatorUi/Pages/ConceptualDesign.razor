@@ -5,11 +5,23 @@
 @attribute [Authorize]
 
 <PageTitle>Conceptual</PageTitle>
+<h4>ConceptualDesign:</h4>
 
-<EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
+<section class="container-fluid">
+    <Card Style="height:30rem;">
+        <img class="rounded-top" src="/Images/Conceptual-design-space-for-different-eVTOL-aircraft-architectures-based-on-2-For.jpg" alt="Conceptual Design" height="100%" width="100%" />
+        <CardBody>
+
+        </CardBody>
+    </Card>
+</section>
+<div class="row">
+    <br />
+</div>
+<section class="container-fluid">
+    <EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
     <DataAnnotationsValidator />
     <div class="container-fluid">
-        <h4>ConceptualDesign:</h4>
         <div class="row row-cols-4">
             <div class="col g-3">
                 <div class="form-floating mb-3">
@@ -61,7 +73,8 @@
             </div>
         </div>
     }
-</EditForm>
+    </EditForm>
+</section>
 <div class="row">
     <br />
 </div>

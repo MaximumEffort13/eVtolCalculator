@@ -8,9 +8,8 @@ public sealed record CreateBatteryPackCommand(Guid UserId, BatteryPackInsert Bat
 public sealed record BatteryPackInsert(
     string CellName,
     double CellVoltage_V,
-    double CellCurrent_mA,
-    double CellWeight_g,
-    double CellCapacity_mWh,
+    double CellMass_g,
+    double CellCapacity_Ah,
     int NumberOfCellsConnectedInSeries,
     int NumberOfCellsConnectedInParallel,
     int NumberOfModulesConnectedInSeries,

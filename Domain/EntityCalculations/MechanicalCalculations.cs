@@ -18,7 +18,7 @@ public static  class MechanicalCalculations
 
         var moduleWeight = normalisedWeight * numberOfCellsInModule;
 
-        return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(moduleWeight, SiUnits.Mass);
+        return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(Math.Round(moduleWeight, 4), SiUnits.Mass);
     }
 
     public static MeasureandQuantity CalculateBatteryPackWeightUsingBatteryModule(MeasureandQuantity moduleWeight, int numberOfModulesInPack, MeasureandQuantity miscellaneousPackWeight)
@@ -42,7 +42,7 @@ public static  class MechanicalCalculations
 
         var packWeight = normalisedWeight * numberOfModulesInPack + normalisedMiscellaneousWeight;
 
-        return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(packWeight, SiUnits.Mass);
+        return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(Math.Round(packWeight, 4), SiUnits.Mass);
     }
 
 
@@ -59,7 +59,7 @@ public static  class MechanicalCalculations
 
         var rpmPerVolt = normalisedVoltage * kv;
 
-        return new MeasureandQuantity(rpmPerVolt, $"{SiUnits.Rpm.Name}/{SiUnits.Voltage.Name}");
+        return new MeasureandQuantity(Math.Round(rpmPerVolt, 4), $"{SiUnits.Rpm.Name}/{SiUnits.Voltage.Name}");
     }
 
 
@@ -89,6 +89,6 @@ public static  class MechanicalCalculations
 
 
 
-        return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(totalWeight, SiUnits.Mass);
+        return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(Math.Round(totalWeight, 4), SiUnits.Mass);
     }
 }

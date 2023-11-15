@@ -5,11 +5,23 @@
 @attribute [Authorize]
 
 <PageTitle>Battery</PageTitle>
+<h4>Battery Design</h4>
 
-<EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
+<section class="container-fluid">
+    <Card Style="height:30rem;">
+        <img class="rounded-top" src="/Images/BatteryDiagram.png" alt="Battery Design" height="100%" width="100%"/>
+        <CardBody>
+
+        </CardBody>
+    </Card>
+</section>
+<div class="row">
+    <br />
+</div>
+<section class="container-fluid">
+    <EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
     <DataAnnotationsValidator />
     <div class="container-fluid">
-        <h4>Battery Design</h4>
         <div class="row row-cols-4">
             <div class="col g-3">
                 <div class="form-floating mb-3">
@@ -38,25 +50,18 @@
         <div class="row row-cols-4">
             <div class="col g-3">
                 <div class="form-floating mb-3">
-                    <InputNumber id="cellCurrent" class="form-control" @bind-Value="model.CellCurrent_mA" placeholder="1400" />
-                    <ValidationMessage For=@(() => model.CellCurrent_mA) />
-                    <label for="cellCurrent">Cell Current (mA)</label>
-                </div>
-            </div>
-            <div class="col g-3">
-                <div class="form-floating mb-3">
-                    <InputNumber id="cellWeight" class="form-control" @bind-Value="model.CellWeight_g" placeholder="300" />
-                    <ValidationMessage For=@(() => model.CellWeight_g) />
-                    <label for="cellWeight">Cell Weight (g)</label>
+                    <InputNumber id="cellWeight" class="form-control" @bind-Value="model.CellMass_g" placeholder="300" />
+                    <ValidationMessage For=@(() => model.CellMass_g) />
+                    <label for="cellWeight">Cell Mass (g)</label>
                 </div>
             </div>
         </div>
         <div class="row row-cols-4">
             <div class="col g-3">
                 <div class="form-floating mb-3">
-                    <InputNumber id="cellCapacity" class="form-control" @bind-Value="model.CellCapacity_mWh" placeholder="1400" />
-                    <ValidationMessage For=@(() => model.CellCapacity_mWh) />
-                    <label for="cellCapacity">Cell Capacity (mWh):</label>
+                    <InputNumber id="cellCapacity" class="form-control" @bind-Value="model.CellCapacity_Ah" placeholder="1400" />
+                    <ValidationMessage For=@(() => model.CellCapacity_Ah) />
+                    <label for="cellCapacity">Cell Capacity (Ah):</label>
                 </div>
             </div>
             <div class="col g-3">
@@ -113,7 +118,8 @@
             </div>
         </div>
     }
-</EditForm>
+    </EditForm>
+</section>
 <div class="row">
     <br />
 </div>
@@ -165,18 +171,6 @@
         <div class="row row-cols-4">
             <div class="col">
                 <p>
-                    Battery Current Rating =
-                </p>
-            </div>
-            <div class="col">
-                <p>
-                    @designResults.Current
-                </p>
-            </div>
-        </div>
-        <div class="row row-cols-4">
-            <div class="col">
-                <p>
                     Battery Capacity =
                 </p>
             </div>
@@ -194,7 +188,19 @@
             </div>
             <div class="col">
                 <p>
-                    @designResults.Weight
+                    @designResults.Mass
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col">
+                <p>
+                    Battery Total Energy =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Energy
                 </p>
             </div>
         </div>

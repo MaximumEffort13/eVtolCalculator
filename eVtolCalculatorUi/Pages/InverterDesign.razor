@@ -5,50 +5,63 @@
 @attribute [Authorize]
 
 <PageTitle>Inverter</PageTitle>
+<h4>Inverter Design:</h4>
 
-<EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
-    <DataAnnotationsValidator />
-    <div class="container-fluid">
-        <h4>Inverter Design:</h4>
-        <div class="row row-cols-3">
-            <div class="col g-3">
-                <div class="form-floating mb-3">
-                    <InputText id="inverterName" class="form-control" @bind-Value="model.Name" placeholder="Axial Flux M003" />
-                    <ValidationMessage For=@(() => model.Name) />
-                    <label for="inverterName">Name of Inverter:</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <InputNumber id="inverterVoltage" class="form-control" @bind-Value="model.VoltageRating_V" placeholder="50" />
-                    <ValidationMessage For=@(() => model.VoltageRating_V) />
-                    <label for="inverterVoltage">Inverter Voltage (V)</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <InputNumber id="inverterCurrent" class="form-control" @bind-Value="model.CurrentRating_A" placeholder="15" />
-                    <ValidationMessage For=@(() => model.CurrentRating_A) />
-                    <label for="motorCurrent">Inverter Current (A)</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <InputNumber id="motorWeight" class="form-control" @bind-Value="model.Weight_kg" placeholder="30" />
-                    <ValidationMessage For=@(() => model.Weight_kg) />
-                    <label for="motorWeight">Inverter Weight (kg): </label>
+<section class="container-fluid">
+    <Card Style="height:30rem;">
+        <img class="rounded-top" src="/Images/Exploded-sketch-of-the-modeled-inverter-unit-design.png" alt="Inverter Exploded View" width="100%" height="100%" />
+        <CardBody>
+
+        </CardBody>
+    </Card>
+</section>
+<div class="row">
+    <br />
+</div>
+<section class="container-fluid">
+    <EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
+        <DataAnnotationsValidator />
+        <div class="container-fluid">
+            <div class="row row-cols-3">
+                <div class="col g-3">
+                    <div class="form-floating mb-3">
+                        <InputText id="inverterName" class="form-control" @bind-Value="model.Name" placeholder="Axial Flux M003" />
+                        <ValidationMessage For=@(() => model.Name) />
+                        <label for="inverterName">Name of Inverter:</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <InputNumber id="inverterVoltage" class="form-control" @bind-Value="model.VoltageRating_V" placeholder="50" />
+                        <ValidationMessage For=@(() => model.VoltageRating_V) />
+                        <label for="inverterVoltage">Inverter Voltage (V)</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <InputNumber id="inverterCurrent" class="form-control" @bind-Value="model.CurrentRating_A" placeholder="15" />
+                        <ValidationMessage For=@(() => model.CurrentRating_A) />
+                        <label for="motorCurrent">Inverter Current (A)</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <InputNumber id="motorWeight" class="form-control" @bind-Value="model.Weight_kg" placeholder="30" />
+                        <ValidationMessage For=@(() => model.Weight_kg) />
+                        <label for="motorWeight">Inverter Weight (kg): </label>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <Button Type="ButtonType.Submit" Color="ButtonColor.Dark" Outline="true">Submit</Button>
-    </div>
-    @if (errorMessage.Equals(string.Empty) == false)
-    {
         <div class="row">
-            <div class="text-danger">
-                <p class="fw-bolder">
-                    @errorMessage;
-                </p>
-            </div>
+            <Button Type="ButtonType.Submit" Color="ButtonColor.Dark" Outline="true">Submit</Button>
         </div>
-    }
-</EditForm>
+        @if (errorMessage.Equals(string.Empty) == false)
+        {
+            <div class="row">
+                <div class="text-danger">
+                    <p class="fw-bolder">
+                        @errorMessage;
+                    </p>
+                </div>
+            </div>
+        }
+    </EditForm>
+</section>
 <div class="row">
     <br />
 </div>

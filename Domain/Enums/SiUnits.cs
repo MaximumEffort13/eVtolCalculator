@@ -12,6 +12,7 @@ public class SiUnits : SmartEnum<SiUnits, double>
     public static readonly SiUnits Current = new("A", 1);
     public static readonly SiUnits Watt = new("W", 1);
     public static readonly SiUnits WattHour = new("Wh", 1);
+    public static readonly SiUnits AmpHour = new("Ah", 1);
     public static readonly SiUnits Horsepower = new("hp", 1);
     public static readonly SiUnits Degress = new("º", 1);
     public static readonly SiUnits Rpm = new("rpm", 1);

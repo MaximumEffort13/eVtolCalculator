@@ -27,7 +27,7 @@ internal class CreateDetailDesignCommandHandler : ICommandHandler<CreateDetailed
         var bladeLength = MeasureandQuantity.ConvertStringToMeasureandQuantity(request.Blade.Length);
         var powerRequirement = MeasureandQuantity.ConvertStringToMeasureandQuantity(request.MissionParameter.EstimatedPowerRequirement);
         var motorWeight = MeasureandQuantity.ConvertStringToMeasureandQuantity(request.Motor.Weight);
-        var batteryWeight = MeasureandQuantity.ConvertStringToMeasureandQuantity(request.Battery.Weight);
+        var batteryWeight = MeasureandQuantity.ConvertStringToMeasureandQuantity(request.Battery.Mass);
         var inverterWeight = MeasureandQuantity.ConvertStringToMeasureandQuantity(request.Inverter.Weight);
         var bladeWeight = MeasureandQuantity.ConvertStringToMeasureandQuantity(request.Blade.Weight);
         var fuselageWeight = MeasureandQuantity.ConvertStringToMeasureandQuantity(request.Fuselage.Weight);

@@ -68,7 +68,7 @@ internal class CreateDetailDesignWithGuidLinksCommandHandler : ICommandHandler<C
 
         electricVtol.LiftOffWeight = MechanicalCalculations.CalculateLiftOffWeight(
             mission.PayloadWeight,
-            battery.Weight,
+            battery.Mass,
             motor.Weight,
             inverter.Weight,
             blade.Weight,

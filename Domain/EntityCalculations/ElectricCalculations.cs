@@ -26,7 +26,7 @@ public sealed class ElectricCalculations
 
         var voltage = normalisedVoltage * numberOfUnitsConnectedInSeries;
 
-        return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(voltage, SiUnits.Voltage);
+        return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(Math.Round(voltage,4), SiUnits.Voltage);
     }
 
     public static MeasureandQuantity CalculateCurrentFromUnitConnectionCount(MeasureandQuantity current, int numberOfUnitsConnectedInParallel)
@@ -49,10 +49,10 @@ public sealed class ElectricCalculations
 
         var newCurrent = normalisedCurrent * numberOfUnitsConnectedInParallel;
 
-        return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(newCurrent, SiUnits.Current);
+        return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(Math.Round(newCurrent,4), SiUnits.Current);
     }
 
-    public static MeasureandQuantity CalculateCapacityBaseOnUnitConnections(MeasureandQuantity capacityOfUnit, int connectionsInParallel, int connectionsInSeries)
+    public static MeasureandQuantity CalculateCapacityBaseOnUnitConnections(MeasureandQuantity capacityOfUnit, int connectionsInParallel)
     {
         MeasureandQuantity[] inputs = { capacityOfUnit };
 
@@ -63,16 +63,16 @@ public sealed class ElectricCalculations
 
         double normalisedCapacity = capacityOfUnit.Value;
 
-        if (capacityOfUnit.Unit != null && capacityOfUnit.Unit.StartsWith(SiUnits.WattHour.Name) == false)
+        if (capacityOfUnit.Unit != null && capacityOfUnit.Unit.StartsWith(SiUnits.AmpHour.Name) == false)
         {
             var prefix = SiPrefixes.FindPrefixFromName(capacityOfUnit.Unit[0]);
 
             normalisedCapacity = capacityOfUnit.Value * prefix.Value;
         }
 
-        var capacity = normalisedCapacity * connectionsInParallel * connectionsInSeries;
+        var capacity = normalisedCapacity * connectionsInParallel;
 
-        return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(capacity, SiUnits.WattHour);
+        return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(Math.Round(capacity, 4), SiUnits.AmpHour);
     }
 
     public static MeasureandQuantity CalculatePower(MeasureandQuantity voltage, MeasureandQuantity current)
@@ -103,13 +103,12 @@ public sealed class ElectricCalculations
 
         var power = normalisedVoltage * normalisedCurrent;
 
-        return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(power, SiUnits.Watt);
+        return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(Math.Round(power, 4), SiUnits.Watt);
     }
 
-
-    public static MeasureandQuantity CalculateSpecificEnergy(MeasureandQuantity capacity, MeasureandQuantity weight)
+    public static MeasureandQuantity CalculateEnergy(MeasureandQuantity voltage, MeasureandQuantity capacity)
     {
-        MeasureandQuantity[] inputs = { capacity, weight };
+        MeasureandQuantity[] inputs = { voltage, capacity };
 
         if (ValidInput(inputs) == false)
         {
@@ -117,30 +116,62 @@ public sealed class ElectricCalculations
         }
 
         double normalisedCapacity = capacity.Value;
+        double normalisedVoltage = voltage.Value;
 
-        if (capacity.Unit != null && capacity.Unit.StartsWith(SiUnits.Watt.Name) == false)
+        if (capacity.Unit != null && capacity.Unit.StartsWith(SiUnits.AmpHour.Name) == false)
         {
             var prefix = SiPrefixes.FindPrefixFromName(capacity.Unit[0]);
 
             normalisedCapacity = capacity.Value * prefix.Value;
         }
 
-        string weightUnit = weight.Unit;
-        double newWeight = weight.Value;
-
-        if (weight.Unit != null && weight.Unit.StartsWith(SiUnits.Mass.Name) == false)
+        if (voltage.Unit != null && voltage.Unit.StartsWith(SiUnits.Voltage.Name) == false)
         {
-            var prefix = SiPrefixes.FindPrefixFromName(weight.Unit[0]);
+            var prefix = SiPrefixes.FindPrefixFromName(voltage.Unit[0]);
 
-            var normalisedWeight = weight.Value * prefix.Value;
-
-            newWeight = normalisedWeight / SiPrefixes.Kilo.Value;
-            weightUnit = $"{SiPrefixes.Kilo.Name}{SiUnits.Mass.Name}";
+            normalisedVoltage = voltage.Value * prefix.Value;
         }
 
-        var specificEnergy= SiPrefixes.ScaleNormalisedValueToAppropriateUnit(normalisedCapacity / newWeight, SiUnits.WattHour);
+        var energy = normalisedVoltage * normalisedCapacity;
 
-        return new MeasureandQuantity(specificEnergy.Value, $"{specificEnergy.Unit}/{weightUnit}");
+        return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(Math.Round(energy, 4), SiUnits.WattHour);
+
+    }
+
+    public static MeasureandQuantity CalculateSpecificEnergy(MeasureandQuantity energy, MeasureandQuantity mass)
+    {
+        MeasureandQuantity[] inputs = { energy, mass };
+
+        if (ValidInput(inputs) == false)
+        {
+            return new MeasureandQuantity(0, string.Empty);
+        }
+
+        double normalisedCapacity = energy.Value;
+
+        if (energy.Unit != null && energy.Unit.StartsWith(SiUnits.WattHour.Name) == false)
+        {
+            var prefix = SiPrefixes.FindPrefixFromName(energy.Unit[0]);
+
+            normalisedCapacity = energy.Value * prefix.Value;
+        }
+
+        string massUnit = mass.Unit;
+        double netMass = mass.Value;
+
+        if (mass.Unit != null && mass.Unit.StartsWith(SiUnits.Mass.Name) == false)
+        {
+            var prefix = SiPrefixes.FindPrefixFromName(mass.Unit[0]);
+
+            var normalisedWeight = mass.Value * prefix.Value;
+
+            netMass = normalisedWeight / SiPrefixes.Kilo.Value;
+            massUnit = $"{SiPrefixes.Kilo.Name}{SiUnits.Mass.Name}";
+        }
+
+        var specificEnergy= SiPrefixes.ScaleNormalisedValueToAppropriateUnit(normalisedCapacity / netMass, SiUnits.WattHour);
+
+        return new MeasureandQuantity(Math.Round(specificEnergy.Value, 4), $"{specificEnergy.Unit}/{massUnit}");
     }
 
     public static MeasureandQuantity CalculatePowerToWeightRatio(MeasureandQuantity voltage, MeasureandQuantity current, MeasureandQuantity weight)
@@ -167,7 +198,7 @@ public sealed class ElectricCalculations
             weightUnit = $"{SiPrefixes.Kilo.Name}{SiUnits.Mass.Name}";
         }
 
-        return new MeasureandQuantity(power.Value / newWeight,$"{power.Unit}/{weightUnit}");
+        return new MeasureandQuantity(Math.Round(power.Value / newWeight, 4),$"{power.Unit}/{weightUnit}");
     }
 
     private static bool ValidInput(MeasureandQuantity[] values)
