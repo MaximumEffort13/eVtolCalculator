@@ -11,7 +11,7 @@ public static class BladeDtoMapper
         {
             Id = blade.Id.ToString(),
             Name = blade.Name,
-            Length = $"{blade.Length.Value} {blade.Length.Unit}",
+            Diameter = $"{blade.Diameter.Value} {blade.Diameter.Unit}",
             Width = $"{blade.Width.Value} {blade.Width.Unit}",
             Thickness = $"{blade.Thickness.Value} {blade.Thickness.Unit}",
             Weight = $"{blade.Weight.Value} {blade.Weight.Unit}",

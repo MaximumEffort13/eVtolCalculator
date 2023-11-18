@@ -30,9 +30,9 @@
                     <label for="bladeName">Name of Blade:</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <InputNumber id="bladeLenght" class="form-control" @bind-Value="model.Length_mm" placeholder="1600" />
-                    <ValidationMessage For=@(() => model.Length_mm) />
-                    <label for="bladeLenght">Length (mm)</label>
+                    <InputNumber id="bladeLenght" class="form-control" @bind-Value="model.Diameter_mm" placeholder="1600" />
+                    <ValidationMessage For=@(() => model.Diameter_mm) />
+                    <label for="bladeLenght">Diameter (mm)</label>
                 </div>
                 <div class="form-floating mb-3">
                     <InputNumber id="bladeWidth" class="form-control" @bind-Value="model.Width_mm" placeholder="40" />
@@ -111,12 +111,12 @@
         <div class="row row-cols-4">
             <div class="col">
                 <p>
-                    Blade Length =
+                    Blade Diameter =
                 </p>
             </div>
             <div class="col">
                 <p>
-                    @designResults.Length
+                    @designResults.Diameter
                 </p>
             </div>
         </div>

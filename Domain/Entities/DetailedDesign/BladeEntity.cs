@@ -2,32 +2,21 @@
 
 namespace Domain.Entities.DetailedDesign;
 
-public sealed class BladeEntity : Entity
+public sealed class BladeEntity(
+    Guid id,
+    Guid userId,
+    string name,
+    MeasureandQuantity diameter,
+    MeasureandQuantity width,
+    MeasureandQuantity thickness,
+    MeasureandQuantity weight,
+    MeasureandQuantity angleOfAttack) : Entity(id)
 {
-    public BladeEntity(
-        Guid id,
-        Guid userId,
-        string name,
-        MeasureandQuantity length,
-        MeasureandQuantity width,
-        MeasureandQuantity thickness,
-        MeasureandQuantity weight,
-        MeasureandQuantity angleOfAttack) : base(id)
-    {
-        UserId = userId;
-        Name = name;
-        Length = length;
-        Width = width;
-        Thickness = thickness;
-        Weight = weight;
-        AngleOfAttack = angleOfAttack;
-    }
-
-    public Guid UserId { get; private set; }
-    public string Name { get; private set; }
-    public MeasureandQuantity Length { get; private set; }
-    public MeasureandQuantity Width { get; private set; }
-    public MeasureandQuantity Thickness { get; private set; }
-    public MeasureandQuantity Weight { get; private set; }
-    public MeasureandQuantity AngleOfAttack { get; private set; }
+    public Guid UserId { get; private set; } = userId;
+    public string Name { get; private set; } = name;
+    public MeasureandQuantity Diameter { get; private set; } = diameter;
+    public MeasureandQuantity Width { get; private set; } = width;
+    public MeasureandQuantity Thickness { get; private set; } = thickness;
+    public MeasureandQuantity Weight { get; private set; } = weight;
+    public MeasureandQuantity AngleOfAttack { get; private set; } = angleOfAttack;
 }

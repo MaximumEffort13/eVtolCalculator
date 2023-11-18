@@ -21,49 +21,40 @@ public class Utilities
         _logger = logger;
     }
 
-    public async Task<Result<T>> GetRequestAsync<T>(string apiEndpoint) 
+    public async Task<Result<T?>> GetRequestAsync<T>(string apiEndpoint) 
         where T: class 
     {
         CancellationToken cancellationToken = new ();
 
         _logger.LogInformation(_apiHelper.Client.BaseAddress!.ToString());
 
-        AsyncRetryPolicy policy = Policy.Handle<Exception>().RetryAsync(3);
-
-        PolicyResult<T?> response = await policy.ExecuteAndCaptureAsync(() => _apiHelper.Client.GetFromJsonAsync<T>(apiEndpoint, cancellationToken));
+        T? response = await _apiHelper.Client.GetFromJsonAsync<T?>(apiEndpoint, cancellationToken);
 
         if (response is null)
         {
             return Result.Fail("Could not contact server");
         }
 
-        if (response.FaultType is not null)
-        {
-            return Result.Fail($"Exception occurred during the request to the server.\n{response.FinalException.Message}");
-        }
-
-        return response.Result is not null ? response.Result : Result.Fail("Invalid data returned from server.");
+        return response is not null ? response: Result.Fail("Invalid data returned from server.");
     }
 
     public async Task<Result> GetRequestAsync(string apiEndpoint)
     {
         CancellationToken cancellationToken = new();
 
-        AsyncRetryPolicy policy = Policy.Handle<Exception>().RetryAsync(3);
-
-        PolicyResult<HttpResponseMessage> response = await policy.ExecuteAndCaptureAsync(async () => await _apiHelper.Client.GetAsync(apiEndpoint, cancellationToken));
+        HttpResponseMessage response =  await _apiHelper.Client.GetAsync(apiEndpoint, cancellationToken);
 
         if (response is null)
         {
             return Result.Fail("Could not contact server");
         }
 
-        if (response.FaultType is not null)
+        if (response.IsSuccessStatusCode is false)
         {
-            return Result.Fail($"Exception occurred during the request to the server.\n{response.FinalException.Message}");
+            return Result.Fail($"Exception occurred during the request to the server.");
         }
 
-        return response.Result is not null ? Result.Ok() : Result.Fail("Invalid data returned from server.");
+        return response is not null ? Result.Ok() : Result.Fail("Invalid data returned from server.");
     }
 
     public async Task<Result> PostCommandAsync<TInput>(TInput commandBodyObject, string apiEndpoint)
@@ -71,11 +62,9 @@ public class Utilities
     {
         CancellationToken cancellationToken = new();
 
-        AsyncRetryPolicy policy = Policy.Handle<Exception>().RetryAsync(3);
+        HttpResponseMessage result = await _apiHelper.Client.PostAsJsonAsync(apiEndpoint, commandBodyObject, cancellationToken);
 
-        PolicyResult<HttpResponseMessage> result = await policy.ExecuteAndCaptureAsync(() => _apiHelper.Client.PostAsJsonAsync(apiEndpoint, commandBodyObject, cancellationToken));
-
-        if (result.Result is null || result.Result.IsSuccessStatusCode == false)
+        if (result is null || result.IsSuccessStatusCode == false)
         {
             return Result.Fail("Error during the request to the server.");
         }
@@ -90,21 +79,19 @@ public class Utilities
     {
         CancellationToken cancellationToken = new ();
 
-        AsyncRetryPolicy policy = Policy.Handle<Exception>().RetryAsync(3);
+        HttpResponseMessage result = await _apiHelper.Client.PostAsJsonAsync(apiEndpoint, commandBodyObject, cancellationToken);
 
-        PolicyResult<HttpResponseMessage> result = await policy.ExecuteAndCaptureAsync(() => _apiHelper.Client.PostAsJsonAsync(apiEndpoint, commandBodyObject, cancellationToken));
-
-        if (result.Result is null || result.Result.IsSuccessStatusCode == false)
+        if (result is null || result.IsSuccessStatusCode == false)
         {
-            return Result.Fail<TOutput>(result.FinalException.ToString());
+            return Result.Fail<TOutput>(result.ReasonPhrase);
         }
 
-        if (result.Result.Content is null)
+        if (result.Content is null)
         {
             return Result.Fail("The expected response was not received.");
         }
 
-        var response = await result.Result.Content.ReadFromJsonAsync<TOutput>(cancellationToken);
+        var response = await result.Content.ReadFromJsonAsync<TOutput>(cancellationToken);
 
         if (response is null)
         {

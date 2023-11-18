@@ -49,6 +49,11 @@
                         <ValidationMessage For=@(() => model.Kv) />
                         <label for="motorKvRating">Motor Kv Rating: </label>
                     </div>
+                    <div class="form-floating mb-3">
+                        <InputNumber id="motorEfficiency" class="form-control" @bind-Value="model.Efficiency" placeholder="0.8" />
+                        <ValidationMessage For=@(() => model.Efficiency) />
+                        <label for="motorEfficiency">Motor Efficiency: </label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -93,7 +98,7 @@
 {
     <section class="container-fluid">
         <h4>Design Outputs:</h4>
-        <div class="row row-cols-4">
+        <div class="row row-cols-3">
             <div class="col">
                 <p>
                     Name =
@@ -105,7 +110,7 @@
                 </p>
             </div>
         </div>
-        <div class="row row-cols-4">
+        <div class="row row-cols-3">
             <div class="col">
                 <p>
                     Motor Voltage Rating =
@@ -117,7 +122,7 @@
                 </p>
             </div>
         </div>
-        <div class="row row-cols-4">
+        <div class="row row-cols-3">
             <div class="col">
                 <p>
                     Motor Current Rating =
@@ -129,7 +134,7 @@
                 </p>
             </div>
         </div>
-        <div class="row row-cols-4">
+        <div class="row row-cols-3">
             <div class="col">
                 <p>
                     Weight =
@@ -141,7 +146,7 @@
                 </p>
             </div>
         </div>
-        <div class="row row-cols-4">
+        <div class="row row-cols-3">
             <div class="col">
                 <p>
                     Power To Weight Ratio =
@@ -150,6 +155,30 @@
             <div class="col">
                 <p>
                     @designResults.PowerToWeightRatio
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-3">
+            <div class="col">
+                <p>
+                    Motor Torque Estimation =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Torque (30% Tolerance)
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-3">
+            <div class="col">
+                <p>
+                    Motor Efficiency =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Efficiency
                 </p>
             </div>
         </div>

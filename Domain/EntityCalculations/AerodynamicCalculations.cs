@@ -9,14 +9,19 @@ public class AerodynamicCalculations
     /// <summary>
     /// Calculates the thrust are of the propeller blades used.
     /// </summary>
-    /// <param name="lengthOfBlade">The length of the blade.</param>
+    /// <param name="diamterOfPropeller">The length of the blade.</param>
     /// <param name="MotorQuantity"></param>
     /// <returns></returns>
-    public static MeasureandQuantity CalculateThrustArea(MeasureandQuantity lengthOfBlade, int MotorQuantity, int bladePerMotorQuantity)
+    public static MeasureandQuantity CalculateTotalThrustArea(MeasureandQuantity diamterOfPropeller, int MotorQuantity, int bladePerMotorQuantity)
     {
-        var normalisedLength = SiPrefixes.NormaliseValue(lengthOfBlade, SiUnits.Meter);
+        var normalisedLength = SiPrefixes.NormaliseValue(diamterOfPropeller, SiUnits.Meter);
         var thrustArea = Math.PI * Math.Pow(normalisedLength / 2, 2) * MotorQuantity * bladePerMotorQuantity;
         return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(Math.Round(thrustArea, 4), SiUnits.Meter);
+    }
+
+    public static MeasureandQuantity CalculateIndividualMotorThrust(MeasureandQuantity rpm, MeasureandQuantity propellerDiameter, MeasureandQuantity angleOfAttack)
+    {
+        throw new NotImplementedException();
     }
 
     public static MeasureandQuantity CalculateThrustRequirement(MeasureandQuantity powerRequirement, MeasureandQuantity thrustArea)

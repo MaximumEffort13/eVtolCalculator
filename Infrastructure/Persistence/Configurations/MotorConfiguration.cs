@@ -13,15 +13,15 @@ internal class MotorConfiguration : IEntityTypeConfiguration<Motor>
         builder.Property(x => x.Id).IsRequired();
         builder.Property(p => p.UserId).IsRequired();
         builder.Property(x => x.Name).IsRequired().HasMaxLength(25);
+        builder.Property(m => m.Efficiency).IsRequired().HasColumnName("efficiency");
 
         builder.Property(x => x.VoltageRating).HasConversion<MeasureandQuantityConverter>().HasMaxLength(50).HasColumnName("voltage_rating");
         builder.Property(x => x.CurrentRating).HasConversion<MeasureandQuantityConverter>().HasMaxLength(50).HasColumnName("current_rating");
         builder.Property(x => x.Weight).HasConversion<MeasureandQuantityConverter>().HasMaxLength(50).HasColumnName("total_weight");
 
-
         builder.Property(x => x.Kv).HasConversion<MeasureandQuantityConverter>().HasMaxLength(50).HasColumnName("Kv");
         builder.Property(x => x.PowerToWeightRatio).HasConversion<MeasureandQuantityConverter>().HasMaxLength(50).HasColumnName("power_to_weight");
-
+        builder.Property(x => x.Torque).HasConversion<MeasureandQuantityConverter>().HasMaxLength(15).HasColumnName("max_torque");
         builder.Property(x => x.Rpm).HasConversion<MeasureandQuantityConverter>().HasMaxLength(15).HasColumnName("maximum_rpm");
     }
 }

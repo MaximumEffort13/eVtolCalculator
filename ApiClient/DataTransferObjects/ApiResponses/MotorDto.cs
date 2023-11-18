@@ -9,4 +9,6 @@ public class MotorDto
     public string Weight { get; set; }
     public string PowerToWeightRatio { get; set; }
     public string RpmValue { get; set; }
+    public string Torque { get; set; }
+    public string Efficiency { get; set; }
 }

@@ -14,14 +14,9 @@ namespace eVtolCalculatorApi.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize(Policy = "user")]
-public class BladeController : ControllerBase
+public class BladeController(ISender sender) : ControllerBase
 {
-    private readonly ISender _sender;
-
-    public BladeController(ISender sender)
-    {
-        _sender = sender;
-    }
+    private readonly ISender _sender = sender;
 
     // GET api/<Blade>/5
     [HttpGet]

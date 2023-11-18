@@ -1,4 +1,5 @@
-﻿using Domain.Entities.AuthenticationModels;
+﻿using Domain.Entities;
+using Domain.Entities.AuthenticationModels;
 using Domain.Entities.ConceptDesign;
 using Domain.Entities.DetailedDesign;
 using Domain.Entities.DetailedDesign.Battery;
@@ -25,6 +26,7 @@ namespace Infrastructure.Persistence.DataAccess
         internal DbSet<MissionParameterEstimates> MissionParameters { get; set; }
         internal DbSet<PersonEntity> People { get; set; }
         internal DbSet<AddressEntity> Addresses { get; set; }
+        internal DbSet<DesignConstantsEntity> DesignConstants { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

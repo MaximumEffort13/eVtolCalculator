@@ -34,12 +34,12 @@ public sealed class ConceptualVtolDesign : Entity
 
     private MeasureandQuantity CalculatePowerRequirement()
     {
-        return new MeasureandQuantity((TotalDesignWeight.Value + PayloadWeight.Value) / PredefinedConstantValues.motorThrustToPowerRatio, SiPrefixes.Kilo.Name + SiUnits.Watt.Name);
+        return new MeasureandQuantity(Math.Round((TotalDesignWeight.Value + PayloadWeight.Value) / PredefinedConstantValues.motorThrustToPowerRatio,4), SiPrefixes.Kilo.Name + SiUnits.Watt.Name);
     }
 
     private MeasureandQuantity CalculateBatteryCapacityRequired()
     {
-        return new MeasureandQuantity(PowerRequirement.Value * FlightTimeRequirementInMinutes.TotalHours, SiPrefixes.Kilo.Name + SiUnits.WattHour.Name);
+        return new MeasureandQuantity(Math.Round(PowerRequirement.Value * FlightTimeRequirementInMinutes.TotalHours,4), SiPrefixes.Kilo.Name + SiUnits.WattHour.Name);
     }
 
     private MeasureandQuantity CalculateEstimatedBatteryWeight()
@@ -49,12 +49,12 @@ public sealed class ConceptualVtolDesign : Entity
 
     private MeasureandQuantity CalculateEstimatedMotorWeight()
     {
-        return new MeasureandQuantity(PowerRequirement.Value / PredefinedConstantValues.motorPowerLoading, SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
+        return new MeasureandQuantity(Math.Round(PowerRequirement.Value / PredefinedConstantValues.motorPowerLoading, 4), SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
     }
 
     private MeasureandQuantity CalculateHorsepower()
     {
-        return new MeasureandQuantity(PowerRequirement.Value * SiPrefixes.Kilo.Value / PredefinedConstantValues.horsepowerToWatConversion, SiUnits.Horsepower.Name);
+        return new MeasureandQuantity(Math.Round(PowerRequirement.Value * SiPrefixes.Kilo.Value / PredefinedConstantValues.horsepowerToWatConversion, 4), SiUnits.Horsepower.Name);
     }
 
 }

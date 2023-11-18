@@ -24,7 +24,7 @@ internal class CreateDetailDesignCommandHandler : ICommandHandler<CreateDetailed
     public async Task<Result<ElectricVtolDesignDto>> Handle(CreateDetailedDesignCommand request, CancellationToken cancellationToken)
     {
         MeasureandQuantity payloadWeight = new MeasureandQuantity(request.PayloadWeight, SiPrefixes.Kilo.Name + SiUnits.Mass.Name);
-        var bladeLength = MeasureandQuantity.ConvertStringToMeasureandQuantity(request.Blade.Length);
+        var bladeLength = MeasureandQuantity.ConvertStringToMeasureandQuantity(request.Blade.Diameter);
         var powerRequirement = MeasureandQuantity.ConvertStringToMeasureandQuantity(request.MissionParameter.EstimatedPowerRequirement);
         var motorWeight = MeasureandQuantity.ConvertStringToMeasureandQuantity(request.Motor.Weight);
         var batteryWeight = MeasureandQuantity.ConvertStringToMeasureandQuantity(request.Battery.Mass);
@@ -46,7 +46,7 @@ internal class CreateDetailDesignCommandHandler : ICommandHandler<CreateDetailed
             request.MotorQuantity,
             request.BladePerMotorQuantity);
 
-        electricVtol.ThrustArea = AerodynamicCalculations.CalculateThrustArea(bladeLength, request.MotorQuantity, request.BladePerMotorQuantity);
+        electricVtol.ThrustArea = AerodynamicCalculations.CalculateTotalThrustArea(bladeLength, request.MotorQuantity, request.BladePerMotorQuantity);
         electricVtol.Thrust = AerodynamicCalculations.CalculateThrustRequirement(powerRequirement, electricVtol.ThrustArea);
 
         electricVtol.LiftOffWeight = MechanicalCalculations.CalculateLiftOffWeight(

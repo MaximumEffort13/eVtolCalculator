@@ -1,0 +1,76 @@
+﻿@page "/designConsts"
+@inject IDesignConstantsEndpoints DesignConstantEndpoints
+@attribute [Authorize]
+
+<h3>DesignConstants</h3>
+<EditForm Model="@model" OnValidSubmit="SubmitConstant">
+    <DataAnnotationsValidator />
+    <div class="container-fluid">
+        <div class="row row-cols-2">
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputText id="constantName" class="form-control" @bind-Value="model.Name" placeholder="Name" />
+                    <ValidationMessage For=@(() => model.Name) />
+                    <label for="constantName">Name</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <InputNumber id="constantValue" class="form-control" @bind-Value="model.Value" />
+                    <ValidationMessage For=@(() => model.Value) />
+                    <label for="constantValue">Value</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <Button Type="ButtonType.Submit" Color="ButtonColor.Dark" Outline="true">Submit</Button>
+            </div>
+        </div>
+        @if (string.IsNullOrEmpty(errorMessage) is false)
+        {
+            <div class="row">
+                <div class="text-danger">
+                    @errorMessage
+                </div>
+            </div>
+        }
+    </div>
+
+</EditForm>
+
+@code {
+    [Inject] protected PreloadService PreloadService { get; set; }
+
+    private CreateDesignConstants model = new ();
+
+    private string errorMessage = string.Empty;
+
+    private async Task SubmitConstant()
+    {
+        try
+        {
+            PreloadService.Show(SpinnerColor.Warning);
+            errorMessage = string.Empty;
+
+            var result = await DesignConstantEndpoints.CreateDesingConstants(model);
+
+            if (result is null)
+            {
+                throw new Exception("No data returned from the server.");
+            }
+
+            if (result is not null && result.IsFailed)
+            {
+                throw new Exception($"Could not calculate design parameters.\n{result.Reasons.Last().Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            StateHasChanged();
+            PreloadService.Hide();
+        }
+    }
+}    

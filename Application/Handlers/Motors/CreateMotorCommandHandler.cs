@@ -28,7 +28,7 @@ internal class CreateMotorCommandHandler : ICommandHandler<CreateMotorCommand, M
         MeasureandQuantity currentRating = new(request.Motor.CurrentRating_A, SiUnits.Current.Name);
         MeasureandQuantity voltageRating = new(request.Motor.VoltageRating_V, SiUnits.Voltage.Name);
 
-        var motor = new Motor(Guid.NewGuid(), request.UserId, request.Motor.Name, voltageRating, currentRating, weight, kv);
+        var motor = new Motor(Guid.NewGuid(), request.UserId, request.Motor.Name, voltageRating, currentRating, weight, kv, request.Motor.Efficiency);
 
         _motorRepo.Create(motor);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

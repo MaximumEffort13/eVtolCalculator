@@ -284,6 +284,26 @@ namespace Infrastructure.Migrations
                     b.ToTable("MissionParameters");
                 });
 
+            modelBuilder.Entity("Domain.Entities.DesignConstantsEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<double>("Value")
+                        .HasColumnType("double precision")
+                        .HasColumnName("constant_value");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DesignConstants");
+                });
+
             modelBuilder.Entity("Domain.Entities.DetailedDesign.Battery.BatteryModule", b =>
                 {
                     b.Property<Guid>("Id")
@@ -452,11 +472,11 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(50)")
                         .HasColumnName("angle_attack");
 
-                    b.Property<string>("Length")
+                    b.Property<string>("Diameter")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
-                        .HasColumnName("length");
+                        .HasColumnName("diameter");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -652,6 +672,10 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(50)")
                         .HasColumnName("current_rating");
 
+                    b.Property<double>("Efficiency")
+                        .HasColumnType("double precision")
+                        .HasColumnName("efficiency");
+
                     b.Property<string>("Kv")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -674,6 +698,12 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("character varying(15)")
                         .HasColumnName("maximum_rpm");
+
+                    b.Property<string>("Torque")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)")
+                        .HasColumnName("max_torque");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");

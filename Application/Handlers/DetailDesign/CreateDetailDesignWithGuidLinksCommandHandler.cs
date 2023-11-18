@@ -62,7 +62,7 @@ internal class CreateDetailDesignWithGuidLinksCommandHandler : ICommandHandler<C
         var fuselage = await _fuselageRepository.GetByIdAsync(request.FuselageId, request.UserId, cancellationToken);
         var mission = await _missionParameterRepository.GetByIdAsync(request.MissionId, request.UserId, cancellationToken);
 
-        electricVtol.ThrustArea = AerodynamicCalculations.CalculateThrustArea(blade.Length, request.MotorQuantity, request.BladePerMotorQuantity);
+        electricVtol.ThrustArea = AerodynamicCalculations.CalculateTotalThrustArea(blade.Diameter, request.MotorQuantity, request.BladePerMotorQuantity);
         electricVtol.Thrust = AerodynamicCalculations.CalculateThrustRequirement(mission.EstimatedPowerRequirement, electricVtol.ThrustArea);
         electricVtol.FlightTimeInMinutes = mission.FlightTimeRequirementInMinutes;
 

@@ -8,7 +8,7 @@ public class CreateBladeModel
     public string Name { get; set; }
 
     [Required]
-    public double Length_mm { get; set; }
+    public double Diameter_mm { get; set; }
 
     [Required]
     public double Width_mm { get; set; }

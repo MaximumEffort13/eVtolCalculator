@@ -45,7 +45,6 @@ public static  class MechanicalCalculations
         return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(Math.Round(packWeight, 4), SiUnits.Mass);
     }
 
-
     public static MeasureandQuantity CalculateRpm(double kv, MeasureandQuantity voltageRating)
     {
         double normalisedVoltage = voltageRating.Value;
@@ -59,9 +58,8 @@ public static  class MechanicalCalculations
 
         var rpmPerVolt = normalisedVoltage * kv;
 
-        return new MeasureandQuantity(Math.Round(rpmPerVolt, 4), $"{SiUnits.Rpm.Name}/{SiUnits.Voltage.Name}");
+        return new MeasureandQuantity(Math.Round(rpmPerVolt, 4), $"{SiUnits.Rpm.Name}");
     }
-
 
     public static MeasureandQuantity CalculateLiftOffWeight(
         MeasureandQuantity payloadWeight,
@@ -90,5 +88,33 @@ public static  class MechanicalCalculations
 
 
         return SiPrefixes.ScaleNormalisedValueToAppropriateUnit(Math.Round(totalWeight, 4), SiUnits.Mass);
+    }
+
+    public static MeasureandQuantity CalculateTorque(MeasureandQuantity motorCurrent, MeasureandQuantity kvRating)
+    {
+        var kt = 1 / kvRating.Value;
+        var normalisedCurrent = SiPrefixes.NormaliseValue(motorCurrent, SiUnits.Current);
+        var radPerSec = ConvertKvtoRadPerSec(kvRating.Value);
+
+        double torque = (1 / radPerSec) * normalisedCurrent;
+
+        return new MeasureandQuantity(Math.Round(torque,4), SiUnits.NewtonMeter.Name);
+    }
+
+    public static double ConvertKvtoRadPerSec(double rpm)
+    {
+        return (rpm / 60) * 2 * (Math.PI);
+    }
+  
+    public static MeasureandQuantity CalculateTorque(MeasureandQuantity motorKvRatio, MeasureandQuantity voltage, MeasureandQuantity motorCurrent, double motorEfficiency)
+    {
+        double normalisedVoltage = SiPrefixes.NormaliseValue(voltage, SiUnits.Voltage);
+        double normalisedCurrent = SiPrefixes.NormaliseValue(motorCurrent, SiUnits.Current);
+        var rpm = CalculateRpm(motorKvRatio.Value, voltage);
+        double radPerSec = ConvertKvtoRadPerSec(rpm.Value);
+
+        var torque = (normalisedCurrent * normalisedVoltage * motorEfficiency) / radPerSec;
+
+        return new MeasureandQuantity(Math.Round(torque, 4), SiUnits.NewtonMeter.Name);
     }
 }

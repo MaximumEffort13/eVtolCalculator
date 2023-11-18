@@ -32,6 +32,7 @@ public static class DependencyInjection
         services.AddTransient<IElectricVtolRepository, ElectricVtolRepository>();
         services.AddTransient<IPersonRepository, PersonRepository>();
         services.AddTransient<IAddressRespository, AddressRespository>();
+        services.AddTransient<IDesignConstantsRepository, DesignConstantsRepository>();
 
         services.AddTransient<IEmailService, SmtpEmailService>();
         services.AddTransient<IEmailSender, EmailSender>();

@@ -25,5 +25,11 @@ public class MotorDto
 
     [Required]
     public string RpmValue { get; set; }
+
+    [Required]
+    public string Torque { get; set; }
+
+    [Required]
+    public string Efficiency { get; set; }
 }
 

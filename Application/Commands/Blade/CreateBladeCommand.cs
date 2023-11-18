@@ -9,7 +9,7 @@ public sealed record CreateBladeCommand(Guid UserId, BladeInsert Blade) : IComma
 public class BladeInsert
 {
     public string Name { get; set; }
-    public double Length_mm { get; set; }
+    public double Diameter_mm { get; set; }
     public double Width_mm { get; set; }
     public double Thickness_mm { get; set; }
     public double Weight_g { get; set; }

@@ -3,12 +3,23 @@ using ApiClient.DataTransferObjects.IdentityObjects;
 using ApiClient.Endpoints;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Polly.Extensions.Http;
+using Polly;
+using System.Net;
 using System.Net.Http.Headers;
 
 namespace ApiClient;
 
 public static class ServiceCollectionExtension
 {
+    private static IAsyncPolicy<HttpResponseMessage> RetryPolicy => HttpPolicyExtensions
+    .HandleTransientHttpError()
+    .OrResult(msg => msg.StatusCode == HttpStatusCode.NotFound)
+    .Or<Exception>()
+    .Or<HttpRequestException>()
+    .Or<HttpListenerException>()
+    .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+
     public static void AddeVtolApiClient(this IServiceCollection services, IConfiguration config)
     {
         string url = config.GetRequiredSection("ApiSetting")["ApiEndPointBaseAddress"]!;
@@ -23,7 +34,7 @@ public static class ServiceCollectionExtension
 
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        });
+        }).AddPolicyHandler(RetryPolicy);
 
         services.AddTransient<IIdentityEndpoints, IdentityEndpoints>();
         services.AddScoped<IApiHelper, ApiHelper>();
@@ -35,6 +46,7 @@ public static class ServiceCollectionExtension
         services.AddTransient<IDetailDesignEndpoints, DetailDesignEndpoints>();
         services.AddTransient<IInverterEndpoints,  InverterEndpoints>();
         services.AddTransient<IMotorEndpoints,  MotorEndpoints>();
+        services.AddTransient<IDesignConstantsEndpoints, DesignConstantsEndpoints>();
 
         services.AddScoped<Utilities, Utilities>();
     }

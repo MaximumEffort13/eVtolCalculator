@@ -18,4 +18,7 @@ public class CreateMotorModel
 
     [Required]
     public int Kv { get; set; }
+
+    [Required]
+    public double Efficiency { get; set; }
 }

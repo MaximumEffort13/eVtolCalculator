@@ -23,7 +23,7 @@ internal sealed class CreateBladeCommandHandler : ICommandHandler<CreateBladeCom
 
     public async Task<Result<BladeDto>> Handle(CreateBladeCommand request, CancellationToken cancellationToken)
     {
-        MeasureandQuantity length = new(request.Blade.Length_mm, SiPrefixes.Milli.Name + SiUnits.Meter.Name);
+        MeasureandQuantity length = new(request.Blade.Diameter_mm, SiPrefixes.Milli.Name + SiUnits.Meter.Name);
         MeasureandQuantity width = new(request.Blade.Width_mm, SiPrefixes.Milli.Name + SiUnits.Meter.Name);
         MeasureandQuantity thickness = new(request.Blade.Thickness_mm, SiPrefixes.Milli.Name + SiUnits.Meter.Name);
         MeasureandQuantity weight = new(request.Blade.Weight_g, SiUnits.Mass.Name);

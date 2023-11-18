@@ -83,17 +83,18 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorizationBuilder().AddPolicy("admin", policy =>
 {
-    policy.RequireRole("admin");
+    policy.RequireRole("Admin");
 }).AddPolicy("management", policy =>
 {
-    policy.RequireRole("management");
+    policy.RequireRole("Management");
 }).AddPolicy("user", policy =>
 {
     policy.RequireAuthenticatedUser();
+    policy.RequireRole("Everyone");
 }).AddPolicy("create_user", policy =>
 {
-    policy.RequireRole("admin");
-    policy.RequireRole("management");
+    policy.RequireRole("Admin");
+    policy.RequireRole("Management");
 });
 
 builder.Services.AddIdentityCore<IdentityUserExtender>(options => options.SignIn.RequireConfirmedAccount = true)
