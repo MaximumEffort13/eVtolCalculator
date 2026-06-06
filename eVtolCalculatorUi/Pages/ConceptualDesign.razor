@@ -1,0 +1,273 @@
+﻿@page "/conceptualDesign"
+@inject IAuthenticationService AuthService
+@inject AuthenticationStateProvider AuthState
+@inject IConceptualDesignEndpoints ConceptualDesignEndpoints
+@attribute [Authorize]
+
+<PageTitle>Conceptual</PageTitle>
+<h4>ConceptualDesign:</h4>
+
+<section class="container-fluid">
+    <Card Style="height:30rem;">
+        <img class="rounded-top" src="/Images/Conceptual-design-space-for-different-eVTOL-aircraft-architectures-based-on-2-For.jpg" alt="Conceptual Design" height="100%" width="100%" />
+        <CardBody>
+
+        </CardBody>
+    </Card>
+</section>
+<div class="row">
+    <br />
+</div>
+<section class="container-fluid">
+    <EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="container-fluid">
+        <div class="row row-cols-4">
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputText id="name" class="form-control" @bind-Value="model.Name" placeholder="First Concept" />
+                    <ValidationMessage For=@(() => model.Name) />
+                    <label for="name">Name:</label>
+                </div>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputNumber id="totalWeight" class="form-control" @bind-Value="model.TotalMassOfeVtol_kg" placeholder="500" />
+                    <ValidationMessage For=@(() => model.TotalMassOfeVtol_kg) />
+                    <label for="totalWeight">Total Weight (kg):</label>
+                </div>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputNumber id="payloadWeight" class="form-control" @bind-Value="model.PayloadMass_kg" placeholder="100" />
+                    <ValidationMessage For=@(() => model.PayloadMass_kg) />
+                    <label for="payloadWeight">Payload Weight (kg):</label>
+                </div>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputNumber id="flighTime" class="form-control" @bind-Value="model.FlightTimeInMinutes" placeholder="15" />
+                    <ValidationMessage For=@(() => model.FlightTimeInMinutes) />
+                    <label for="flightTime">Flight time in Min:</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <Button Type="ButtonType.Submit" Color="ButtonColor.Dark" Outline="true">Submit</Button>
+    </div>
+    @if (errorMessage.Equals(string.Empty) == false)
+    {
+        <div class="row">
+            <div class="text-danger">
+                <p class="fw-bolder">
+                    @errorMessage;
+                </p>
+            </div>
+        </div>
+    }
+    </EditForm>
+</section>
+<div class="row">
+    <br />
+</div>
+<section class="row row-cols-5">
+    <div class="col"></div>
+    <div class="col"></div>
+    <div class="col">
+        <div class="form-floating mb-3">
+            <select id="conceptsSelect" class="form-select form-select-sm" @onchange="@OnConceptSelectChange">
+                <option value="" selected>Select</option>
+                @foreach (var concepts in ConceptualDesigns)
+                {
+                    <option value="@concepts.Id">@concepts.Name</option>
+                }
+            </select>
+            <label for="conceptsSelect" class="col-md-2 col-form-label">Concepts</label>
+        </div>
+    </div>
+</section>
+
+@if (designResults is not null && displayOutput)
+{
+    <section class="container-fluid">
+        <h4>Design Outputs:</h4>
+        <div class="row row-cols-4">
+            <div class="col">
+                <p>
+                    Name =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Name
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col">
+                <p>
+                    Total Power Required =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.ProwerRequirement
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col">
+                <p>
+                    Total Battery Size = 
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.BatteryCapacityRequirement
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col">
+                <p>
+                    Battery Weight = 
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.BatteryWeight
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col">
+                <p>
+                    Motor Weight = 
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.MotorWeight
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col">
+                <p>
+                    Horsepower required for liftoff = 
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Horsepower
+                </p>
+            </div>
+        </div>
+    </section>
+}
+
+
+@code{
+    [Inject] protected PreloadService PreloadService { get; set; }
+
+    bool displayOutput = false;
+    CreateConceptualDesignModel model = new();
+    string errorMessage = string.Empty;
+
+    ConceptualDesignDto designResults { get; set; }
+    List<ConceptualDesignDto> ConceptualDesigns = new();
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            var state = await AuthState.GetAuthenticationStateAsync();
+            if (state is not null && state.User is not null && state.User.Identity.IsAuthenticated is false)
+            {
+                await AuthService.RefreshAsync();
+            }
+
+            PreloadService.Show(SpinnerColor.Warning);
+
+            var conceptualDesigns = await ConceptualDesignEndpoints.GetConceptualDesigns();
+
+            if (conceptualDesigns.IsFailed)
+            {
+                errorMessage = conceptualDesigns.Reasons.Last().Message;
+            }
+            else
+            {
+                ConceptualDesigns = conceptualDesigns.Value;
+            }
+        }
+        finally
+        {
+            StateHasChanged();
+            PreloadService.Hide();
+        }
+
+    }
+
+    protected async Task OnConceptSelectChange(ChangeEventArgs args)
+    {
+        var value = args.Value.ToString();
+
+        if (string.IsNullOrEmpty(value) || value.Equals("Select"))
+        {
+            designResults = new();
+            displayOutput = false;
+            return;
+        }
+
+        var result = await ConceptualDesignEndpoints.GetConceptualDesignByIdAsync(value);
+        designResults = result.Value;
+        displayOutput = true;
+
+        return;
+    }
+
+    private async Task OnValidSubmit()
+    {
+        errorMessage = string.Empty;
+        designResults = new();
+        displayOutput = false;
+
+        try
+        {
+            PreloadService.Show(SpinnerColor.Warning);
+            var result = await ConceptualDesignEndpoints.CreateConceptualDesign(model);
+
+            if (result is null)
+            {
+                throw new Exception("No data returned from the server.");
+            }
+
+            if (result is not null && result.IsFailed)
+            {
+                throw new Exception("Could not calculate design parameters.");
+            }
+
+            designResults = result!.Value;
+            ConceptualDesigns.Add(designResults);
+            displayOutput = true;
+
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            StateHasChanged();
+            PreloadService.Hide();
+        }
+    }
+}

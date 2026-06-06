@@ -1,0 +1,90 @@
+﻿@page "/"
+@attribute [AllowAnonymous]
+
+<PageTitle>Index</PageTitle>
+
+<section class="container-fluid">
+    <div class="row">
+        <h1>Electric Vertical Takeoff and Landing</h1>
+    </div>
+</section>
+<div class="row">
+    <br />
+</div>
+<Card Style="height:30rem;">
+    <img src="/Images/eVtolSpeedster.png" alt="eVtol speedster." height="100%" />
+</Card>
+<div class="row">
+    <br />
+</div>
+<section class="container-fluid">
+    <div class="row">
+        <CardGroup Style="border:none;">
+            <Card></Card>
+            <Card>
+                <img class="rounded-top" src="/Images/TaylorAerocar_029.jpg" alt="Flying Car" />
+                <CardBody>
+                    <CardTitle>Flying Car</CardTitle>
+                    <CardText>
+                        This was a very old design and that makes it very heavy.
+                        We should be looking into making better designs that are more user friendly and safer.
+                        We should also not be worrying about adding wings like these types of designs as they are very inefficient.
+                    </CardText>
+                </CardBody>
+            </Card>
+            <Card></Card>
+        </CardGroup>
+    </div>
+    <div class="row">
+        <br/>
+    </div>
+    <CardGroup>
+        <Card Class="mb-4" Style="width:18rem;">
+            <img class="rounded-top" src="/Images/Multicopter.jpg" alt="Flying Car" />
+            <CardBody>
+                <CardTitle>Multicopter</CardTitle>
+                <CardText>
+                    Mutlicopter designs for eVtol's are quite common these days. The concept around this emulates modern day drones, at an amplified level.
+                    These designs are quite effective at reducing weight as there is no need for tilting mechanisms, thus it is ideal for smaller mission parameters.
+                    However, for longer ranges this design is not recommended as it is inefficient during cruise and thus requires a large amount of energy during cruise.
+                </CardText>
+            </CardBody>
+        </Card>
+        <Card Class="mb-4" Style="width:18rem;">
+            <img class="rounded-top" src="/Images/LiftCruise.jpg" alt="Flying Car" />
+            <CardBody>
+                <CardTitle>Lift + Cruise</CardTitle>
+                <CardText>
+                    Lift + Cruise design style is almost the same as with the Multicopter. However they tend to be heavier due to the added weight of the wings, however they are much more efficient during cruise.
+                </CardText>
+            </CardBody>
+        </Card>
+        <Card Class="mb-4" Style="width:18rem;">
+            <img class="rounded-top" src="/Images/TiltRotor.jpg" alt="Flying Car" />
+            <CardBody>
+                <CardTitle>Tilt Rotor</CardTitle>
+                <CardText>
+                    This was a very old design and that makes it very heavy.
+                    We should be looking into making better designs that are more user friendly and safer.
+                    We should also not be worrying about adding wings like these types of designs as they are very inefficient.
+                </CardText>
+            </CardBody>
+        </Card>
+        <Card Class="mb-4" Style="width:18rem;">
+            <img class="rounded-top" src="/Images/TiltWing2.jpg" alt="Flying Car" />
+            <CardBody>
+                <CardTitle>Tilt Wing</CardTitle>
+                <CardText>
+                    This was a very old design and that makes it very heavy.
+                    We should be looking into making better designs that are more user friendly and safer.
+                    We should also not be worrying about adding wings like these types of designs as they are very inefficient.
+                </CardText>
+            </CardBody>
+        </Card>
+    </CardGroup>
+</section>
+
+
+@code{
+
+}

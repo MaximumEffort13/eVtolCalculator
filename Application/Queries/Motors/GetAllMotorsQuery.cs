@@ -1,0 +1,6 @@
+﻿using Application.Abstractions;
+using Application.DTO;
+
+namespace Application.Queries.Motors;
+
+public sealed record GetAllMotorsQuery(Guid UserId) : IQuery<List<MotorDto>>;

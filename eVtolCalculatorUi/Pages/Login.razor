@@ -1,0 +1,58 @@
+﻿@page "/login"
+@using ApiClient.DataTransferObjects.IdentityObjects;
+@inject IAuthenticationService AuthService
+@inject NavigationManager NavManager
+@attribute [AllowAnonymous]
+
+<EditForm Model="@model" OnValidSubmit="ExecuteLogin">
+    <DataAnnotationsValidator />
+    <div class="container-fluid">
+        <div class="row row-cols-3">
+            <div class="col">
+                <InputText id="email" class="form-control" @bind-Value="model.UserName" placeholder="Email Address" />
+                <ValidationMessage For=@(() => model.UserName) />
+            </div>
+            <div class="col">
+                <label for="password" class="visually-hidden">Password</label>
+                <InputText type="password" id="password" class="form-control" @bind-Value="model.Password" placeholder="Password" />
+                <ValidationMessage For=@(() => model.Password) />
+            </div>
+            <div class="col">
+                <Button Type="ButtonType.Submit" Color="ButtonColor.Dark" Outline="true">Log In</Button>
+            </div>
+        </div>
+        @if (showAuthenticationError)
+        {
+            <div class="row">
+                <div class="text-danger">
+                    @authenticationErrorText
+                </div>
+            </div>
+        }
+    </div>
+
+</EditForm>
+
+
+@code {
+    private AuthenticationUserModel model = new();
+
+    private bool showAuthenticationError;
+    private string authenticationErrorText = string.Empty;
+
+    private async Task ExecuteLogin()
+    {
+        showAuthenticationError = false;
+
+        AuthenticatedUserModel result = await AuthService.Login(model);
+
+        if (result is null || result.AccessToken is null)
+        {
+            authenticationErrorText = "There was a error while trying to authenticate you.";
+            showAuthenticationError = true;
+            return;
+        }
+
+        NavManager.NavigateTo("/");
+    }
+}

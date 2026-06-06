@@ -1,0 +1,315 @@
+﻿@page "/batterypackdesign"
+@inject IAuthenticationService AuthService
+@inject AuthenticationStateProvider AuthState
+@inject IBatteryPackEndpoints BatteryPackEndpoints
+@attribute [Authorize]
+
+<PageTitle>Battery</PageTitle>
+<h4>Battery Design</h4>
+
+<section class="container-fluid">
+    <Card Style="height:30rem;">
+        <img class="rounded-top" src="/Images/BatteryDiagram.png" alt="Battery Design" height="100%" width="100%"/>
+        <CardBody>
+
+        </CardBody>
+    </Card>
+</section>
+<div class="row">
+    <br />
+</div>
+<section class="container-fluid">
+    <EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="container-fluid">
+        <div class="row row-cols-4">
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputText id="packName" class="form-control" @bind-Value="model.PackName" placeholder="Lit-Ion PO4" />
+                    <ValidationMessage For=@(() => model.PackName) />
+                    <label for="packName">Name of completed Battery Pack: </label>
+                </div>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputText id="cellName" class="form-control" @bind-Value="model.CellName" placeholder="Lit-Ion PO4" />
+                    <ValidationMessage For=@(() => model.CellName) />
+                    <label for="cellName">Name of Cells:</label>
+                </div>
+            </div>
+            <div class="col g-3">
+                 <div class="form-floating mb-3">
+                    <InputNumber id="cellVoltage" class="form-control" @bind-Value="model.CellVoltage_V" placeholder="230" />
+                    <ValidationMessage For=@(() => model.CellVoltage_V) />
+                    <label for="cellVoltage">Cell Voltage (V)</label>
+                </div>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputNumber id="cellWeight" class="form-control" @bind-Value="model.CellMass_g" placeholder="300" />
+                    <ValidationMessage For=@(() => model.CellMass_g) />
+                    <label for="cellWeight">Cell Mass (g)</label>
+                </div>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputNumber id="cellCapacity" class="form-control" @bind-Value="model.CellCapacity_Ah" placeholder="1400" />
+                    <ValidationMessage For=@(() => model.CellCapacity_Ah) />
+                    <label for="cellCapacity">Cell Capacity (Ah):</label>
+                </div>
+            </div>
+            <div class="col g-3">
+                 <div class="form-floating mb-3">
+                    <InputNumber id="parallelCells" class="form-control" @bind-Value="model.NumberOfCellsConnectedInParallel" placeholder="5" />
+                    <ValidationMessage For=@(() => model.NumberOfCellsConnectedInParallel) />
+                    <label for="parallelCells">Cells connected in parallel per module: </label>
+                </div>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputNumber id="seriesCells" class="form-control" @bind-Value="model.NumberOfCellsConnectedInSeries" placeholder="5" />
+                    <ValidationMessage For=@(() => model.NumberOfCellsConnectedInSeries) />
+                    <label for="seriesCells">Cell Connected in series per module: </label>
+                </div>
+            </div>
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputNumber id="parallelModules" class="form-control" @bind-Value="model.NumberOfModulesConnectedInParallel" placeholder="5" />
+                    <ValidationMessage For=@(() => model.NumberOfModulesConnectedInParallel) />
+                    <label for="parallelModules">Number of modules connected in parallel: </label>
+                </div>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputNumber id="seriesModules" class="form-control" @bind-Value="model.NumberOfModulesConnectedInSeries" placeholder="5" />
+                    <ValidationMessage For=@(() => model.NumberOfModulesConnectedInSeries) />
+                    <label for="seriesModules">Modules in Series: </label>
+                </div>
+            </div>
+            <div class="col g-3">
+                <div class="form-floating mb-3">
+                    <InputNumber id="packMiscellaneousWeight" class="form-control" @bind-Value="model.MiscellaneousPackWeight_kg" placeholder="50" />
+                    <ValidationMessage For=@(() => model.MiscellaneousPackWeight_kg) />
+                    <label for="packMiscellaneousWeight">Pack Miscellaneous Weight (kg): </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <Button Type="ButtonType.Submit" Color="ButtonColor.Dark" Outline="true">Submit</Button>
+    </div>
+    @if (errorMessage.Equals(string.Empty) == false)
+    {
+        <div class="row">
+            <div class="text-danger">
+                <p class="fw-bolder">
+                    @errorMessage;
+                </p>
+            </div>
+        </div>
+    }
+    </EditForm>
+</section>
+<div class="row">
+    <br />
+</div>
+<section class="row row-cols-5">
+    <div class="col"></div>
+    <div class="col"></div>
+    <div class="col">
+        <div class="form-floating mb-3">
+            <select id="batteryPackSelect" class="form-select form-select-sm" @onchange="@OnBatteryPackChange">
+                <option value="" selected>Select</option>
+                @foreach (var battery in BatteryPacks)
+                {
+                    <option value="@battery.Id">@battery.Name</option>
+                }
+            </select>
+            <label for="batteryPackSelect" class="col-md-2 col-form-label">Battery Packs</label>
+        </div>
+    </div>
+</section>
+
+@if (designResults is not null && displayOutput)
+{
+    <section class="container-fluid">
+        <h4>Design Outputs:</h4>
+        <div class="row row-cols-4">
+            <div class="col">
+                <p>
+                    Name =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Name
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col">
+                <p>
+                    Total Battery Voltage Rating =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Voltage
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col">
+                <p>
+                    Battery Capacity =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Capacity
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col">
+                <p>
+                    Weight of Pack =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Mass
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col">
+                <p>
+                    Battery Total Energy =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Energy
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col">
+                <p>
+                    Specific Energy =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.SpecificEnergy
+                </p>
+            </div>
+        </div>
+    </section>
+}
+
+@code {
+    [Inject] protected PreloadService PreloadService { get; set; }
+
+    bool displayOutput = true;
+    CreateBatteryModel model = new ();
+    string errorMessage = string.Empty;
+    BatteryPackDto designResults { get; set; }
+    List<BatteryPackDto> BatteryPacks = new();
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            var state = await AuthState.GetAuthenticationStateAsync();
+            if (state is not null && state.User is not null && state.User.Identity.IsAuthenticated is false)
+            {
+                await AuthService.RefreshAsync();
+            }
+
+            PreloadService.Show(SpinnerColor.Warning);
+
+            var batteryPacks = await BatteryPackEndpoints.GetBatteries();
+
+            if (batteryPacks.IsFailed)
+            {
+                errorMessage = batteryPacks.Reasons.Last().Message;
+            }
+            else
+            {
+                BatteryPacks = batteryPacks.Value;
+            }
+        }
+        finally
+        {
+            PreloadService.Hide();
+            StateHasChanged();
+        }
+    }
+
+    protected async Task OnBatteryPackChange(ChangeEventArgs args)
+    {
+        var value = args.Value.ToString();
+
+        if (string.IsNullOrEmpty(value) || value.Equals("Select"))
+        {
+            designResults = new();
+            displayOutput = false;
+
+            return;
+        }
+
+        var result = await BatteryPackEndpoints.GetBatteryByIdAsync(value);
+        designResults = result.Value;
+        displayOutput = true;
+
+        return;
+    }
+
+    private async Task OnValidSubmit()
+    {
+        displayOutput = false;
+        designResults = new();
+
+        try
+        {
+            PreloadService.Show(SpinnerColor.Warning);
+            var result = await BatteryPackEndpoints.CreateBatteryPack(model);
+
+            if (result is null)
+            {
+                throw new Exception("No data returned from the server.");
+            }
+
+            if (result is not null && result.IsFailed)
+            {
+                throw new Exception("Could not calculate design parameters.");
+            }
+
+            designResults = result!.Value;
+            displayOutput = true;
+            BatteryPacks.Add(designResults);
+
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            PreloadService.Hide();
+            StateHasChanged();
+        }
+    }
+}

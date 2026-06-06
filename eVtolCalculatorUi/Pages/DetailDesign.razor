@@ -1,0 +1,830 @@
+﻿@page "/detailedDesign"
+@inject IBladeEndpoints BladeEndpoints
+@inject IMotorEndpoints MotorEndpoints
+@inject IInverterEndpoints InverterEndpoints
+@inject IBatteryPackEndpoints BatteryPackEndpoints
+@inject IDetailDesignEndpoints DetailDesignEndpoints
+@inject AuthenticationStateProvider AuthState
+@inject IAuthenticationService AuthService
+@attribute [Authorize]
+
+<PageTitle>Detail Design</PageTitle>
+<h4>Detail Design</h4>
+
+<section class="container-fluid">
+    <Card Style="height:30rem;">
+        <img class="rounded-top" src="/Images/Detail_design.webp" alt="Detail Design" width="100%" height="100%"/>
+        <CardBody>
+
+        </CardBody>
+    </Card>
+</section>
+<div class="row">
+    <br />
+</div>
+<section class="container-fluid">
+    <EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="container-fluid">
+        <div class="row row-cols-4">
+            <div class="col">
+                <div class="form-group row g-3">
+                    <div class="form-floating mb-3">
+                        <InputText id="detail-design-name" class="form-control" @bind-Value="model.Name" placeholder="Project Zero" />
+                        <ValidationMessage For=@(() => model.Name) />
+                        <label for="detail-design-name">Name</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <InputSelect id="blade" class="form-select form-select-sm" @bind-Value="model.BladeId">
+                        <option value="" selected>Select</option>
+                        @foreach (var blade in Blades)
+                        {
+                            <option value="@blade.Id">@blade.Name</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For=@(() => model.BladeId) />
+                    <label for="blade" class="col-md-2 col-form-label">Blade</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <InputSelect id="motor" class="form-select form-select-sm" @bind-Value="model.MotorId">
+                        <option value="" selected>Select</option>
+                        @foreach (var motor in Motors)
+                        {
+                            <option value="@motor.Id">@motor.Name</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For=@(() => model.MotorId) />
+                    <label for="motor" class="col-md-2 col-form-label">Motor</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <InputSelect id="inverter" class="form-select form-select-sm" @bind-Value="model.InverterId">
+                        <option value="" selected>Select</option>
+                        @foreach (var inverter in Inverters)
+                        {
+                            <option value="@inverter.Id">@inverter.Name</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For=@(() => model.InverterId) />
+                    <label for="inverter" class="col-md-2 col-form-label">Inverter</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <InputSelect id="batteryPack" class="form-select form-select-sm" @bind-Value="model.BatteryPackId">
+                        <option value="" selected>Select</option>
+                        @foreach (var battery in BatteryPacks)
+                        {
+                            <option value="@battery.Id">@battery.Name</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For=@(() => model.BatteryPackId) />
+                    <label for="batteryPack" class="col-md-2 col-form-label">Battery Pack</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row row-cols-4">
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <InputNumber id="missionStruct" class="form-control" @bind-Value="model.MissionParameters.TotalStructureWeight_kg" placeholder="400" />
+                    <ValidationMessage For=@(() => model.MissionParameters.TotalStructureWeight_kg) />
+                    <label for="missionStruct">Total Structure Weight</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <InputNumber id="missionPayload" class="form-control" @bind-Value="model.MissionParameters.PayloadWeight_kg" placeholder="100" />
+                    <ValidationMessage For=@(() => model.MissionParameters.PayloadWeight_kg) />
+                    <label for="missionPayload">Payload Weight</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <InputNumber id="missionFlightTime" class="form-control" @bind-Value="model.MissionParameters.FlightTimeInMinutes" placeholder="12" />
+                    <ValidationMessage For=@(() => model.MissionParameters.FlightTimeInMinutes) />
+                    <label for="missionFlightTime">Flight time: (min)</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <InputNumber id="fuselage" class="form-control" @bind-Value="model.Fuselage.Weight_kg" placeholder="400" />
+                    <ValidationMessage For=@(() => model.Fuselage.Weight_kg) />
+                    <label for="fuselage">Fuselage Weight: (kg)</label>
+                </div>
+            </div>
+        </div>
+        <div class="row row-col-2">
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <InputNumber id="motorQuantity" class="form-control" @bind-Value="model.MotorQuantity" placeholder="4" />
+                    <ValidationMessage For=@(() => model.MotorQuantity) />
+                    <label for="motorQuantity">Motor Qty: </label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <InputNumber id="bladeQuantity" class="form-control" @bind-Value="model.BladePerMotorQuantity" placeholder="4" />
+                    <ValidationMessage For=@(() => model.BladePerMotorQuantity) />
+                    <label for="bladeQuantity">Blade Per Motor Qty: </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <Button Type="ButtonType.Submit" Color="ButtonColor.Dark" Outline="true">Submit</Button>
+    </div>
+    @if (errorMessage.Equals(string.Empty) == false)
+    {
+        <div class="row">
+            <div class="text-danger">
+                <p class="fw-bolder">
+                    @errorMessage;
+                </p>
+            </div>
+        </div>
+    }
+    </EditForm>
+</section>
+
+<div class="row">
+    <br />
+</div>
+
+<section class="row row-cols-5">
+    <div class="col"></div>
+    <div class="col"></div>
+    <div class="col">
+        <div class="form-floating mb-3">
+            <select id="detailDesign" class="form-select form-select-sm" @onchange="@OnDetailDesignChange">
+                <option value="" selected>Select</option>
+                @foreach (var design in DetailDesigns)
+                {
+                    <option value="@design.Id">@design.Name</option>
+                }
+            </select>
+            <label for="detailDesign" class="col-md-2 col-form-label">Detail Designs</label>
+        </div>
+    </div>
+</section>
+
+@if (designResults is not null && displayOutput)
+{
+    <div class="row row-cols-5">
+        <div class="col"></div>
+        <div class="col"></div>
+        <section class="col">
+            <h2>Design Outputs</h2>
+        </section>
+    </div>
+    <div class="row row-cols-2">
+        <section class="col">
+            <h4 class"row">Battery Values</h4>
+            <div class="row row-cols-2">
+                <div class="col">
+                    <p>
+                        Battery Name =
+                    </p>
+                </div>
+                <div class="col">
+                    <p>
+                        @designResults.Battery.Name
+                    </p>
+                </div>
+            </div>
+            <div class="row row-cols-2">
+                <div class="col">
+                    <p>
+                        Total Battery Voltage Rating =
+                    </p>
+                </div>
+                <div class="col">
+                    <p>
+                        @designResults.Battery.Voltage
+                    </p>
+                </div>
+            </div>
+            <div class="row row-cols-2">
+                <div class="col">
+                    <p>
+                        Battery Capacity =
+                    </p>
+                </div>
+                <div class="col">
+                    <p>
+                        @designResults.Battery.Capacity
+                    </p>
+                </div>
+            </div>
+            <div class="row row-cols-2">
+                <div class="col">
+                    <p>
+                        Battery Total Energy =
+                    </p>
+                </div>
+                <div class="col">
+                    <p>
+                        @designResults.Battery.Energy
+                    </p>
+                </div>
+            </div>
+            <div class="row row-cols-2">
+                <div class="col">
+                    <p>
+                        Weight of Pack =
+                    </p>
+                </div>
+                <div class="col">
+                    <p>
+                        @designResults.Battery.Mass
+                    </p>
+                </div>
+            </div>
+            <div class="row row-cols-2">
+                <div class="col">
+                    <p>
+                        Specific Energy =
+                    </p>
+                </div>
+                <div class="col">
+                    <p>
+                        @designResults.Battery.SpecificEnergy
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="col">
+            <h4>Motor:</h4>
+            <div class="row row-cols-2">
+                <div class="col">
+                    <p>
+                        Motor Name =
+                    </p>
+                </div>
+                <div class="col">
+                    <p>
+                        @designResults.Motor.Name
+                    </p>
+                </div>
+            </div>
+            <div class="row row-cols-2">
+                <div class="col">
+                    <p>
+                        Motor Voltage Rating =
+                    </p>
+                </div>
+                <div class="col">
+                    <p>
+                        @designResults.Motor.VoltageRating
+                    </p>
+                </div>
+            </div>
+            <div class="row row-cols-2">
+                <div class="col">
+                    <p>
+                        Motor Current Rating =
+                    </p>
+                </div>
+                <div class="col">
+                    <p>
+                        @designResults.Motor.CurrentRating
+                    </p>
+                </div>
+            </div>
+            <div class="row row-cols-2">
+                <div class="col">
+                    <p>
+                        Weight =
+                    </p>
+                </div>
+                <div class="col">
+                    <p>
+                        @designResults.Motor.Weight
+                    </p>
+                </div>
+            </div>
+            <div class="row row-cols-2">
+                <div class="col">
+                    <p>
+                        Power To Weight Ratio =
+                    </p>
+                </div>
+                <div class="col">
+                    <p>
+                        @designResults.Motor.PowerToWeightRatio
+                    </p>
+                </div>
+            </div>
+            <div class="row row-cols-2">
+                <div class="col">
+                    <p>
+                        Torque =
+                    </p>
+                </div>
+                <div class="col">
+                    <p>
+                        @designResults.Motor.Torque (30% Tolerance)
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="row row-cols-2">
+        <section class="col">
+        <h4>Inverter:</h4>
+        <div class="row row-cols-2">
+            <div class="col">
+                <p>
+                    Inverter Name =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Inverter.Name
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-2">
+            <div class="col">
+                <p>
+                    Inverter Voltage Rating =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Inverter.VoltageRating
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-2">
+            <div class="col">
+                <p>
+                    Inverter Current Rating =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Inverter.CurrentRating
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-2">
+            <div class="col">
+                <p>
+                    Inverter Weight =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Inverter.Weight
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-2">
+            <div class="col">
+                <p>
+                    Power To Weight Ratio =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Inverter.PowerToWeightRatio
+                </p>
+            </div>
+        </div>
+    </section>
+    <section class="col">
+        <h4>Blade:</h4>
+        <div class="row row-cols-2">
+            <div class="col">
+                <p>
+                    Blade Name =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Blade.Name
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-2">
+            <div class="col">
+                <p>
+                    Blade Length =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Blade.Diameter
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-2">
+            <div class="col">
+                <p>
+                    Blade Width =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Blade.Width
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-2">
+            <div class="col">
+                <p>
+                    Blade Thickness =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Blade.Thickness
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-2">
+            <div class="col">
+                <p>
+                    Blade Weight =
+                </p>
+            </div>
+            <div class="col row-cols-2">
+                <p>
+                    @designResults.Blade.Weight
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-2">
+            <div class="col">
+                <p>
+                    Blade Angle of Attack =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Blade.AngleOfAttack
+                </p>
+            </div>
+        </div>
+    </section>
+    </div>
+
+    <div class="row row-cols-2">
+        <section class="col">
+        <h4>Mission Parameters: </h4>
+        <div class="row row-cols-2">
+            <div class="col">
+                <p>
+                    Est Power Req =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.MissionEstimates.EstimatedPowerRequirement
+                </p>
+            </div>
+        </div>
+            <div class="row row-cols-2">
+            <div class="col">
+                <p>
+                    Est Battery Capacity =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.MissionEstimates.EstimatedBatteryCapacityRequirement
+                </p>
+            </div>
+        </div>
+            <div class="row row-cols-2">
+            <div class="col">
+                <p>
+                    Est Battery Weight =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.MissionEstimates.EstimatedBatteryWeight
+                </p>
+            </div>
+        </div>
+            <div class="row row-cols-2">
+            <div class="col">
+                <p>
+                    Est Total Motor Weight =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.MissionEstimates.EstimatedMotorWeight
+                </p>
+            </div>
+        </div>
+            <div class="row row-cols-2">
+            <div class="col">
+                <p>
+                    Est Hp Required For Hover =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.MissionEstimates.EstimatedHorsepowerRequiredForHover
+                </p>
+            </div>
+        </div>
+    </section>
+        <section class="col">
+        <h4>Fuselage Weight Result: </h4>
+            <div class="row row-cols-2">
+            <div class="col">
+                <p>
+                    Fuselage Weight =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Fuselage.Weight
+                </p>
+            </div>
+        </div>
+    </section>
+    </div>
+
+    <div class="row row-cols-2">
+        <section class="col">
+            <h2>Calculated Parameters</h2>
+            <div class="row row-cols-2">
+                <div class="col">
+                    <p>
+                        Total Lift Off Weight =
+                    </p>
+                </div>
+                <div class="col">
+                    <p>
+                        @designResults.LiftOffWeight
+                    </p>
+                </div>
+            </div>
+                <div class="row row-cols-2">
+                <div class="col">
+                    <p>
+                        Flight Time in Minutes =
+                    </p>
+                </div>
+                <div class="col">
+                    <p>
+                        @designResults.FlightTimeInMinutes
+                    </p>
+                </div>
+            </div>
+            <div class="row row-cols-2">
+                <div class="col">
+                    <p>
+                        Disc Loading (Dl) = 
+                    </p>
+                </div>
+                <div class="col">
+                    <p>
+                        @designResults.DiscLoading
+                    </p>
+                </div>
+            </div>
+            <div class="row row-cols-2">
+                <div class="col">
+                    <p>
+                        Power Loading = 
+                    </p>
+                </div>
+                <div class="col">
+                    <p>
+                        @designResults.PowerLoading
+                    </p>
+                </div>
+            </div>
+            <div class="row row-cols-2">
+                <div class="col">
+                    <p>
+                        Thrust = 
+                    </p>
+                </div>
+                <div class="col">
+                    <p>
+                        @designResults.Thrust
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+}
+
+
+@code {
+    [Inject] protected PreloadService PreloadService { get; set; }
+
+    bool displayOutput = true;
+    CreateDetailedDesign model = new ();
+    string errorMessage = string.Empty;
+    ElectricVtolDesignDto designResults { get; set; }
+
+    List<MotorDto> Motors = new();
+    List<BladeDto> Blades = new();
+    List<InverterDto> Inverters = new();
+    List<BatteryPackDto> BatteryPacks = new();
+    List<ElectricVtolDesignDto> DetailDesigns = new();
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            var state = await AuthState.GetAuthenticationStateAsync();
+            if (state is not null && state.User is not null && state.User.Identity.IsAuthenticated is false)
+            {
+                await AuthService.RefreshAsync();
+            }
+
+            PreloadService.Show(SpinnerColor.Warning);
+
+            model.MissionParameters = new();
+            model.Fuselage = new();
+
+            var motorResults = await MotorEndpoints.GetMotors();
+            if (motorResults.IsFailed)
+            {
+                errorMessage = motorResults.Reasons.Last().Message;
+            }
+            else
+            {
+                Motors = motorResults.Value;
+            }
+
+            var inverterResults = await InverterEndpoints.GetInverters();
+
+            if (inverterResults.IsFailed)
+            {
+                errorMessage = inverterResults.Reasons.Last().Message;
+            }
+            else
+            {
+                Inverters = inverterResults.Value;
+            }
+
+            var bladeResults = await BladeEndpoints.GetBlades();
+
+            if (bladeResults.IsFailed)
+            {
+                errorMessage = bladeResults.Reasons.Last().Message;
+            }
+            else
+            {
+                Blades = bladeResults.Value;
+            }
+
+            var batteryPackResults = await BatteryPackEndpoints.GetBatteries();
+
+            if (batteryPackResults.IsFailed)
+            {
+                errorMessage = batteryPackResults.Reasons.Last().Message;
+            }
+            else
+            {
+                BatteryPacks = batteryPackResults.Value;
+            }
+
+            var detailDesigns = await DetailDesignEndpoints.GetAllDetailDesigns();
+
+            if (detailDesigns.IsFailed)
+            {
+                errorMessage = detailDesigns.Reasons.Last().Message;
+            }
+            else
+            {
+                DetailDesigns = detailDesigns.Value;
+            }
+        }
+        catch(Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            StateHasChanged();
+            PreloadService.Hide();
+        }
+    }
+
+    protected Task OnInverterChange(string selectedInverterId)
+    {
+        if (selectedInverterId == null || selectedInverterId.Equals(string.Empty))
+        {
+            errorMessage = "Please select a valid inverter.";
+            return Task.CompletedTask;
+        }
+
+        model.InverterId = selectedInverterId;
+        return Task.CompletedTask;
+    }
+
+    protected Task OnMotorChange(string selectedMotorId)
+    {
+        if (selectedMotorId == null || selectedMotorId.Equals("Select"))
+        {
+            errorMessage = "Please select a valid motor.";
+            return Task.CompletedTask;
+        }
+        model.MotorId = selectedMotorId;
+        return Task.CompletedTask;
+
+    }
+
+    protected Task OnBladeChange(string selectedBladeId)
+    {
+        if (selectedBladeId == null || selectedBladeId.Equals("Select"))
+        {
+            errorMessage = "Please select a valid blade.";
+            return Task.CompletedTask;
+        }
+        model.BladeId = selectedBladeId;
+        return Task.CompletedTask;
+
+    }
+
+    protected Task OnBatteryPackChange(string selectedBatteryPackId)
+    {
+        if (selectedBatteryPackId == null || selectedBatteryPackId.Equals("Select"))
+        {
+            errorMessage = "Please select a valid battery pack.";
+            return Task.CompletedTask;
+        }
+        model.BatteryPackId = selectedBatteryPackId;
+        return Task.CompletedTask;
+
+    }
+
+    protected async Task OnDetailDesignChange(ChangeEventArgs args)
+    {
+        var value = args.Value.ToString();
+
+        if (string.IsNullOrEmpty(value) || value.Equals("Select"))
+        {
+            designResults = new();
+            displayOutput = false;
+            return;
+        }
+        var result = await DetailDesignEndpoints.GetDetailDesignByIdAsync(value);
+        designResults = result.Value;
+        displayOutput = true;
+
+        return;
+    }
+
+    private async Task OnValidSubmit()
+    {
+        errorMessage = string.Empty;
+        displayOutput = false;
+        designResults = new();
+
+        try
+        {
+            PreloadService.Show(SpinnerColor.Warning);
+
+            var result = await DetailDesignEndpoints.CreateElectricVtolDesign(model);
+
+            if (result is null)
+            {
+                throw new Exception("No data returned from the server.");
+            }
+
+            if (result is not null && result.IsFailed)
+            {
+                throw new Exception("Could not calculate design parameters.");
+            }
+
+            designResults = result!.Value;
+            displayOutput = true;
+            DetailDesigns.Add(designResults);
+
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            StateHasChanged();
+            PreloadService.Hide();
+        }
+    }
+}

@@ -1,0 +1,245 @@
+﻿@page "/inverterdesign"
+@inject IAuthenticationService AuthService
+@inject AuthenticationStateProvider AuthState
+@inject IInverterEndpoints InverterEndpoints
+@attribute [Authorize]
+
+<PageTitle>Inverter</PageTitle>
+<h4>Inverter Design:</h4>
+
+<section class="container-fluid">
+    <Card Style="height:30rem;">
+        <img class="rounded-top" src="/Images/Exploded-sketch-of-the-modeled-inverter-unit-design.png" alt="Inverter Exploded View" width="100%" height="100%" />
+        <CardBody>
+
+        </CardBody>
+    </Card>
+</section>
+<div class="row">
+    <br />
+</div>
+<section class="container-fluid">
+    <EditForm Model="@model" OnValidSubmit="@OnValidSubmit">
+        <DataAnnotationsValidator />
+        <div class="container-fluid">
+            <div class="row row-cols-3">
+                <div class="col g-3">
+                    <div class="form-floating mb-3">
+                        <InputText id="inverterName" class="form-control" @bind-Value="model.Name" placeholder="Axial Flux M003" />
+                        <ValidationMessage For=@(() => model.Name) />
+                        <label for="inverterName">Name of Inverter:</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <InputNumber id="inverterVoltage" class="form-control" @bind-Value="model.VoltageRating_V" placeholder="50" />
+                        <ValidationMessage For=@(() => model.VoltageRating_V) />
+                        <label for="inverterVoltage">Inverter Voltage (V)</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <InputNumber id="inverterCurrent" class="form-control" @bind-Value="model.CurrentRating_A" placeholder="15" />
+                        <ValidationMessage For=@(() => model.CurrentRating_A) />
+                        <label for="motorCurrent">Inverter Current (A)</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <InputNumber id="motorWeight" class="form-control" @bind-Value="model.Weight_kg" placeholder="30" />
+                        <ValidationMessage For=@(() => model.Weight_kg) />
+                        <label for="motorWeight">Inverter Weight (kg): </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <Button Type="ButtonType.Submit" Color="ButtonColor.Dark" Outline="true">Submit</Button>
+        </div>
+        @if (errorMessage.Equals(string.Empty) == false)
+        {
+            <div class="row">
+                <div class="text-danger">
+                    <p class="fw-bolder">
+                        @errorMessage;
+                    </p>
+                </div>
+            </div>
+        }
+    </EditForm>
+</section>
+<div class="row">
+    <br />
+</div>
+<section class="row row-cols-5">
+    <div class="col"></div>
+    <div class="col"></div>
+    <div class="col">
+        <div class="form-floating mb-3">
+            <select id="inverterSelect" class="form-select form-select-sm" @onchange="@OnInverterSelectChange">
+                <option value="" selected>Select</option>
+                @foreach (var inverter in Inverters)
+                {
+                    <option value="@inverter.Id">@inverter.Name</option>
+                }
+            </select>
+            <label for="inverterSelect" class="col-md-2 col-form-label">Inverters</label>
+        </div>
+    </div>
+</section>
+
+@if (designResults is not null && displayOutput)
+{
+    <section class="container-fluid">
+        <h4>Design Outputs:</h4>
+        <div class="row row-cols-4">
+            <div class="col">
+                <p>
+                    Name =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Name
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col">
+                <p>
+                    Voltage Rating =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.VoltageRating
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col">
+                <p>
+                    Current Rating =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.CurrentRating
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col">
+                <p>
+                    Weight =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.Weight
+                </p>
+            </div>
+        </div>
+        <div class="row row-cols-4">
+            <div class="col">
+                <p>
+                    Power To Weight Ratio =
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    @designResults.PowerToWeightRatio
+                </p>
+            </div>
+        </div>
+    </section>
+}
+
+@code {
+    [Inject] protected PreloadService PreloadService { get; set; }
+
+    bool displayOutput = false;
+    CreateInverterModel model = new();
+    string errorMessage = string.Empty;
+    InverterDto designResults { get; set;}
+    List<InverterDto> Inverters = new();
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            var state = await AuthState.GetAuthenticationStateAsync();
+            if (state is not null && state.User is not null && state.User.Identity!.IsAuthenticated is false)
+            {
+                await AuthService.RefreshAsync();
+            }
+
+            PreloadService.Show(SpinnerColor.Warning);
+
+            var inverers = await InverterEndpoints.GetInverters();
+
+            if (inverers.IsFailed)
+            {
+                errorMessage = inverers.Reasons.Last().Message;
+            }
+            else
+            {
+                Inverters = inverers.Value;
+            }
+        }
+        finally
+        {
+            StateHasChanged();
+            PreloadService.Hide();
+        }
+    }
+
+    protected async Task OnInverterSelectChange(ChangeEventArgs args)
+    {
+        var value = args.Value.ToString();
+
+        if (string.IsNullOrEmpty(value) || value.Equals("Select"))
+        {
+            designResults = new();
+            displayOutput = false;
+            return;
+        }
+
+        var result = await InverterEndpoints.GetInverterById(value);
+        designResults = result.Value;
+        displayOutput = true;
+
+        return;
+    }
+
+    private async Task OnValidSubmit()
+    {
+        designResults = new();
+        displayOutput = false;
+
+        try
+        {
+            PreloadService.Show(SpinnerColor.Warning);
+            var result = await InverterEndpoints.CreateInverterAsync(model);
+
+            if (result is null)
+            {
+                throw new Exception("No data returned from the server.");
+            }
+
+            if (result is not null && result.IsFailed)
+            {
+                throw new Exception("Could not calculate design parameters.");
+            }
+
+            designResults = result!.Value;
+            displayOutput = true;
+            Inverters.Add(designResults);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            StateHasChanged();
+            PreloadService.Hide();
+        }
+    }
+
+
+}
